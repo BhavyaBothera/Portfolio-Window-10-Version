@@ -1,5 +1,5 @@
 /* ==========================================================================
-   WINDOWS 10 DESKTOP PORTFOLIO — ADVANCED REALISM STYLESHEET
+   WINDOWS 10 DESKTOP PORTFOLIO — EXACT WINDOWS 10 SYSTEM ICONS STYLESHEET
    ========================================================================== */
 
 :root {
@@ -60,6 +60,86 @@ body, html {
 ::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.2); }
 ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.25); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+/* ==========================================================================
+   AUTHENTIC WINDOWS 10 DESKTOP SHORTCUT ICONS
+   ========================================================================== */
+
+.desktop-icon {
+    width: 86px;
+    padding: 6px 4px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.desktop-icon:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.28);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.desktop-icon.selected {
+    background: rgba(0, 120, 215, 0.38);
+    border-color: rgba(0, 120, 215, 0.75);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+}
+
+.win-icon-wrapper {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Exact Windows 10 System Icons */
+.win-system-icon {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.45));
+    transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), filter 0.15s ease;
+}
+
+.desktop-icon:hover .win-system-icon {
+    transform: scale(1.08) translateY(-2px);
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.65));
+}
+
+/* Shortcut Arrow Overlay (.lnk indicator) */
+.shortcut-arrow {
+    position: absolute;
+    bottom: -1px;
+    left: -1px;
+    width: 16px;
+    height: 16px;
+    background: #ffffff;
+    border: 1px solid #777;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #0078d7;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.icon-label {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9), 0 2px 5px rgba(0,0,0,0.8);
+    word-break: break-word;
+    line-height: 1.2;
+    padding: 0 2px;
+}
 
 /* ==========================================================================
    LOCK SCREEN
@@ -272,64 +352,6 @@ body, html {
     height: calc(100vh - var(--win-taskbar-height) - 20px);
 }
 
-.desktop-icon {
-    width: 90px;
-    padding: 8px 4px;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-    border: 1px solid transparent;
-    transition: background 0.15s ease, border 0.15s ease;
-}
-
-.desktop-icon:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
-.desktop-icon.selected {
-    background: rgba(0, 120, 215, 0.35);
-    border-color: rgba(0, 120, 215, 0.7);
-}
-
-.icon-img-wrapper {
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2.2rem;
-    margin-bottom: 6px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
-}
-
-.icon-thispc { color: #3b82f6; }
-.icon-folder { color: #f59e0b; }
-.icon-settings { color: #06b6d4; }
-.icon-experience { color: #8b5cf6; }
-.icon-mail { color: #3b82f6; }
-.icon-pdf { color: #ef4444; }
-.icon-cmd { color: #10b981; }
-.icon-game { color: #f97316; }
-.icon-bin { color: #9ca3af; }
-.icon-vscode { color: #007acc; }
-.icon-edge { color: #0078d7; }
-.icon-gear { color: #06b6d4; }
-.icon-notepad { color: #eab308; }
-.icon-calc { color: #3b82f6; }
-.icon-paint { color: #ec4899; }
-
-.icon-label {
-    font-size: 0.8rem;
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0,0,0,0.8);
-    word-break: break-word;
-    line-height: 1.2;
-}
-
 /* ==========================================================================
    WINDOW MANAGER (FLOATING & RESIZABLE WINDOWS)
    ========================================================================== */
@@ -439,7 +461,7 @@ body, html {
 }
 
 /* ==========================================================================
-   NEW APPS SPECIFIC STYLES
+   APPS SPECIFIC STYLES
    ========================================================================== */
 
 /* VS CODE EDITOR */
@@ -511,7 +533,7 @@ body, html {
 .paint-body { height: calc(100% - 42px); background: #ffffff; cursor: crosshair; }
 #paint-canvas { width: 100%; height: 100%; display: block; }
 
-/* ABOUT / EXPLORER / SKILLS / TIMELINE / MAIL / PDF (Inherited from core) */
+/* ABOUT / EXPLORER / SKILLS / TIMELINE / MAIL / PDF */
 .about-container { padding: 30px; }
 .about-header { display: flex; align-items: center; gap: 25px; margin-bottom: 30px; padding-bottom: 25px; border-bottom: 1px solid var(--win-border); }
 .about-avatar-box { position: relative; width: 110px; height: 110px; }

@@ -52,110 +52,329 @@
         <!-- Window Aero Snap Overlay Preview -->
         <div id="snap-preview-box" class="snap-preview hidden"></div>
 
-        <!-- Desktop Grid / Shortcuts -->
+        <!-- Desktop Grid / Exact Windows 10 System Icons -->
         <div id="desktop-icons" class="desktop-icons">
             
+            <!-- Icon 1: This PC (imageres.dll, 109) -->
             <div class="desktop-icon" data-window="this-pc" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-desktop icon-thispc"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Monitor Frame -->
+                        <rect x="4" y="8" width="44" height="32" rx="2" fill="url(#pc-bezel)" stroke="#1a202c" stroke-width="2"/>
+                        <!-- Monitor Screen Display -->
+                        <rect x="7" y="11" width="38" height="26" fill="url(#pc-wallpaper)"/>
+                        <path d="M7 11L45 28V37H7V11Z" fill="#0078d7" opacity="0.4"/>
+                        <!-- Monitor Stand -->
+                        <path d="M22 40L18 52H34L30 40H22Z" fill="url(#pc-stand)"/>
+                        <rect x="14" y="52" width="24" height="3" rx="1" fill="#4a5568"/>
+                        <!-- PC Tower -->
+                        <rect x="46" y="16" width="14" height="39" rx="2" fill="url(#pc-tower)" stroke="#1a202c" stroke-width="1.5"/>
+                        <circle cx="53" cy="22" r="2" fill="#0078d7"/> <!-- Power LED -->
+                        <rect x="49" y="28" width="8" height="2" fill="#718096"/>
+                        <rect x="49" y="32" width="8" height="2" fill="#718096"/>
+                        <defs>
+                            <linearGradient id="pc-bezel" x1="4" y1="8" x2="48" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#4a5568"/><stop offset="1" stop-color="#1a202c"/>
+                            </linearGradient>
+                            <linearGradient id="pc-wallpaper" x1="7" y1="11" x2="45" y2="37" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#0078d7"/><stop offset="1" stop-color="#002050"/>
+                            </linearGradient>
+                            <linearGradient id="pc-stand" x1="18" y1="40" x2="34" y2="52" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#cbd5e0"/><stop offset="1" stop-color="#718096"/>
+                            </linearGradient>
+                            <linearGradient id="pc-tower" x1="46" y1="16" x2="60" y2="55" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#2d3748"/><stop offset="1" stop-color="#0f172a"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
-                <span class="icon-label">This PC (About)</span>
+                <span class="icon-label">This PC</span>
             </div>
 
+            <!-- Icon 2: Projects Explorer (imageres.dll, 3 - Windows 10 Manila Folder) -->
             <div class="desktop-icon" data-window="projects" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-folder-open icon-folder"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Back Folder Body -->
+                        <path d="M4 14C4 11.7909 5.79086 10 8 10H22L28 16H56C58.2091 16 60 17.7909 60 20V50C60 52.2091 58.2091 54 56 54H8C5.79086 54 4 52.2091 4 50V14Z" fill="url(#folder-back)"/>
+                        <!-- Documents Sticking Out -->
+                        <rect x="12" y="16" width="36" height="24" rx="2" fill="#ffffff" opacity="0.9"/>
+                        <!-- Front Folder Pocket -->
+                        <path d="M4 22C4 19.7909 5.79086 18 8 18H56C58.2091 18 60 19.7909 60 22V50C60 52.2091 58.2091 54 56 54H8C5.79086 54 4 52.2091 4 50V22Z" fill="url(#folder-front)"/>
+                        <path d="M4 22H60" stroke="#fef08a" stroke-width="1.5" opacity="0.6"/>
+                        <defs>
+                            <linearGradient id="folder-back" x1="4" y1="10" x2="60" y2="54" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#d97706"/><stop offset="1" stop-color="#b45309"/>
+                            </linearGradient>
+                            <linearGradient id="folder-front" x1="4" y1="18" x2="60" y2="54" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Projects</span>
             </div>
 
+            <!-- Icon 3: Control Panel (shell32.dll, 22) -->
             <div class="desktop-icon" data-window="skills" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-sliders icon-settings"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Computer & Sliders -->
+                        <rect x="6" y="8" width="52" height="40" rx="4" fill="url(#cp-bg)" stroke="#1e293b" stroke-width="2"/>
+                        <rect x="10" y="12" width="44" height="32" rx="2" fill="#0f172a"/>
+                        <!-- Sliders & Knobs -->
+                        <line x1="16" y1="20" x2="48" y2="20" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="16" y1="28" x2="48" y2="28" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                        <line x1="16" y1="36" x2="48" y2="36" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                        <circle cx="28" cy="20" r="5" fill="#0078d7" stroke="#ffffff" stroke-width="1.5"/>
+                        <circle cx="40" cy="28" r="5" fill="#10b981" stroke="#ffffff" stroke-width="1.5"/>
+                        <circle cx="22" cy="36" r="5" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5"/>
+                        <!-- Stand -->
+                        <path d="M24 48L20 56H44L40 48H24Z" fill="#64748b"/>
+                        <defs>
+                            <linearGradient id="cp-bg" x1="6" y1="8" x2="58" y2="48" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#334155"/><stop offset="1" stop-color="#1e293b"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
-                <span class="icon-label">Control Panel (Skills)</span>
+                <span class="icon-label">Control Panel</span>
             </div>
 
+            <!-- Icon 4: VS Code (Official Visual Studio Code Logo) -->
             <div class="desktop-icon" data-window="vscode" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-code icon-vscode"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <path d="M46 4L58 10V54L46 60L22 42L10 51L4 47V17L10 13L22 22L46 4Z" fill="url(#vscode-blue)"/>
+                        <path d="M46 4L22 22L10 13L4 17V47L10 51L22 42L46 60V4Z" stroke="#005999" stroke-width="2"/>
+                        <path d="M46 4V60L58 54V10L46 4Z" fill="#0098ff"/>
+                        <defs>
+                            <linearGradient id="vscode-blue" x1="4" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#007acc"/><stop offset="1" stop-color="#00539c"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">VS Code</span>
             </div>
 
+            <!-- Icon 5: Microsoft Edge (Official Fluent Wave Swirl) -->
             <div class="desktop-icon" data-window="edge" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-brands fa-edge icon-edge"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="26" fill="url(#edge-fluid)"/>
+                        <path d="M32 12C20.9543 12 12 20.9543 12 32C12 43.0457 20.9543 52 32 52C39.5 52 46 48 49.5 41.5C45.5 43.5 41 44 36.5 42C27.5 38 25 28 32 21C35.5 17.5 41 16.5 45.5 19C49 21 52 25 52 30.5C52 41.5 41 50 30 50" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
+                        <defs>
+                            <linearGradient id="edge-fluid" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#0284c7"/>
+                                <stop offset="0.5" stop-color="#0078d7"/>
+                                <stop offset="1" stop-color="#10b981"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Microsoft Edge</span>
             </div>
 
+            <!-- Icon 6: Settings (Windows 10 Fluent Metallic Gear) -->
             <div class="desktop-icon" data-window="settings" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-gear icon-gear"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <path d="M28 6H36L38 14L45 17L53 12L58 17L53 25L56 32L64 34V42L56 44L53 51L58 56L53 61L45 56L38 59L36 67H28L26 59L19 56L11 61L6 56L11 51L8 44L0 42V34L8 32L11 25L6 17L11 12L19 17L26 14L28 6Z" fill="url(#gear-metal)" transform="scale(0.85) translate(5, 5)"/>
+                        <circle cx="32" cy="32" r="11" fill="#0f172a"/>
+                        <circle cx="32" cy="32" r="20" stroke="#0078d7" stroke-width="4" stroke-dasharray="8 4"/>
+                        <defs>
+                            <linearGradient id="gear-metal" x1="0" y1="6" x2="64" y2="67" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#64748b"/><stop offset="1" stop-color="#334155"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
                 <span class="icon-label">Settings</span>
             </div>
 
+            <!-- Icon 7: Experience (imageres.dll, 1022 - Leather Briefcase) -->
             <div class="desktop-icon" data-window="experience" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-briefcase icon-experience"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Briefcase Body -->
+                        <rect x="6" y="20" width="52" height="34" rx="4" fill="url(#case-leather)" stroke="#451a03" stroke-width="2"/>
+                        <!-- Handle -->
+                        <path d="M22 20V13C22 11.3431 23.3431 10 25 10H39C40.6569 10 42 11.3431 42 13V20" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
+                        <!-- Center Gold Straps & Locks -->
+                        <rect x="6" y="28" width="52" height="4" fill="#78350f"/>
+                        <rect x="18" y="26" width="6" height="8" rx="1" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                        <rect x="40" y="26" width="6" height="8" rx="1" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
+                        <defs>
+                            <linearGradient id="case-leather" x1="6" y1="20" x2="58" y2="54" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#92400e"/><stop offset="1" stop-color="#78350f"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Experience</span>
             </div>
 
+            <!-- Icon 8: Contact (Windows 10 Mail App) -->
             <div class="desktop-icon" data-window="contact" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-envelope icon-mail"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <rect x="4" y="14" width="56" height="36" rx="4" fill="url(#mail-blue)"/>
+                        <path d="M4 18L32 37L60 18" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M4 48L24 31" stroke="#1d4ed8" stroke-width="2"/>
+                        <path d="M60 48L40 31" stroke="#1d4ed8" stroke-width="2"/>
+                        <defs>
+                            <linearGradient id="mail-blue" x1="4" y1="14" x2="60" y2="50" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#2563eb"/><stop offset="1" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Contact Me</span>
             </div>
 
+            <!-- Icon 9: Resume (Official Adobe PDF Document) -->
             <div class="desktop-icon" data-window="resume" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-file-pdf icon-pdf"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <path d="M14 6C14 3.79086 15.7909 2 18 2H38L52 16V58C52 60.2091 50.2091 62 48 62H18C15.7909 62 14 60.2091 14 58V6Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                        <path d="M38 2V16H52" fill="#cbd5e1"/>
+                        <rect x="8" y="32" width="48" height="20" rx="3" fill="#dc2626"/>
+                        <text x="32" y="46" fill="#ffffff" font-family="Segoe UI, sans-serif" font-weight="800" font-size="13" text-anchor="middle" letter-spacing="1">PDF</text>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Resume.pdf</span>
             </div>
 
+            <!-- Icon 10: Notepad (imageres.dll, 97 - Text Document & Pencil) -->
             <div class="desktop-icon" data-window="notepad" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-file-lines icon-notepad"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Paper Sheet -->
+                        <rect x="10" y="6" width="44" height="52" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+                        <rect x="10" y="6" width="44" height="10" rx="2" fill="#0078d7"/>
+                        <!-- Lined Text -->
+                        <line x1="18" y1="22" x2="46" y2="22" stroke="#94a3b8" stroke-width="2"/>
+                        <line x1="18" y1="30" x2="46" y2="30" stroke="#94a3b8" stroke-width="2"/>
+                        <line x1="18" y1="38" x2="46" y2="38" stroke="#94a3b8" stroke-width="2"/>
+                        <line x1="18" y1="46" x2="36" y2="46" stroke="#94a3b8" stroke-width="2"/>
+                        <!-- Yellow Pencil -->
+                        <path d="M44 48L56 20L50 14L38 42L44 48Z" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+                        <path d="M38 42L36 50L44 48L38 42Z" fill="#1e293b"/>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">README.txt</span>
             </div>
 
+            <!-- Icon 11: Calculator (imageres.dll, 98) -->
             <div class="desktop-icon" data-window="calculator" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-calculator icon-calc"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <rect x="10" y="4" width="44" height="56" rx="5" fill="url(#calc-body)" stroke="#1e293b" stroke-width="2"/>
+                        <!-- Green Display Screen -->
+                        <rect x="16" y="10" width="32" height="14" rx="2" fill="#064e3b" stroke="#047857" stroke-width="1"/>
+                        <text x="44" y="21" fill="#34d399" font-family="Fira Code, monospace" font-size="11" font-weight="700" text-anchor="end">3.14159</text>
+                        <!-- Grid Buttons -->
+                        <circle cx="20" cy="32" r="3.5" fill="#64748b"/><circle cx="32" cy="32" r="3.5" fill="#64748b"/><circle cx="44" cy="32" r="3.5" fill="#0078d7"/>
+                        <circle cx="20" cy="42" r="3.5" fill="#64748b"/><circle cx="32" cy="42" r="3.5" fill="#64748b"/><circle cx="44" cy="42" r="3.5" fill="#0078d7"/>
+                        <circle cx="20" cy="51" r="3.5" fill="#64748b"/><circle cx="32" cy="51" r="3.5" fill="#64748b"/><circle cx="44" cy="51" r="3.5" fill="#f97316"/>
+                        <defs>
+                            <linearGradient id="calc-body" x1="10" y1="4" x2="54" y2="60" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#334155"/><stop offset="1" stop-color="#1e293b"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
                 <span class="icon-label">Calculator</span>
             </div>
 
+            <!-- Icon 12: Paint (imageres.dll, 68 - Artist Palette & Brush) -->
             <div class="desktop-icon" data-window="paint" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-palette icon-paint"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Wooden Palette -->
+                        <path d="M32 6C17.6421 6 6 17.6421 6 32C6 46.3579 17.6421 58 32 58C36.5 58 39 54.5 39 51C39 48.8 38 47.5 38 45C38 42.5 40 40 42.5 40H48C53.5228 40 58 35.5228 58 30C58 16.7452 46.3579 6 32 6Z" fill="url(#wood-pal)" stroke="#b45309" stroke-width="2"/>
+                        <!-- Paint Dabs -->
+                        <circle cx="18" cy="24" r="4.5" fill="#ef4444"/>
+                        <circle cx="28" cy="16" r="4.5" fill="#3b82f6"/>
+                        <circle cx="42" cy="20" r="4.5" fill="#10b981"/>
+                        <circle cx="50" cy="30" r="4.5" fill="#f59e0b"/>
+                        <circle cx="20" cy="44" r="5" fill="#d97706" opacity="0.4"/> <!-- Thumb hole -->
+                        <!-- Paintbrush -->
+                        <path d="M22 46L46 22L52 28L28 52L22 46Z" fill="#db2777" stroke="#be185d" stroke-width="1.5"/>
+                        <defs>
+                            <linearGradient id="wood-pal" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#fef3c7"/><stop offset="1" stop-color="#fde68a"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
-                <span class="icon-label">Paint Sketch</span>
+                <span class="icon-label">Paint</span>
             </div>
 
+            <!-- Icon 13: Command Prompt (cmd.exe Console Window) -->
             <div class="desktop-icon" data-window="cmd" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-terminal icon-cmd"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <rect x="4" y="10" width="56" height="44" rx="3" fill="#000000" stroke="#475569" stroke-width="2"/>
+                        <path d="M4 10H60V20H4V10Z" fill="#334155"/>
+                        <circle cx="10" cy="15" r="2.5" fill="#ef4444"/>
+                        <circle cx="17" cy="15" r="2.5" fill="#f59e0b"/>
+                        <circle cx="24" cy="15" r="2.5" fill="#10b981"/>
+                        <text x="10" y="36" fill="#ffffff" font-family="Fira Code, monospace" font-weight="700" font-size="13">C:\&gt;_</text>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Command Prompt</span>
             </div>
 
+            <!-- Icon 14: Minesweeper (Classic Spiked Mine Bomb) -->
             <div class="desktop-icon" data-window="minesweeper" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-bomb icon-game"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <rect x="4" y="4" width="56" height="56" rx="6" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
+                        <circle cx="32" cy="36" r="16" fill="#000000" stroke="#475569" stroke-width="2"/>
+                        <!-- Spikes -->
+                        <line x1="32" y1="12" x2="32" y2="18" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                        <line x1="12" y1="36" x2="18" y2="36" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                        <line x1="46" y1="36" x2="52" y2="36" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                        <line x1="18" y1="22" x2="23" y2="27" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                        <line x1="41" y1="45" x2="46" y2="50" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+                        <circle cx="26" cy="30" r="4" fill="#ffffff"/>
+                    </svg>
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Minesweeper</span>
             </div>
 
+            <!-- Icon 15: Recycle Bin (imageres.dll, 54 - Translucent Bin) -->
             <div class="desktop-icon" data-window="recycle-bin" tabindex="0">
-                <div class="icon-img-wrapper">
-                    <i class="fa-solid fa-trash-can icon-bin"></i>
+                <div class="win-icon-wrapper">
+                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
+                        <!-- Glass Bin Body -->
+                        <path d="M14 18H50L45 56C45 58.2091 43.2091 60 41 60H23C20.7909 60 19 58.2091 19 56L14 18Z" fill="url(#bin-glass-fluid)" stroke="#38bdf8" stroke-width="2"/>
+                        <!-- Top Rim -->
+                        <rect x="10" y="12" width="44" height="6" rx="2" fill="#0284c7" stroke="#38bdf8" stroke-width="1"/>
+                        <path d="M24 12V7C24 5.89543 24.8954 5 26 5H38C39.1046 5 40 5.89543 40 7V12" fill="#0369a1"/>
+                        <!-- Green Recycle Arrows -->
+                        <path d="M32 24L38 32H26L32 24Z" fill="#10b981"/>
+                        <path d="M24 38L32 44V32L24 38Z" fill="#10b981"/>
+                        <path d="M40 38L32 32V44L40 38Z" fill="#10b981"/>
+                        <defs>
+                            <linearGradient id="bin-glass-fluid" x1="14" y1="18" x2="50" y2="60" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#38bdf8" stop-opacity="0.55"/>
+                                <stop offset="1" stop-color="#0284c7" stop-opacity="0.85"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
                 <span class="icon-label">Recycle Bin</span>
             </div>
