@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhavy | Windows 10 Portfolio OS</title>
+    <meta name="description" content="An interactive Windows 10 Desktop experience showcasing Bhavy's portfolio, projects, skills, and experience.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ==================== LOCK SCREEN ==================== -->
+    <div id="lock-screen" class="lock-screen">
+        <div class="lock-screen-bg"></div>
+        <div class="lock-screen-content">
+            <div class="lock-clock-container">
+                <div id="lock-time" class="lock-time">12:00</div>
+                <div id="lock-date" class="lock-date">Friday, July 31</div>
+            </div>
+            
+            <div id="lock-login-container" class="lock-login-container">
+                <div class="user-avatar-wrapper">
+                    <img src="assets/avatar.png" alt="Bhavy Profile" class="user-avatar-img">
+                </div>
+                <h2 class="user-name">Bhavy</h2>
+                <p class="user-title">Full-Stack Developer & Innovator</p>
+                
+                <button id="unlock-btn" class="win-btn primary-btn">
+                    <i class="fa-solid fa-lock-open"></i> Sign In to Portfolio
+                </button>
+                <p class="unlock-hint"><i class="fa-solid fa-lightbulb"></i> Or click anywhere / press any key to enter</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN DESKTOP SHELL ==================== -->
+    <div id="desktop-shell" class="desktop-shell hidden">
+
+        <!-- Desktop Wallpaper -->
+        <div id="desktop-wallpaper" class="desktop-wallpaper"></div>
+
+        <!-- Desktop Grid / Shortcuts -->
+        <div id="desktop-icons" class="desktop-icons">
+            
+            <div class="desktop-icon" data-window="this-pc" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-desktop icon-thispc"></i>
+                </div>
+                <span class="icon-label">This PC (About)</span>
+            </div>
+
+            <div class="desktop-icon" data-window="projects" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-folder-open icon-folder"></i>
+                </div>
+                <span class="icon-label">Projects</span>
+            </div>
+
+            <div class="desktop-icon" data-window="skills" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-sliders icon-settings"></i>
+                </div>
+                <span class="icon-label">Control Panel (Skills)</span>
+            </div>
+
+            <div class="desktop-icon" data-window="experience" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-briefcase icon-experience"></i>
+                </div>
+                <span class="icon-label">Experience</span>
+            </div>
+
+            <div class="desktop-icon" data-window="contact" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-envelope icon-mail"></i>
+                </div>
+                <span class="icon-label">Contact Me</span>
+            </div>
+
+            <div class="desktop-icon" data-window="resume" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-file-pdf icon-pdf"></i>
+                </div>
+                <span class="icon-label">Resume.pdf</span>
+            </div>
+
+            <div class="desktop-icon" data-window="cmd" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-terminal icon-cmd"></i>
+                </div>
+                <span class="icon-label">Command Prompt</span>
+            </div>
+
+            <div class="desktop-icon" data-window="minesweeper" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-bomb icon-game"></i>
+                </div>
+                <span class="icon-label">Minesweeper</span>
+            </div>
+
+            <div class="desktop-icon" data-window="recycle-bin" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-trash-can icon-bin"></i>
+                </div>
+                <span class="icon-label">Recycle Bin</span>
+            </div>
+
+        </div>
+
+        <!-- ==================== WINDOWS CONTAINER ==================== -->
+        <div id="windows-container" class="windows-container">
+
+            <!-- WINDOW 1: THIS PC / ABOUT ME -->
+            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width: 780px; height: 520px; top: 70px; left: 140px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-desktop"></i> This PC — System Properties & About Bhavy
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn" title="Minimize"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn" title="Maximize"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body scrollable">
+                    <div class="about-container">
+                        <div class="about-header">
+                            <div class="about-avatar-box">
+                                <img src="assets/avatar.png" alt="Bhavy Avatar" class="about-avatar">
+                                <div class="online-badge" title="Status: Online & Ready to Code"></div>
+                            </div>
+                            <div class="about-intro">
+                                <h1>Bhavy <span class="accent-text">Software Engineer</span></h1>
+                                <p class="tagline">Crafting pixel-perfect web applications, intelligent software solutions, and immersive interactive digital experiences.</p>
+                                <div class="about-quick-badges">
+                                    <span class="badge"><i class="fa-solid fa-location-dot"></i> Tech World</span>
+                                    <span class="badge"><i class="fa-solid fa-code"></i> Full-Stack Dev</span>
+                                    <span class="badge green"><i class="fa-solid fa-circle-check"></i> Available for Hire</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sys-specs-grid">
+                            <div class="spec-card">
+                                <div class="spec-icon"><i class="fa-solid fa-microchip"></i></div>
+                                <div class="spec-info">
+                                    <span class="spec-label">Processor</span>
+                                    <span class="spec-value">High-Speed Analytical & Creative Mind</span>
+                                </div>
+                            </div>
+                            <div class="spec-card">
+                                <div class="spec-icon"><i class="fa-solid fa-memory"></i></div>
+                                <div class="spec-info">
+                                    <span class="spec-label">Installed Memory (RAM)</span>
+                                    <span class="spec-value">Infinite Capacity for Learning</span>
+                                </div>
+                            </div>
+                            <div class="spec-card">
+                                <div class="spec-icon"><i class="fa-solid fa-hard-drive"></i></div>
+                                <div class="spec-info">
+                                    <span class="spec-label">System Architecture</span>
+                                    <span class="spec-value">React, Next.js, Node.js, Python & Cloud</span>
+                                </div>
+                            </div>
+                            <div class="spec-card">
+                                <div class="spec-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div class="spec-info">
+                                    <span class="spec-label">Core Philosophy</span>
+                                    <span class="spec-value">Clean Code, Modern Design & User Delight</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section-box">
+                            <h2><i class="fa-solid fa-user-astronaut"></i> Biography & Background</h2>
+                            <p>Hello! I'm <strong>Bhavy</strong>, a passionate software developer who loves bridging the gap between technical engineering and aesthetic design. I specialize in building modern frontend web applications, responsive APIs, and interactive desktop-grade experiences like the one you are interacting with right now!</p>
+                            <p>When I'm not writing code, you can find me exploring open-source software, diving into AI/ML tools, customizing developer productivity workflows, or gaming.</p>
+                        </div>
+
+                        <div class="about-action-bar">
+                            <button class="win-btn primary-btn open-proj-trigger"><i class="fa-solid fa-folder-open"></i> Explore My Projects</button>
+                            <button class="win-btn open-contact-trigger"><i class="fa-solid fa-paper-plane"></i> Get In Touch</button>
+                            <a href="assets/avatar.png" download="Bhavy_Profile.png" class="win-btn"><i class="fa-solid fa-download"></i> Save Profile Card</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 2: PROJECTS (FILE EXPLORER STYLE) -->
+            <div class="win-window hidden" id="win-projects" data-id="projects" style="width: 860px; height: 560px; top: 90px; left: 180px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-folder-open"></i> File Explorer — C:\Users\Bhavy\Projects
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <!-- Explorer Toolbar & Address Bar -->
+                <div class="explorer-address-bar">
+                    <button class="nav-arrow" disabled><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="nav-arrow" disabled><i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="nav-arrow"><i class="fa-solid fa-arrow-up"></i></button>
+                    <div class="address-input-box">
+                        <i class="fa-solid fa-folder"></i>
+                        <span>This PC &gt; Local Disk (C:) &gt; Users &gt; Bhavy &gt; Projects</span>
+                    </div>
+                    <div class="explorer-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="project-search-input" placeholder="Search Projects...">
+                    </div>
+                </div>
+                <div class="explorer-body">
+                    <!-- Explorer Sidebar -->
+                    <div class="explorer-sidebar">
+                        <div class="sidebar-section-title">Quick Access</div>
+                        <ul class="sidebar-menu">
+                            <li class="active" data-filter="all"><i class="fa-solid fa-star text-gold"></i> All Projects</li>
+                            <li data-filter="web"><i class="fa-solid fa-globe text-blue"></i> Web Applications</li>
+                            <li data-filter="ai"><i class="fa-solid fa-brain text-purple"></i> AI / Machine Learning</li>
+                            <li data-filter="mobile"><i class="fa-solid fa-mobile-screen text-green"></i> Mobile & Tools</li>
+                        </ul>
+                    </div>
+                    <!-- Explorer Main Content -->
+                    <div class="explorer-content scrollable">
+                        <div class="projects-grid" id="projects-grid-container">
+                            <!-- Project Card 1 -->
+                            <div class="project-item-card" data-category="web">
+                                <div class="proj-banner bg-gradient-1">
+                                    <i class="fa-solid fa-desktop proj-icon-overlay"></i>
+                                    <span class="proj-tag">Featured</span>
+                                </div>
+                                <div class="proj-details">
+                                    <h3>Windows 10 Portfolio OS</h3>
+                                    <p class="proj-desc">Interactive OS-style web desktop built with HTML5, CSS3, and Vanilla JavaScript with floating window management and retro apps.</p>
+                                    <div class="proj-tech-stack">
+                                        <span>HTML5</span><span>CSS3</span><span>JS</span><span>Glassmorphic UI</span>
+                                    </div>
+                                    <div class="proj-footer-links">
+                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Card 2 -->
+                            <div class="project-item-card" data-category="ai">
+                                <div class="proj-banner bg-gradient-2">
+                                    <i class="fa-solid fa-robot proj-icon-overlay"></i>
+                                    <span class="proj-tag purple">AI Tool</span>
+                                </div>
+                                <div class="proj-details">
+                                    <h3>AI Workspace Assistant</h3>
+                                    <p class="proj-desc">Intelligent assistant suite integrating LLMs for automated code generation, document summarization, and workflow automation.</p>
+                                    <div class="proj-tech-stack">
+                                        <span>Python</span><span>FastAPI</span><span>React</span><span>OpenAI API</span>
+                                    </div>
+                                    <div class="proj-footer-links">
+                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Preview</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Card 3 -->
+                            <div class="project-item-card" data-category="web">
+                                <div class="proj-banner bg-gradient-3">
+                                    <i class="fa-solid fa-chart-line proj-icon-overlay"></i>
+                                    <span class="proj-tag green">Full Stack</span>
+                                </div>
+                                <div class="proj-details">
+                                    <h3>Real-Time Analytics Dashboard</h3>
+                                    <p class="proj-desc">Comprehensive data visualization platform tracking system metrics, live user traffic, and server health with WebSockets.</p>
+                                    <div class="proj-tech-stack">
+                                        <span>Next.js</span><span>Tailwind</span><span>Recharts</span><span>WebSockets</span>
+                                    </div>
+                                    <div class="proj-footer-links">
+                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Project Card 4 -->
+                            <div class="project-item-card" data-category="mobile">
+                                <div class="proj-banner bg-gradient-4">
+                                    <i class="fa-solid fa-gamepad proj-icon-overlay"></i>
+                                    <span class="proj-tag orange">Game/Tool</span>
+                                </div>
+                                <div class="proj-details">
+                                    <h3>Retro Arcade Engine</h3>
+                                    <p class="proj-desc">Web-based classic game collection with custom physics engine, leaderboard API, and retro pixel sound effects.</p>
+                                    <div class="proj-tech-stack">
+                                        <span>JavaScript</span><span>Canvas API</span><span>Web Audio API</span>
+                                    </div>
+                                    <div class="proj-footer-links">
+                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Play Now</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 3: SKILLS (CONTROL PANEL STYLE) -->
+            <div class="win-window hidden" id="win-skills" data-id="skills" style="width: 800px; height: 540px; top: 110px; left: 220px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-sliders"></i> Control Panel — Skills & Technical Capabilities
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body scrollable">
+                    <div class="skills-container">
+                        <div class="skills-header">
+                            <h2>Technical Competencies & System Specifications</h2>
+                            <p>Overview of my technical expertise, frameworks, and developer toolkits.</p>
+                        </div>
+
+                        <!-- Skill Category 1 -->
+                        <div class="skills-group">
+                            <h3 class="group-title"><i class="fa-solid fa-code text-blue"></i> Frontend & UI Development</h3>
+                            <div class="skills-grid">
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-brands fa-js text-yellow"></i> JavaScript (ES6+)</span>
+                                        <span class="skill-percent">95%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-brands fa-react text-cyan"></i> React.js / Next.js</span>
+                                        <span class="skill-percent">90%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-brands fa-html5 text-orange"></i> HTML5 / CSS3 / Sass</span>
+                                        <span class="skill-percent">98%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-solid fa-paintbrush text-purple"></i> UI/UX & Responsive Design</span>
+                                        <span class="skill-percent">92%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Category 2 -->
+                        <div class="skills-group">
+                            <h3 class="group-title"><i class="fa-solid fa-server text-green"></i> Backend & Database Systems</h3>
+                            <div class="skills-grid">
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-brands fa-node text-green"></i> Node.js & Express</span>
+                                        <span class="skill-percent">88%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-brands fa-python text-blue"></i> Python & FastAPI</span>
+                                        <span class="skill-percent">85%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-solid fa-database text-cyan"></i> PostgreSQL & MongoDB</span>
+                                        <span class="skill-percent">85%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
+                                </div>
+                                <div class="skill-card">
+                                    <div class="skill-header">
+                                        <span class="skill-name"><i class="fa-solid fa-plug text-gold"></i> REST & GraphQL APIs</span>
+                                        <span class="skill-percent">90%</span>
+                                    </div>
+                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Skill Chips -->
+                        <div class="skills-chips-section">
+                            <h3><i class="fa-solid fa-toolbox text-orange"></i> Developer Tools & Ecosystem</h3>
+                            <div class="chips-flex">
+                                <span class="skill-chip"><i class="fa-brands fa-git-alt"></i> Git / GitHub</span>
+                                <span class="skill-chip"><i class="fa-brands fa-docker"></i> Docker</span>
+                                <span class="skill-chip"><i class="fa-solid fa-cloud"></i> Vercel & AWS</span>
+                                <span class="skill-chip"><i class="fa-solid fa-terminal"></i> PowerShell / Bash</span>
+                                <span class="skill-chip"><i class="fa-solid fa-laptop-code"></i> VS Code</span>
+                                <span class="skill-chip"><i class="fa-solid fa-vial"></i> Jest & Testing</span>
+                                <span class="skill-chip"><i class="fa-solid fa-bolt"></i> Vite / Webpack</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 4: EXPERIENCE & TIMELINE -->
+            <div class="win-window hidden" id="win-experience" data-id="experience" style="width: 760px; height: 520px; top: 120px; left: 260px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-briefcase"></i> Experience & Career Timeline
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body scrollable">
+                    <div class="timeline-container">
+                        <div class="timeline-header">
+                            <h2>Work History & Achievements</h2>
+                            <p>A chronological record of my professional growth, software projects, and education.</p>
+                        </div>
+
+                        <div class="timeline">
+                            <!-- Timeline Item 1 -->
+                            <div class="timeline-item">
+                                <div class="timeline-marker"><i class="fa-solid fa-code"></i></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2024 — PRESENT</div>
+                                    <h3>Senior Full-Stack Developer</h3>
+                                    <h4>Tech Innovations Lab</h4>
+                                    <p>Architecting web applications with React, Next.js, and Node.js. Leading UI modernization efforts, optimizing rendering speeds by 40%, and establishing robust CI/CD pipelines.</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 2 -->
+                            <div class="timeline-item">
+                                <div class="timeline-marker"><i class="fa-solid fa-laptop-code"></i></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2022 — 2024</div>
+                                    <h3>Frontend Web Developer</h3>
+                                    <h4>Digital Solutions Inc.</h4>
+                                    <p>Developed responsive web interfaces, reusable component libraries, and client dashboard applications. Partnered closely with UI/UX designers to translate Figma mockups into seamless code.</p>
+                                </div>
+                            </div>
+
+                            <!-- Timeline Item 3 -->
+                            <div class="timeline-item">
+                                <div class="timeline-marker"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-date">2019 — 2023</div>
+                                    <h3>Bachelor of Science in Computer Science</h3>
+                                    <h4>University of Technology</h4>
+                                    <p>Graduated with Honors. Specialized in Software Engineering, Data Structures & Algorithms, and Human-Computer Interaction (HCI).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 5: CONTACT ME (OUTLOOK MAIL STYLE) -->
+            <div class="win-window hidden" id="win-contact" data-id="contact" style="width: 720px; height: 530px; top: 100px; left: 300px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-envelope"></i> Windows Mail — New Message to Bhavy
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body scrollable">
+                    <div class="mail-container">
+                        <div class="mail-toolbar">
+                            <button id="send-mail-btn" class="win-btn primary-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
+                            <button class="win-btn" id="clear-mail-btn"><i class="fa-solid fa-trash-can"></i> Clear</button>
+                        </div>
+                        
+                        <form id="contact-form" class="mail-form" onsubmit="return false;">
+                            <div class="form-row">
+                                <label for="sender-to">To:</label>
+                                <input type="text" id="sender-to" value="Bhavy <bhavy@example.com>" disabled class="mail-input readonly">
+                            </div>
+                            <div class="form-row">
+                                <label for="sender-name">Your Name:</label>
+                                <input type="text" id="sender-name" placeholder="John Doe" required class="mail-input">
+                            </div>
+                            <div class="form-row">
+                                <label for="sender-email">Your Email:</label>
+                                <input type="email" id="sender-email" placeholder="john@example.com" required class="mail-input">
+                            </div>
+                            <div class="form-row">
+                                <label for="sender-subject">Subject:</label>
+                                <input type="text" id="sender-subject" placeholder="Project Inquiry / Job Opportunity / Hello!" required class="mail-input">
+                            </div>
+                            <div class="form-row message-row">
+                                <textarea id="sender-message" placeholder="Hi Bhavy, I checked out your portfolio desktop and would love to collaborate..." required class="mail-textarea"></textarea>
+                            </div>
+                        </form>
+
+                        <div class="mail-social-bar">
+                            <h3>Connect Directly:</h3>
+                            <div class="social-buttons-grid">
+                                <a href="https://github.com" target="_blank" class="social-btn github"><i class="fa-brands fa-github"></i> GitHub</a>
+                                <a href="https://linkedin.com" target="_blank" class="social-btn linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                                <a href="mailto:bhavy@example.com" class="social-btn email"><i class="fa-solid fa-envelope"></i> Email Me</a>
+                                <a href="https://twitter.com" target="_blank" class="social-btn twitter"><i class="fa-brands fa-x-twitter"></i> Twitter / X</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 6: RESUME PDF VIEWER -->
+            <div class="win-window hidden" id="win-resume" data-id="resume" style="width: 780px; height: 560px; top: 80px; left: 200px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-file-pdf text-red"></i> PDF Reader — Bhavy_Resume.pdf
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="pdf-toolbar">
+                    <div class="pdf-page-controls">
+                        <span>Page 1 of 1</span>
+                    </div>
+                    <div class="pdf-actions">
+                        <button class="win-btn" id="zoom-in-pdf"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                        <button class="win-btn" id="zoom-out-pdf"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                        <button class="win-btn primary-btn" id="download-resume-btn"><i class="fa-solid fa-download"></i> Download Resume PDF</button>
+                    </div>
+                </div>
+                <div class="win-body scrollable pdf-viewer-body">
+                    <div class="pdf-paper-document" id="pdf-document">
+                        <div class="resume-header">
+                            <h1>BHAVY</h1>
+                            <h2>Full-Stack Software Engineer</h2>
+                            <p class="resume-contact-line">Email: bhavy@example.com | GitHub: github.com | LinkedIn: linkedin.com</p>
+                        </div>
+                        <hr class="resume-divider">
+                        
+                        <div class="resume-section">
+                            <h3>SUMMARY</h3>
+                            <p>Versatile Software Engineer with strong background in frontend & full-stack development, modern web standards, and UI/UX craftsmanship. Skilled at transforming complex requirements into clean, performant codebases.</p>
+                        </div>
+
+                        <div class="resume-section">
+                            <h3>TECHNICAL SKILLS</h3>
+                            <p><strong>Languages:</strong> JavaScript (ES6+), TypeScript, Python, HTML5, CSS3/Sass, SQL</p>
+                            <p><strong>Frameworks & Libraries:</strong> React.js, Next.js, Node.js, Express, FastAPI, Tailwind CSS</p>
+                            <p><strong>Tools & Platforms:</strong> Git, Docker, Webpack/Vite, Vercel, AWS, Linux, VS Code</p>
+                        </div>
+
+                        <div class="resume-section">
+                            <h3>PROJECTS & EXPERIENCE</h3>
+                            <p><strong>Windows 10 Portfolio OS:</strong> Web-based operating system shell mimicking Windows 10 with window management, custom desktop icons, and interactive apps.</p>
+                            <p><strong>AI Workspace Suite:</strong> Automated development tools powered by Large Language Models.</p>
+                        </div>
+
+                        <div class="resume-section">
+                            <h3>EDUCATION</h3>
+                            <p><strong>B.S. in Computer Science</strong> — Graduated with Honors</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 7: COMMAND PROMPT (CMD.EXE) -->
+            <div class="win-window hidden" id="win-cmd" data-id="cmd" style="width: 720px; height: 460px; top: 130px; left: 240px;">
+                <div class="win-titlebar cmd-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-terminal"></i> Command Prompt - bhavy@portfolio-os:~
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body cmd-body scrollable" id="cmd-body-container">
+                    <div id="cmd-output">
+                        <p class="cmd-text">Microsoft Windows [Version 10.0.19045.3803]</p>
+                        <p class="cmd-text">(c) Bhavy Corporation. All rights reserved.</p>
+                        <br>
+                        <p class="cmd-text text-green">Type <span class="text-gold">'help'</span> to view available commands.</p>
+                        <br>
+                    </div>
+                    <div class="cmd-input-line">
+                        <span class="cmd-prompt-str">C:\Users\Bhavy&gt;</span>
+                        <input type="text" id="cmd-input-field" class="cmd-input" autofocus spellcheck="false" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 8: MINESWEEPER GAME -->
+            <div class="win-window hidden" id="win-minesweeper" data-id="minesweeper" style="width: 440px; height: 500px; top: 120px; left: 320px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-bomb"></i> Minesweeper Classic
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body minesweeper-body">
+                    <div class="minesweeper-header">
+                        <div class="ms-counter" id="ms-mines-count">010</div>
+                        <button id="ms-reset-btn" class="ms-face-btn" title="Reset Game">🙂</button>
+                        <div class="ms-counter" id="ms-timer">000</div>
+                    </div>
+                    <div class="ms-grid" id="ms-grid-container">
+                        <!-- Grid dynamically rendered by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 9: RECYCLE BIN -->
+            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width: 680px; height: 440px; top: 140px; left: 280px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-trash-can"></i> Recycle Bin
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="bin-toolbar">
+                    <button class="win-btn" id="empty-bin-btn"><i class="fa-solid fa-dumpster"></i> Empty Recycle Bin</button>
+                    <button class="win-btn" id="restore-bin-btn"><i class="fa-solid fa-rotate-left"></i> Restore All Items</button>
+                </div>
+                <div class="win-body scrollable">
+                    <div class="bin-content" id="bin-content-area">
+                        <div class="bin-item">
+                            <i class="fa-solid fa-bug text-red"></i>
+                            <div class="bin-item-info">
+                                <span class="bin-item-name">Undefined_Null_Pointer_Bug.exe</span>
+                                <span class="bin-item-meta">Deleted: Yesterday • Size: 0 KB</span>
+                            </div>
+                        </div>
+                        <div class="bin-item">
+                            <i class="fa-solid fa-file-code text-orange"></i>
+                            <div class="bin-item-info">
+                                <span class="bin-item-name">Old_Portfolio_Draft_v1.html</span>
+                                <span class="bin-item-meta">Deleted: 3 days ago • Size: 14 KB</span>
+                            </div>
+                        </div>
+                        <div class="bin-item">
+                            <i class="fa-solid fa-mug-hot text-brown"></i>
+                            <div class="bin-item-info">
+                                <span class="bin-item-name">Cold_Coffee_Cups.log</span>
+                                <span class="bin-item-meta">Deleted: Today • Size: 999 MB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Windows Container -->
+
+        <!-- ==================== START MENU ==================== -->
+        <div id="start-menu" class="start-menu hidden">
+            <!-- Start Menu Sidebar -->
+            <div class="start-sidebar">
+                <button class="start-side-btn" id="start-btn-user" title="Bhavy Profile">
+                    <img src="assets/avatar.png" alt="Avatar" class="start-avatar">
+                </button>
+                <button class="start-side-btn" id="start-btn-docs" title="Documents"><i class="fa-regular fa-folder"></i></button>
+                <button class="start-side-btn" id="start-btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
+                <button class="start-side-btn" id="start-btn-power" title="Power Options"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+
+            <!-- Start Menu App List -->
+            <div class="start-app-list scrollable">
+                <div class="app-letter-heading">B</div>
+                <div class="start-app-item" data-window="this-pc">
+                    <i class="fa-solid fa-desktop text-blue"></i>
+                    <span>About Bhavy (This PC)</span>
+                </div>
+                
+                <div class="app-letter-heading">C</div>
+                <div class="start-app-item" data-window="cmd">
+                    <i class="fa-solid fa-terminal text-green"></i>
+                    <span>Command Prompt (cmd.exe)</span>
+                </div>
+                <div class="start-app-item" data-window="skills">
+                    <i class="fa-solid fa-sliders text-cyan"></i>
+                    <span>Control Panel (Skills)</span>
+                </div>
+                <div class="start-app-item" data-window="contact">
+                    <i class="fa-solid fa-envelope text-blue"></i>
+                    <span>Contact Me (Mail)</span>
+                </div>
+
+                <div class="app-letter-heading">E</div>
+                <div class="start-app-item" data-window="experience">
+                    <i class="fa-solid fa-briefcase text-purple"></i>
+                    <span>Experience Timeline</span>
+                </div>
+
+                <div class="app-letter-heading">M</div>
+                <div class="start-app-item" data-window="minesweeper">
+                    <i class="fa-solid fa-bomb text-red"></i>
+                    <span>Minesweeper Classic</span>
+                </div>
+
+                <div class="app-letter-heading">P</div>
+                <div class="start-app-item" data-window="projects">
+                    <i class="fa-solid fa-folder-open text-gold"></i>
+                    <span>Projects Explorer</span>
+                </div>
+
+                <div class="app-letter-heading">R</div>
+                <div class="start-app-item" data-window="resume">
+                    <i class="fa-solid fa-file-pdf text-red"></i>
+                    <span>Resume.pdf</span>
+                </div>
+            </div>
+
+            <!-- Start Menu Tiles -->
+            <div class="start-tiles-panel scrollable">
+                <div class="tile-section-header">Pinned Shortcuts</div>
+                <div class="tiles-grid">
+                    <div class="start-tile tile-large tile-blue" data-window="this-pc">
+                        <i class="fa-solid fa-laptop-code tile-icon"></i>
+                        <span class="tile-label">About Me</span>
+                    </div>
+                    <div class="start-tile tile-medium tile-purple" data-window="projects">
+                        <i class="fa-solid fa-folder-open tile-icon"></i>
+                        <span class="tile-label">Projects</span>
+                    </div>
+                    <div class="start-tile tile-medium tile-green" data-window="skills">
+                        <i class="fa-solid fa-code tile-icon"></i>
+                        <span class="tile-label">Skills</span>
+                    </div>
+                    <div class="start-tile tile-medium tile-orange" data-window="resume">
+                        <i class="fa-solid fa-file-arrow-down tile-icon"></i>
+                        <span class="tile-label">Resume</span>
+                    </div>
+                    <div class="start-tile tile-medium tile-red" data-window="contact">
+                        <i class="fa-solid fa-paper-plane tile-icon"></i>
+                        <span class="tile-label">Contact</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== POWER OPTIONS MODAL ==================== -->
+        <div id="power-modal" class="power-modal hidden">
+            <div class="power-modal-card">
+                <i class="fa-solid fa-power-off power-icon"></i>
+                <h2>Power Options</h2>
+                <p>Choose an action for Windows 10 Portfolio OS:</p>
+                <div class="power-buttons">
+                    <button class="win-btn" id="power-lock-btn"><i class="fa-solid fa-lock"></i> Lock Screen</button>
+                    <button class="win-btn" id="power-restart-btn"><i class="fa-solid fa-rotate"></i> Restart OS</button>
+                    <button class="win-btn primary-btn" id="power-shutdown-btn"><i class="fa-solid fa-power-off"></i> Shut Down</button>
+                </div>
+                <button class="close-power-modal" id="close-power-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+
+        <!-- ==================== ACTION CENTER / NOTIFICATION PANEL ==================== -->
+        <div id="action-center" class="action-center hidden">
+            <div class="action-center-header">
+                <h3>Notifications</h3>
+                <button id="clear-notifications" class="clear-btn">Clear all</button>
+            </div>
+            <div class="notifications-list">
+                <div class="notification-card">
+                    <div class="notif-header">
+                        <i class="fa-solid fa-laptop-code text-blue"></i>
+                        <span>Windows Portfolio OS</span>
+                        <span class="notif-time">Just now</span>
+                    </div>
+                    <div class="notif-title">Welcome to Bhavy's Portfolio!</div>
+                    <div class="notif-body">Double click desktop icons or search from the taskbar to explore projects, skills, and interactive apps.</div>
+                </div>
+            </div>
+            <div class="quick-actions-grid">
+                <div class="quick-action-tile active" id="toggle-dark-mode">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Dark Mode</span>
+                </div>
+                <div class="quick-action-tile" id="toggle-wallpaper">
+                    <i class="fa-solid fa-image"></i>
+                    <span>Wallpaper</span>
+                </div>
+                <div class="quick-action-tile active" id="toggle-sound">
+                    <i class="fa-solid fa-volume-high"></i>
+                    <span>Sound: ON</span>
+                </div>
+                <div class="quick-action-tile" id="toggle-fullscreen">
+                    <i class="fa-solid fa-expand"></i>
+                    <span>Full Screen</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TASKBAR ==================== -->
+        <div id="taskbar" class="taskbar">
+            <!-- Start Button -->
+            <button id="start-btn" class="taskbar-btn start-button" title="Start">
+                <i class="fa-brands fa-windows win-logo-icon"></i>
+            </button>
+
+            <!-- Search Bar -->
+            <div class="taskbar-search-container">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="taskbar-search-input" placeholder="Type here to search (e.g. Projects, Skills, Contact)..." autocomplete="off">
+                <!-- Search Popover -->
+                <div id="search-popover" class="search-popover hidden">
+                    <div class="search-results-header">Search Results</div>
+                    <div id="search-results-list" class="search-results-list scrollable">
+                        <!-- Dynamic Search Results -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taskbar Open Windows Pills -->
+            <div id="taskbar-apps-container" class="taskbar-apps-container">
+                <!-- Dynamic taskbar items generated by JS -->
+            </div>
+
+            <!-- System Tray -->
+            <div class="system-tray">
+                <div class="tray-icon" id="tray-wifi" title="Internet Access: Connected">
+                    <i class="fa-solid fa-wifi"></i>
+                </div>
+                <div class="tray-icon" id="tray-volume" title="Volume: 100%">
+                    <i class="fa-solid fa-volume-high"></i>
+                </div>
+                <div class="tray-icon" id="tray-battery" title="Battery: 100% Fully Charged">
+                    <i class="fa-solid fa-battery-full"></i>
+                </div>
+                <div class="tray-clock" id="taskbar-clock" title="Click for Calendar">
+                    <div id="tray-time">12:00 PM</div>
+                    <div id="tray-date">31/07/2026</div>
+                </div>
+                <div class="tray-icon" id="tray-action-center" title="Action Center">
+                    <i class="fa-regular fa-comment"></i>
+                </div>
+                <div class="peek-desktop-bar" id="peek-desktop" title="Show Desktop"></div>
+            </div>
+        </div>
+
+        <!-- ==================== DESKTOP CONTEXT MENU (RIGHT CLICK) ==================== -->
+        <div id="context-menu" class="context-menu hidden">
+            <div class="context-item" id="ctx-refresh"><i class="fa-solid fa-rotate-right"></i> Refresh</div>
+            <div class="context-divider"></div>
+            <div class="context-item" id="ctx-next-wallpaper"><i class="fa-solid fa-image"></i> Next Wallpaper</div>
+            <div class="context-item" id="ctx-open-terminal"><i class="fa-solid fa-terminal"></i> Open Command Prompt</div>
+            <div class="context-divider"></div>
+            <div class="context-item" id="ctx-about-os"><i class="fa-solid fa-circle-info"></i> About Windows 10 OS</div>
+        </div>
+
+    </div> <!-- End Desktop Shell -->
+
+    <!-- Main JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
