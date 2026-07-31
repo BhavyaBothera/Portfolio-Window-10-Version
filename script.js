@@ -1,6 +1,5 @@
 /* ==========================================================================
-   WINDOWS 10 DESKTOP PORTFOLIO — SYSTEM LOGIC & WINDOW MANAGER
-   Features: Lock Screen, Window Manager, Taskbar, Start Menu, Minesweeper, CMD, Search
+   WINDOWS 10 DESKTOP PORTFOLIO — ADVANCED SYSTEM LOGIC & REALISM ENGINE
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80',
             'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80'
         ],
+        accentColor: '#0078d7',
         highestZIndex: 100,
         openWindows: new Set(),
         activeWindowId: null
@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 osc.start();
                 osc.stop(ctx.currentTime + 0.05);
             } else if (type === 'startup') {
-                // Windows 10 style soft synth chime
                 const notes = [440, 554.37, 659.25, 880];
                 notes.forEach((freq, idx) => {
                     const o = ctx.createOscillator();
@@ -65,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 osc.stop(ctx.currentTime + 0.2);
             }
         } catch (e) {
-            console.log('Web Audio API initialized on user interaction.');
+            console.log('Audio initialized.');
         }
     };
 
@@ -78,6 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Lock screen format
         const hours24 = now.getHours();
         const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
         const lockTimeStr = `${String(hours24).padStart(2, '0')}:${minutes}`;
         const lockDateOptions = { weekday: 'long', month: 'long', day: 'numeric' };
         const lockDateStr = now.toLocaleDateString('en-US', lockDateOptions);
@@ -98,6 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const trayDateEl = document.getElementById('tray-date');
         if (trayTimeEl) trayTimeEl.textContent = trayTimeStr;
         if (trayDateEl) trayDateEl.textContent = trayDateStr;
+
+        // Calendar Popover Clock
+        const calTimeDisplay = document.getElementById('cal-time-display');
+        const calDateDisplay = document.getElementById('cal-date-display');
+        if (calTimeDisplay) calTimeDisplay.textContent = `${hours12}:${minutes}:${seconds} ${ampm}`;
+        if (calDateDisplay) calDateDisplay.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     };
 
     updateClocks();
@@ -127,23 +133,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.addEventListener('keydown', (e) => {
+    window.addEventListener('keydown', () => {
         if (!lockScreen.classList.contains('unlocked')) {
             unlockOS();
         }
     });
 
     // ==========================================================================
-    // 3. WINDOW MANAGER (OPEN, CLOSE, MINIMIZE, MAXIMIZE, FOCUS, DRAG)
+    // 3. WINDOW MANAGER (OPEN, CLOSE, MINIMIZE, MAXIMIZE, FOCUS, DRAG, AERO SNAP, RESIZE)
     // ==========================================================================
-    const windowsContainer = document.getElementById('windows-container');
     const taskbarAppsContainer = document.getElementById('taskbar-apps-container');
+    const snapPreviewBox = document.getElementById('snap-preview-box');
 
     const openWindow = (windowId) => {
         const win = document.getElementById(`win-${windowId}`);
         if (!win) return;
 
-        // If window is already open and minimized, restore it
         if (win.classList.contains('minimized')) {
             win.classList.remove('minimized');
         }
@@ -153,13 +158,17 @@ document.addEventListener('DOMContentLoaded', () => {
         focusWindow(windowId);
         updateTaskbarPills();
         playSound('click');
+
+        // Lazy load VS Code content if opened
+        if (windowId === 'vscode') loadVsCodeContent('index.html');
+        // Lazy load Paint canvas if opened
+        if (windowId === 'paint') initPaintCanvas();
     };
 
     const focusWindow = (windowId) => {
         const win = document.getElementById(`win-${windowId}`);
         if (!win) return;
 
-        // Remove active class from all windows
         document.querySelectorAll('.win-window').forEach(w => w.classList.remove('active'));
 
         state.highestZIndex += 1;
@@ -194,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateTaskbarPills();
     };
 
-    // Update Taskbar App Pills
     const updateTaskbarPills = () => {
         taskbarAppsContainer.innerHTML = '';
 
@@ -223,16 +231,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Make Windows Draggable
+    // Make Windows Draggable with Aero Snap
     document.querySelectorAll('.win-window').forEach(win => {
         const titlebar = win.querySelector('.win-titlebar');
         const winId = win.dataset.id;
 
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
+        let snapState = null; // 'left', 'right', 'top'
 
         titlebar.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.win-controls')) return; // Don't drag when clicking buttons
+            if (e.target.closest('.win-controls')) return;
             if (win.classList.contains('maximized')) return;
 
             focusWindow(winId);
@@ -252,52 +261,156 @@ document.addEventListener('DOMContentLoaded', () => {
             const dy = e.clientY - startY;
             win.style.left = `${initialLeft + dx}px`;
             win.style.top = `${initialTop + dy}px`;
+
+            // Aero Snap Detection
+            const taskbarHeight = 40;
+            const screenW = window.innerWidth;
+            const screenH = window.innerHeight - taskbarHeight;
+
+            if (e.clientX < 20) {
+                // Snap Left Preview
+                snapState = 'left';
+                snapPreviewBox.style.left = '0px';
+                snapPreviewBox.style.top = '0px';
+                snapPreviewBox.style.width = `${screenW / 2}px`;
+                snapPreviewBox.style.height = `${screenH}px`;
+                snapPreviewBox.classList.remove('hidden');
+            } else if (e.clientX > screenW - 20) {
+                // Snap Right Preview
+                snapState = 'right';
+                snapPreviewBox.style.left = `${screenW / 2}px`;
+                snapPreviewBox.style.top = '0px';
+                snapPreviewBox.style.width = `${screenW / 2}px`;
+                snapPreviewBox.style.height = `${screenH}px`;
+                snapPreviewBox.classList.remove('hidden');
+            } else if (e.clientY < 20) {
+                // Maximize Preview
+                snapState = 'top';
+                snapPreviewBox.style.left = '0px';
+                snapPreviewBox.style.top = '0px';
+                snapPreviewBox.style.width = `${screenW}px`;
+                snapPreviewBox.style.height = `${screenH}px`;
+                snapPreviewBox.classList.remove('hidden');
+            } else {
+                snapState = null;
+                snapPreviewBox.classList.add('hidden');
+            }
         };
 
         const onMouseUp = () => {
-            isDragging = false;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
+            if (isDragging) {
+                isDragging = false;
+                snapPreviewBox.classList.add('hidden');
+
+                const taskbarHeight = 40;
+                const screenW = window.innerWidth;
+                const screenH = window.innerHeight - taskbarHeight;
+
+                if (snapState === 'left') {
+                    win.style.left = '0px';
+                    win.style.top = '0px';
+                    win.style.width = `${screenW / 2}px`;
+                    win.style.height = `${screenH}px`;
+                } else if (snapState === 'right') {
+                    win.style.left = `${screenW / 2}px`;
+                    win.style.top = '0px';
+                    win.style.width = `${screenW / 2}px`;
+                    win.style.height = `${screenH}px`;
+                } else if (snapState === 'top') {
+                    win.classList.add('maximized');
+                }
+
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
         };
 
-        // Window Control Buttons
+        // Window Controls
         win.querySelector('.min-btn')?.addEventListener('click', () => minimizeWindow(winId));
         win.querySelector('.max-btn')?.addEventListener('click', () => toggleMaximizeWindow(winId));
         win.querySelector('.close-btn')?.addEventListener('click', () => closeWindow(winId));
 
-        // Click window to focus
         win.addEventListener('mousedown', () => focusWindow(winId));
     });
 
     // ==========================================================================
-    // 4. DESKTOP SHORTCUTS & SELECTION
+    // 4. DESKTOP MARQUEE SELECTION BOX
     // ==========================================================================
+    const selectionBox = document.getElementById('desktop-selection-box');
     const desktopIcons = document.querySelectorAll('.desktop-icon');
+    let isSelecting = false;
+    let selStartX, selStartY;
 
+    document.getElementById('desktop-wallpaper').addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return; // Only left click
+        isSelecting = true;
+        selStartX = e.clientX;
+        selStartY = e.clientY;
+
+        selectionBox.style.left = `${selStartX}px`;
+        selectionBox.style.top = `${selStartY}px`;
+        selectionBox.style.width = '0px';
+        selectionBox.style.height = '0px';
+        selectionBox.classList.remove('hidden');
+
+        desktopIcons.forEach(i => i.classList.remove('selected'));
+        closeAllPopovers();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isSelecting) return;
+        const currentX = e.clientX;
+        const currentY = e.clientY;
+
+        const left = Math.min(selStartX, currentX);
+        const top = Math.min(selStartY, currentY);
+        const width = Math.abs(currentX - selStartX);
+        const height = Math.abs(currentY - selStartY);
+
+        selectionBox.style.left = `${left}px`;
+        selectionBox.style.top = `${top}px`;
+        selectionBox.style.width = `${width}px`;
+        selectionBox.style.height = `${height}px`;
+
+        // Check icon intersection
+        const selRect = { left, top, right: left + width, bottom: top + height };
+        desktopIcons.forEach(icon => {
+            const rect = icon.getBoundingClientRect();
+            const intersect = !(rect.right < selRect.left || 
+                                rect.left > selRect.right || 
+                                rect.bottom < selRect.top || 
+                                rect.top > selRect.bottom);
+            icon.classList.toggle('selected', intersect);
+        });
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (isSelecting) {
+            isSelecting = false;
+            selectionBox.classList.add('hidden');
+        }
+    });
+
+    // Desktop Icon double click
     desktopIcons.forEach(icon => {
-        const winId = icon.dataset.window;
-
-        // Single click selects
         icon.addEventListener('click', (e) => {
             e.stopPropagation();
             desktopIcons.forEach(i => i.classList.remove('selected'));
             icon.classList.add('selected');
         });
-
-        // Double click opens window
         icon.addEventListener('dblclick', () => {
-            openWindow(winId);
+            openWindow(icon.dataset.window);
         });
     });
 
-    // Deselect desktop icons when clicking desktop wallpaper
-    document.getElementById('desktop-wallpaper').addEventListener('click', () => {
-        desktopIcons.forEach(i => i.classList.remove('selected'));
+    // Close all menus popovers helper
+    const closeAllPopovers = () => {
         closeStartMenu();
         closeActionCenter();
         closeContextMenu();
         closeSearchPopover();
-    });
+        document.querySelectorAll('.tray-popover').forEach(p => p.classList.add('hidden'));
+    };
 
     // ==========================================================================
     // 5. START MENU & POWER OPTIONS
@@ -306,9 +419,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const startMenu = document.getElementById('start-menu');
 
     const toggleStartMenu = () => {
-        startMenu.classList.toggle('hidden');
-        startBtn.classList.toggle('active');
-        playSound('click');
+        const isHidden = startMenu.classList.contains('hidden');
+        closeAllPopovers();
+        if (isHidden) {
+            startMenu.classList.remove('hidden');
+            startBtn.classList.add('active');
+            playSound('click');
+        }
     };
 
     const closeStartMenu = () => {
@@ -321,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toggleStartMenu();
     });
 
-    // Start Menu Items Click -> Open Window
     document.querySelectorAll('.start-app-item, .start-tile').forEach(item => {
         item.addEventListener('click', () => {
             const winId = item.dataset.window;
@@ -332,42 +448,31 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Triggers inside "About Me"
-    document.querySelector('.open-proj-trigger')?.addEventListener('click', () => openWindow('projects'));
-    document.querySelector('.open-contact-trigger')?.addEventListener('click', () => openWindow('contact'));
-
-    // Power Modal
+    // Power Options Modal
     const powerModal = document.getElementById('power-modal');
     document.getElementById('start-btn-power')?.addEventListener('click', () => {
         powerModal.classList.remove('hidden');
         closeStartMenu();
     });
 
-    document.getElementById('close-power-modal')?.addEventListener('click', () => {
-        powerModal.classList.add('hidden');
-    });
-
+    document.getElementById('close-power-modal')?.addEventListener('click', () => powerModal.classList.add('hidden'));
     document.getElementById('power-lock-btn')?.addEventListener('click', () => {
         powerModal.classList.add('hidden');
         lockScreen.classList.remove('unlocked', 'sign-in-mode');
     });
-
-    document.getElementById('power-restart-btn')?.addEventListener('click', () => {
-        location.reload();
-    });
-
+    document.getElementById('power-restart-btn')?.addEventListener('click', () => location.reload());
     document.getElementById('power-shutdown-btn')?.addEventListener('click', () => {
         document.body.innerHTML = `
             <div style="background:#000; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-family:'Segoe UI', sans-serif;">
-                <h1 style="font-size:2.5rem; margin-bottom:15px;"><i class="fa-solid fa-power-off" style="color:#0078d7;"></i> System Shut Down</h1>
+                <h1 style="font-size:2.5rem; margin-bottom:15px;"><i class="fa-solid fa-power-off" style="color:${state.accentColor};"></i> System Shut Down</h1>
                 <p style="color:#aaa; margin-bottom:25px;">Windows Portfolio OS has been shut down safely.</p>
-                <button onclick="location.reload()" style="background:#0078d7; color:#fff; border:none; padding:10px 25px; border-radius:4px; font-size:1rem; cursor:pointer;">Turn On PC</button>
+                <button onclick="location.reload()" style="background:${state.accentColor}; color:#fff; border:none; padding:10px 25px; border-radius:4px; font-size:1rem; cursor:pointer;">Turn On PC</button>
             </div>
         `;
     });
 
     // ==========================================================================
-    // 6. TASKBAR SEARCH & LIVE FILTER
+    // 6. TASKBAR SEARCH
     // ==========================================================================
     const searchInput = document.getElementById('taskbar-search-input');
     const searchPopover = document.getElementById('search-popover');
@@ -377,7 +482,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: 'About Bhavy (This PC)', icon: 'fa-desktop text-blue', winId: 'this-pc' },
         { title: 'Projects Explorer', icon: 'fa-folder-open text-gold', winId: 'projects' },
         { title: 'Technical Skills (Control Panel)', icon: 'fa-sliders text-cyan', winId: 'skills' },
-        { title: 'Experience & Career Timeline', icon: 'fa-briefcase text-purple', winId: 'experience' },
+        { title: 'VS Code Editor', icon: 'fa-code text-cyan', winId: 'vscode' },
+        { title: 'Microsoft Edge Browser', icon: 'fa-edge text-blue', winId: 'edge' },
+        { title: 'Windows Settings', icon: 'fa-gear text-cyan', winId: 'settings' },
+        { title: 'Notepad Text Editor', icon: 'fa-file-lines text-yellow', winId: 'notepad' },
+        { title: 'Calculator', icon: 'fa-calculator text-blue', winId: 'calculator' },
+        { title: 'Paint Sketch', icon: 'fa-palette text-pink', winId: 'paint' },
+        { title: 'Experience & Timeline', icon: 'fa-briefcase text-purple', winId: 'experience' },
         { title: 'Contact Me (Mail)', icon: 'fa-envelope text-blue', winId: 'contact' },
         { title: 'Resume.pdf Reader', icon: 'fa-file-pdf text-red', winId: 'resume' },
         { title: 'Command Prompt (cmd.exe)', icon: 'fa-terminal text-green', winId: 'cmd' },
@@ -385,9 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: 'Recycle Bin', icon: 'fa-trash-can text-orange', winId: 'recycle-bin' }
     ];
 
-    const closeSearchPopover = () => {
-        searchPopover.classList.add('hidden');
-    };
+    const closeSearchPopover = () => searchPopover.classList.add('hidden');
 
     searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
@@ -419,36 +528,100 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================================================
-    // 7. ACTION CENTER & SYSTEM TRAY
+    // 7. SYSTEM TRAY POPOVERS (CALENDAR, VOLUME, WIFI, BATTERY, ACTION CENTER)
     // ==========================================================================
+    const calendarPopover = document.getElementById('calendar-popover');
+    const volumePopover = document.getElementById('volume-popover');
+    const wifiPopover = document.getElementById('wifi-popover');
+    const batteryPopover = document.getElementById('battery-popover');
     const actionCenter = document.getElementById('action-center');
-    const trayActionBtn = document.getElementById('tray-action-center');
 
-    const toggleActionCenter = () => {
-        actionCenter.classList.toggle('hidden');
+    const toggleTrayPopover = (popoverEl) => {
+        const isHidden = popoverEl.classList.contains('hidden');
+        closeAllPopovers();
+        if (isHidden) popoverEl.classList.remove('hidden');
     };
 
-    const closeActionCenter = () => {
-        actionCenter.classList.add('hidden');
-    };
-
-    trayActionBtn.addEventListener('click', (e) => {
+    document.getElementById('taskbar-clock')?.addEventListener('click', (e) => {
         e.stopPropagation();
-        toggleActionCenter();
+        toggleTrayPopover(calendarPopover);
+        renderCalendarGrid();
     });
 
-    document.getElementById('toggle-wallpaper').addEventListener('click', () => {
+    document.getElementById('tray-volume')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTrayPopover(volumePopover);
+    });
+
+    document.getElementById('tray-wifi')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTrayPopover(wifiPopover);
+    });
+
+    document.getElementById('tray-battery')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTrayPopover(batteryPopover);
+    });
+
+    document.getElementById('tray-action-center')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleTrayPopover(actionCenter);
+    });
+
+    const closeActionCenter = () => actionCenter.classList.add('hidden');
+
+    // Calendar Days Generator
+    const renderCalendarGrid = () => {
+        const calGrid = document.getElementById('cal-days-grid');
+        if (!calGrid) return;
+        calGrid.innerHTML = '';
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+
+        const firstDayIndex = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+
+        // Empty cells before month start
+        for (let x = 0; x < firstDayIndex; x++) {
+            const emptyCell = document.createElement('div');
+            emptyCell.className = 'cal-day other-month';
+            emptyCell.textContent = '';
+            calGrid.appendChild(emptyCell);
+        }
+
+        // Month days
+        for (let day = 1; day <= totalDays; day++) {
+            const dayCell = document.createElement('div');
+            dayCell.className = `cal-day ${day === now.getDate() ? 'today' : ''}`;
+            dayCell.textContent = day;
+            calGrid.appendChild(dayCell);
+        }
+    };
+
+    // Volume Slider Control
+    const volumeSlider = document.getElementById('tray-volume-slider');
+    const volumePercent = document.getElementById('tray-volume-percent');
+    volumeSlider?.addEventListener('input', (e) => {
+        const val = e.target.value;
+        volumePercent.textContent = `${val}%`;
+        playSound('click');
+    });
+
+    // Action Center Quick Actions
+    document.getElementById('toggle-wallpaper')?.addEventListener('click', () => {
         state.currentWallpaperIdx = (state.currentWallpaperIdx + 1) % state.wallpapers.length;
         document.getElementById('desktop-wallpaper').style.backgroundImage = `url('${state.wallpapers[state.currentWallpaperIdx]}')`;
     });
 
-    document.getElementById('toggle-sound').addEventListener('click', (e) => {
+    document.getElementById('toggle-sound')?.addEventListener('click', (e) => {
         state.soundEnabled = !state.soundEnabled;
         e.currentTarget.classList.toggle('active', state.soundEnabled);
         e.currentTarget.querySelector('span').textContent = `Sound: ${state.soundEnabled ? 'ON' : 'OFF'}`;
     });
 
-    document.getElementById('toggle-fullscreen').addEventListener('click', () => {
+    document.getElementById('toggle-fullscreen')?.addEventListener('click', () => {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen();
         } else {
@@ -456,11 +629,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('peek-desktop').addEventListener('click', () => {
-        // Minimize all open windows
-        document.querySelectorAll('.win-window').forEach(win => {
-            win.classList.add('minimized');
-        });
+    document.getElementById('peek-desktop')?.addEventListener('click', () => {
+        document.querySelectorAll('.win-window').forEach(win => win.classList.add('minimized'));
         updateTaskbarPills();
     });
 
@@ -473,8 +643,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
-        const x = Math.min(e.clientX, window.innerWidth - 220);
-        const y = Math.min(e.clientY, window.innerHeight - 200);
+        const x = Math.min(e.clientX, window.innerWidth - 230);
+        const y = Math.min(e.clientY, window.innerHeight - 220);
         contextMenu.style.left = `${x}px`;
         contextMenu.style.top = `${y}px`;
         contextMenu.classList.remove('hidden');
@@ -482,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', closeContextMenu);
 
-    document.getElementById('ctx-refresh').addEventListener('click', () => {
+    document.getElementById('ctx-refresh')?.addEventListener('click', () => {
         desktopIcons.forEach(icon => {
             icon.style.animation = 'none';
             setTimeout(() => icon.style.animation = 'fadeInUp 0.3s ease', 10);
@@ -490,20 +660,169 @@ document.addEventListener('DOMContentLoaded', () => {
         playSound('click');
     });
 
-    document.getElementById('ctx-next-wallpaper').addEventListener('click', () => {
+    document.getElementById('ctx-next-wallpaper')?.addEventListener('click', () => {
         document.getElementById('toggle-wallpaper').click();
     });
 
-    document.getElementById('ctx-open-terminal').addEventListener('click', () => {
-        openWindow('cmd');
-    });
+    document.getElementById('ctx-open-terminal')?.addEventListener('click', () => openWindow('cmd'));
+    document.getElementById('ctx-open-vscode')?.addEventListener('click', () => openWindow('vscode'));
+    document.getElementById('ctx-personalize')?.addEventListener('click', () => openWindow('settings'));
+    document.getElementById('ctx-about-os')?.addEventListener('click', () => openWindow('this-pc'));
 
-    document.getElementById('ctx-about-os').addEventListener('click', () => {
-        openWindow('this-pc');
+    // ==========================================================================
+    // 9. VS CODE CODE VIEWER
+    // ==========================================================================
+    const loadVsCodeContent = (fileName) => {
+        const display = document.getElementById('vscode-code-display');
+        if (!display) return;
+
+        if (fileName === 'index.html') {
+            display.textContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bhavy | Windows 10 Portfolio OS</title>
+</head>
+<body>
+    <div id="desktop-shell">
+        <!-- Windows 10 Desktop Components -->
+    </div>
+</body>
+</html>`;
+        } else if (fileName === 'style.css') {
+            display.textContent = `:root {
+    --win-accent: ${state.accentColor};
+    --win-window-bg: #1f1f23;
+}
+/* Authentic Windows 10 Glassmorphic Styling */`;
+        } else if (fileName === 'script.js') {
+            display.textContent = `// Windows 10 Portfolio OS Core Logic
+const openWindow = (windowId) => { ... };
+const focusWindow = (windowId) => { ... };`;
+        } else {
+            display.textContent = `{
+  "name": "windows10-portfolio-os",
+  "version": "1.0.0",
+  "author": "Bhavy"
+}`;
+        }
+    };
+
+    document.querySelectorAll('.vscode-file-tree li').forEach(item => {
+        item.addEventListener('click', () => {
+            document.querySelectorAll('.vscode-file-tree li').forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            const fileName = item.dataset.file;
+            document.getElementById('vscode-tabs').innerHTML = `<div class="vscode-tab active">${item.innerHTML}</div>`;
+            loadVsCodeContent(fileName);
+        });
     });
 
     // ==========================================================================
-    // 9. COMMAND PROMPT (CMD.EXE) INTERACTIVE ENGINE
+    // 10. WINDOWS SETTINGS (COLOR PICKER & WALLPAPER)
+    // ==========================================================================
+    document.querySelectorAll('.color-swatch').forEach(swatch => {
+        swatch.addEventListener('click', () => {
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+            const color = swatch.dataset.color;
+            state.accentColor = color;
+            document.documentElement.style.setProperty('--win-accent', color);
+            playSound('click');
+        });
+    });
+
+    document.querySelectorAll('.wallpaper-thumb').forEach(thumb => {
+        thumb.addEventListener('click', () => {
+            document.querySelectorAll('.wallpaper-thumb').forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+            const bg = thumb.dataset.bg;
+            document.getElementById('desktop-wallpaper').style.backgroundImage = `url('${bg}')`;
+            playSound('click');
+        });
+    });
+
+    // ==========================================================================
+    // 11. CALCULATOR ENGINE
+    // ==========================================================================
+    const calcDisplay = document.getElementById('calc-display');
+    let calcExpression = '';
+
+    document.querySelectorAll('.calc-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const txt = btn.textContent;
+
+            if (txt === 'C') {
+                calcExpression = '';
+                calcDisplay.textContent = '0';
+            } else if (txt === '⌫') {
+                calcExpression = calcExpression.slice(0, -1);
+                calcDisplay.textContent = calcExpression || '0';
+            } else if (txt === '=') {
+                try {
+                    let sanitized = calcExpression.replace(/÷/g, '/').replace(/×/g, '*');
+                    let result = eval(sanitized);
+                    calcDisplay.textContent = result;
+                    calcExpression = String(result);
+                } catch (err) {
+                    calcDisplay.textContent = 'Error';
+                    calcExpression = '';
+                }
+            } else {
+                if (calcDisplay.textContent === '0' && txt !== '.') {
+                    calcExpression = txt;
+                } else {
+                    calcExpression += txt;
+                }
+                calcDisplay.textContent = calcExpression;
+            }
+            playSound('click');
+        });
+    });
+
+    // ==========================================================================
+    // 12. PAINT SKETCH ENGINE
+    // ==========================================================================
+    let paintCanvas, paintCtx, isDrawing = false;
+
+    const initPaintCanvas = () => {
+        paintCanvas = document.getElementById('paint-canvas');
+        if (!paintCanvas) return;
+        paintCtx = paintCanvas.getContext('2d');
+
+        paintCanvas.width = paintCanvas.parentElement.clientWidth;
+        paintCanvas.height = paintCanvas.parentElement.clientHeight;
+
+        paintCtx.fillStyle = '#ffffff';
+        paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+
+        paintCanvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            paintCtx.beginPath();
+            paintCtx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        paintCanvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing) return;
+            paintCtx.lineTo(e.offsetX, e.offsetY);
+            paintCtx.strokeStyle = document.getElementById('paint-color').value;
+            paintCtx.lineWidth = document.getElementById('paint-size').value;
+            paintCtx.lineCap = 'round';
+            paintCtx.stroke();
+        });
+
+        paintCanvas.addEventListener('mouseup', () => isDrawing = false);
+        paintCanvas.addEventListener('mouseleave', () => isDrawing = false);
+    };
+
+    document.getElementById('paint-clear')?.addEventListener('click', () => {
+        if (paintCtx && paintCanvas) {
+            paintCtx.fillStyle = '#ffffff';
+            paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+        }
+    });
+
+    // ==========================================================================
+    // 13. COMMAND PROMPT ENGINE
     // ==========================================================================
     const cmdInputField = document.getElementById('cmd-input-field');
     const cmdOutput = document.getElementById('cmd-output');
@@ -579,7 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================================================
-    // 10. MINESWEEPER CLASSIC GAME ENGINE
+    // 14. MINESWEEPER GAME ENGINE
     // ==========================================================================
     const msGridContainer = document.getElementById('ms-grid-container');
     const msMinesCount = document.getElementById('ms-mines-count');
@@ -587,24 +906,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const msResetBtn = document.getElementById('ms-reset-btn');
 
     let msBoard = [];
-    let msRows = 9;
-    let msCols = 9;
-    let msMinesNum = 10;
-    let msTimerInterval = null;
-    let msSeconds = 0;
-    let msGameOver = false;
+    let msRows = 9, msCols = 9, msMinesNum = 10;
+    let msTimerInterval = null, msSeconds = 0, msGameOver = false;
 
     const initMinesweeper = () => {
         clearInterval(msTimerInterval);
-        msSeconds = 0;
-        msGameOver = false;
+        msSeconds = 0; msGameOver = false;
         msTimer.textContent = '000';
         msMinesCount.textContent = '010';
         msResetBtn.textContent = '🙂';
         msGridContainer.innerHTML = '';
         msBoard = [];
 
-        // Create empty grid
         for (let r = 0; r < msRows; r++) {
             msBoard[r] = [];
             for (let c = 0; c < msCols; c++) {
@@ -612,7 +925,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Place mines randomly
         let minesPlaced = 0;
         while (minesPlaced < msMinesNum) {
             let r = Math.floor(Math.random() * msRows);
@@ -623,7 +935,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Calculate counts
         for (let r = 0; r < msRows; r++) {
             for (let c = 0; c < msCols; c++) {
                 if (msBoard[r][c].mine) continue;
@@ -640,20 +951,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Render DOM cells
         for (let r = 0; r < msRows; r++) {
             for (let c = 0; c < msCols; c++) {
                 const cell = document.createElement('div');
                 cell.className = 'ms-cell';
-                cell.dataset.row = r;
-                cell.dataset.col = c;
-
                 cell.addEventListener('click', () => revealCell(r, c));
                 cell.addEventListener('contextmenu', (e) => {
                     e.preventDefault();
                     flagCell(r, c);
                 });
-
                 msGridContainer.appendChild(cell);
             }
         }
@@ -677,14 +983,12 @@ document.addEventListener('DOMContentLoaded', () => {
         cell.classList.add('revealed');
 
         if (msBoard[r][c].mine) {
-            // Game Over
             msGameOver = true;
             clearInterval(msTimerInterval);
             cell.classList.add('mine');
             cell.textContent = '💣';
             msResetBtn.textContent = '😵';
 
-            // Reveal all mines
             for (let i = 0; i < msRows; i++) {
                 for (let j = 0; j < msCols; j++) {
                     if (msBoard[i][j].mine) {
@@ -702,7 +1006,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const colors = ['', '#0000ff', '#007b00', '#ff0000', '#00007b', '#7b0000', '#007b7b', '#000000', '#7b7b7b'];
             cell.style.color = colors[msBoard[r][c].count];
         } else {
-            // Flood fill blank cells
             for (let dr = -1; dr <= 1; dr++) {
                 for (let dc = -1; dc <= 1; dc++) {
                     let nr = r + dr, nc = c + dc;
@@ -724,23 +1027,16 @@ document.addEventListener('DOMContentLoaded', () => {
     msResetBtn?.addEventListener('click', initMinesweeper);
     initMinesweeper();
 
-    // ==========================================================================
-    // 11. RECYCLE BIN INTERACTION
-    // ==========================================================================
+    // Recycle Bin Interactions
     document.getElementById('empty-bin-btn')?.addEventListener('click', () => {
         const binArea = document.getElementById('bin-content-area');
         binArea.innerHTML = `<div style="text-align:center; padding:40px; color:#888;">Recycle Bin is empty</div>`;
-        document.querySelector('.icon-bin')?.classList.replace('fa-trash-can', 'fa-trash-can-arrow-up');
         playSound('bin');
     });
 
-    document.getElementById('restore-bin-btn')?.addEventListener('click', () => {
-        location.reload();
-    });
+    document.getElementById('restore-bin-btn')?.addEventListener('click', () => location.reload());
 
-    // ==========================================================================
-    // 12. PROJECT EXPLORER CATEGORY FILTERING
-    // ==========================================================================
+    // Project Explorer Categories
     const projectCards = document.querySelectorAll('.project-item-card');
     document.querySelectorAll('.explorer-sidebar .sidebar-menu li').forEach(item => {
         item.addEventListener('click', () => {
@@ -749,16 +1045,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const filter = item.dataset.filter;
             projectCards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+                card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'block' : 'none';
             });
         });
     });
 
-    // Contact Form submit demo
+    // Mail Send Demo
     document.getElementById('send-mail-btn')?.addEventListener('click', () => {
         const name = document.getElementById('sender-name').value;
         if (name) {

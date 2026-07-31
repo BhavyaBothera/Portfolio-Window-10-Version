@@ -35,7 +35,7 @@
                 <button id="unlock-btn" class="win-btn primary-btn">
                     <i class="fa-solid fa-lock-open"></i> Sign In to Portfolio
                 </button>
-                <p class="unlock-hint"><i class="fa-solid fa-lightbulb"></i> Or click anywhere / press any key to enter</p>
+                <p class="unlock-hint"><i class="fa-solid fa-lightbulb"></i> Click anywhere or press any key to enter</p>
             </div>
         </div>
     </div>
@@ -45,6 +45,12 @@
 
         <!-- Desktop Wallpaper -->
         <div id="desktop-wallpaper" class="desktop-wallpaper"></div>
+
+        <!-- Marquee Selection Rectangle -->
+        <div id="desktop-selection-box" class="selection-box hidden"></div>
+
+        <!-- Window Aero Snap Overlay Preview -->
+        <div id="snap-preview-box" class="snap-preview hidden"></div>
 
         <!-- Desktop Grid / Shortcuts -->
         <div id="desktop-icons" class="desktop-icons">
@@ -70,6 +76,27 @@
                 <span class="icon-label">Control Panel (Skills)</span>
             </div>
 
+            <div class="desktop-icon" data-window="vscode" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-code icon-vscode"></i>
+                </div>
+                <span class="icon-label">VS Code</span>
+            </div>
+
+            <div class="desktop-icon" data-window="edge" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-brands fa-edge icon-edge"></i>
+                </div>
+                <span class="icon-label">Microsoft Edge</span>
+            </div>
+
+            <div class="desktop-icon" data-window="settings" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-gear icon-gear"></i>
+                </div>
+                <span class="icon-label">Settings</span>
+            </div>
+
             <div class="desktop-icon" data-window="experience" tabindex="0">
                 <div class="icon-img-wrapper">
                     <i class="fa-solid fa-briefcase icon-experience"></i>
@@ -89,6 +116,27 @@
                     <i class="fa-solid fa-file-pdf icon-pdf"></i>
                 </div>
                 <span class="icon-label">Resume.pdf</span>
+            </div>
+
+            <div class="desktop-icon" data-window="notepad" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-file-lines icon-notepad"></i>
+                </div>
+                <span class="icon-label">README.txt</span>
+            </div>
+
+            <div class="desktop-icon" data-window="calculator" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-calculator icon-calc"></i>
+                </div>
+                <span class="icon-label">Calculator</span>
+            </div>
+
+            <div class="desktop-icon" data-window="paint" tabindex="0">
+                <div class="icon-img-wrapper">
+                    <i class="fa-solid fa-palette icon-paint"></i>
+                </div>
+                <span class="icon-label">Paint Sketch</span>
             </div>
 
             <div class="desktop-icon" data-window="cmd" tabindex="0">
@@ -118,7 +166,7 @@
         <div id="windows-container" class="windows-container">
 
             <!-- WINDOW 1: THIS PC / ABOUT ME -->
-            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width: 780px; height: 520px; top: 70px; left: 140px;">
+            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width: 780px; height: 520px; top: 60px; left: 120px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-desktop"></i> This PC — System Properties & About Bhavy
@@ -194,7 +242,7 @@
             </div>
 
             <!-- WINDOW 2: PROJECTS (FILE EXPLORER STYLE) -->
-            <div class="win-window hidden" id="win-projects" data-id="projects" style="width: 860px; height: 560px; top: 90px; left: 180px;">
+            <div class="win-window hidden" id="win-projects" data-id="projects" style="width: 860px; height: 560px; top: 70px; left: 160px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-folder-open"></i> File Explorer — C:\Users\Bhavy\Projects
@@ -314,7 +362,7 @@
             </div>
 
             <!-- WINDOW 3: SKILLS (CONTROL PANEL STYLE) -->
-            <div class="win-window hidden" id="win-skills" data-id="skills" style="width: 800px; height: 540px; top: 110px; left: 220px;">
+            <div class="win-window hidden" id="win-skills" data-id="skills" style="width: 800px; height: 540px; top: 90px; left: 200px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-sliders"></i> Control Panel — Skills & Technical Capabilities
@@ -420,8 +468,238 @@
                 </div>
             </div>
 
-            <!-- WINDOW 4: EXPERIENCE & TIMELINE -->
-            <div class="win-window hidden" id="win-experience" data-id="experience" style="width: 760px; height: 520px; top: 120px; left: 260px;">
+            <!-- WINDOW 4: VS CODE EDITOR APP -->
+            <div class="win-window hidden" id="win-vscode" data-id="vscode" style="width: 840px; height: 550px; top: 50px; left: 150px;">
+                <div class="win-titlebar vscode-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-code text-cyan"></i> Visual Studio Code — Portfolio Source Code
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="vscode-body">
+                    <div class="vscode-sidebar">
+                        <div class="vscode-sidebar-header">EXPLORER</div>
+                        <ul class="vscode-file-tree">
+                            <li class="active" data-file="index.html"><i class="fa-brands fa-html5 text-orange"></i> index.html</li>
+                            <li data-file="style.css"><i class="fa-brands fa-css3-alt text-blue"></i> style.css</li>
+                            <li data-file="script.js"><i class="fa-brands fa-js text-yellow"></i> script.js</li>
+                            <li data-file="package.json"><i class="fa-solid fa-gear text-green"></i> package.json</li>
+                        </ul>
+                    </div>
+                    <div class="vscode-editor-pane">
+                        <div class="vscode-tabs-bar" id="vscode-tabs">
+                            <div class="vscode-tab active"><i class="fa-brands fa-html5 text-orange"></i> index.html</div>
+                        </div>
+                        <div class="vscode-code-content scrollable" id="vscode-code-container">
+                            <pre><code id="vscode-code-display">&lt;!-- Loading source code... --&gt;</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 5: MICROSOFT EDGE BROWSER APP -->
+            <div class="win-window hidden" id="win-edge" data-id="edge" style="width: 880px; height: 560px; top: 65px; left: 170px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-brands fa-edge text-blue"></i> Microsoft Edge — Web Browser
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="edge-browser-bar">
+                    <button class="edge-nav-btn" id="edge-back"><i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="edge-nav-btn" id="edge-forward"><i class="fa-solid fa-arrow-right"></i></button>
+                    <button class="edge-nav-btn" id="edge-refresh"><i class="fa-solid fa-rotate-right"></i></button>
+                    <div class="edge-url-box">
+                        <i class="fa-solid fa-lock text-green"></i>
+                        <input type="text" id="edge-url-input" value="https://bhavy-portfolio.dev/welcome">
+                    </div>
+                    <button class="edge-go-btn" id="edge-go">Go</button>
+                </div>
+                <div class="win-body edge-viewport scrollable" id="edge-viewport-content">
+                    <div class="edge-start-page">
+                        <div class="edge-hero">
+                            <i class="fa-brands fa-edge edge-hero-logo"></i>
+                            <h1>Microsoft Edge Web Explorer</h1>
+                            <p>Explore live Web Applications, GitHub Repositories, and Portfolio Projects directly in-browser!</p>
+                            <div class="edge-bookmarks-grid">
+                                <button class="edge-bookmark-btn" data-url="https://github.com"><i class="fa-brands fa-github"></i> GitHub Profile</button>
+                                <button class="edge-bookmark-btn" data-url="https://linkedin.com"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
+                                <button class="edge-bookmark-btn" data-url="https://react.dev"><i class="fa-brands fa-react"></i> React Docs</button>
+                                <button class="edge-bookmark-btn" data-url="https://wikipedia.org"><i class="fa-solid fa-book"></i> Wikipedia</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 6: SETTINGS APP -->
+            <div class="win-window hidden" id="win-settings" data-id="settings" style="width: 760px; height: 500px; top: 80px; left: 190px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-gear"></i> Windows Settings — Personalization & Preferences
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body settings-body scrollable">
+                    <div class="settings-container">
+                        <h2>Personalization & System Themes</h2>
+                        <p class="settings-subtitle">Customize desktop background, accent colors, and audio options.</p>
+
+                        <div class="settings-section">
+                            <h3><i class="fa-solid fa-palette text-blue"></i> Choose Accent Color</h3>
+                            <div class="color-picker-grid">
+                                <button class="color-swatch active" data-color="#0078d7" style="background:#0078d7;" title="Windows Blue"></button>
+                                <button class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6;" title="Purple Reign"></button>
+                                <button class="color-swatch" data-color="#10b981" style="background:#10b981;" title="Emerald Green"></button>
+                                <button class="color-swatch" data-color="#ef4444" style="background:#ef4444;" title="Crimson Red"></button>
+                                <button class="color-swatch" data-color="#f97316" style="background:#f97316;" title="Sunset Orange"></button>
+                                <button class="color-swatch" data-color="#ec4899" style="background:#ec4899;" title="Cyber Pink"></button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3><i class="fa-solid fa-image text-purple"></i> Desktop Wallpaper Selection</h3>
+                            <div class="wallpaper-previews-grid">
+                                <div class="wallpaper-thumb active" data-bg="assets/wallpaper.png" style="background-image:url('assets/wallpaper.png');"><span>Cyber Light</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80');"><span>Neon Gradient</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');"><span>Ocean View</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80');"><span>Deep Space</span></div>
+                            </div>
+                        </div>
+
+                        <div class="settings-section">
+                            <h3><i class="fa-solid fa-sliders text-green"></i> Sound & Interaction Preferences</h3>
+                            <label class="toggle-switch-label">
+                                <input type="checkbox" id="settings-sound-toggle" checked>
+                                <span class="toggle-slider"></span>
+                                <span>Enable Windows Audio Sound Effects</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 7: NOTEPAD APP -->
+            <div class="win-window hidden" id="win-notepad" data-id="notepad" style="width: 650px; height: 450px; top: 110px; left: 210px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-file-lines text-yellow"></i> Notepad — README.txt
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="notepad-menu-bar">
+                    <span>File</span><span>Edit</span><span>Format</span><span>View</span><span>Help</span>
+                </div>
+                <div class="win-body notepad-body">
+                    <textarea id="notepad-textarea" class="notepad-textarea" spellcheck="false">WELCOME TO BHAVY'S WINDOWS 10 PORTFOLIO OS!
+==================================================
+
+Thank you for visiting my interactive portfolio desktop experience!
+
+FEATURES TO EXPLORE:
+- Double click desktop shortcuts to open windows
+- Drag, resize, minimize, maximize, and snap windows to screen edges!
+- Click the Start button or press Windows key to open Start Menu
+- Type in the taskbar search bar to quickly jump to any section
+- Open VS Code to inspect the actual source code of this portfolio
+- Open Command Prompt and type 'help' or 'matrix'
+- Play classic Minesweeper or draw artwork in MS Paint
+- Open Settings to customize accent color & wallpaper!
+
+Feel free to leave a note here or use the Contact Mail app to send me a message!
+
+— Bhavy (Software Developer)</textarea>
+                </div>
+            </div>
+
+            <!-- WINDOW 8: CALCULATOR APP -->
+            <div class="win-window hidden" id="win-calculator" data-id="calculator" style="width: 320px; height: 460px; top: 120px; left: 340px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-calculator"></i> Calculator
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body calc-body">
+                    <div class="calc-display" id="calc-display">0</div>
+                    <div class="calc-keypad">
+                        <button class="calc-btn op" id="calc-clear">C</button>
+                        <button class="calc-btn op" id="calc-back">⌫</button>
+                        <button class="calc-btn op" id="calc-percent">%</button>
+                        <button class="calc-btn op" id="calc-divide">÷</button>
+
+                        <button class="calc-btn num">7</button>
+                        <button class="calc-btn num">8</button>
+                        <button class="calc-btn num">9</button>
+                        <button class="calc-btn op" id="calc-multiply">×</button>
+
+                        <button class="calc-btn num">4</button>
+                        <button class="calc-btn num">5</button>
+                        <button class="calc-btn num">6</button>
+                        <button class="calc-btn op" id="calc-minus">-</button>
+
+                        <button class="calc-btn num">1</button>
+                        <button class="calc-btn num">2</button>
+                        <button class="calc-btn num">3</button>
+                        <button class="calc-btn op" id="calc-plus">+</button>
+
+                        <button class="calc-btn num zero">0</button>
+                        <button class="calc-btn num">.</button>
+                        <button class="calc-btn equals" id="calc-equals">=</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WINDOW 9: PAINT SKETCH APP -->
+            <div class="win-window hidden" id="win-paint" data-id="paint" style="width: 720px; height: 500px; top: 90px; left: 240px;">
+                <div class="win-titlebar">
+                    <div class="win-title">
+                        <i class="fa-solid fa-palette text-pink"></i> Paint — Untitled Drawing
+                    </div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="paint-toolbar">
+                    <div class="paint-tool-group">
+                        <label>Brush Color:</label>
+                        <input type="color" id="paint-color" value="#0078d7">
+                    </div>
+                    <div class="paint-tool-group">
+                        <label>Brush Size:</label>
+                        <input type="range" id="paint-size" min="2" max="30" value="5">
+                    </div>
+                    <button class="win-btn" id="paint-clear"><i class="fa-solid fa-eraser"></i> Clear Canvas</button>
+                </div>
+                <div class="win-body paint-body">
+                    <canvas id="paint-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- WINDOW 10: EXPERIENCE & TIMELINE -->
+            <div class="win-window hidden" id="win-experience" data-id="experience" style="width: 760px; height: 520px; top: 100px; left: 260px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-briefcase"></i> Experience & Career Timeline
@@ -477,8 +755,8 @@
                 </div>
             </div>
 
-            <!-- WINDOW 5: CONTACT ME (OUTLOOK MAIL STYLE) -->
-            <div class="win-window hidden" id="win-contact" data-id="contact" style="width: 720px; height: 530px; top: 100px; left: 300px;">
+            <!-- WINDOW 11: CONTACT ME (OUTLOOK MAIL STYLE) -->
+            <div class="win-window hidden" id="win-contact" data-id="contact" style="width: 720px; height: 530px; top: 90px; left: 280px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-envelope"></i> Windows Mail — New Message to Bhavy
@@ -531,8 +809,8 @@
                 </div>
             </div>
 
-            <!-- WINDOW 6: RESUME PDF VIEWER -->
-            <div class="win-window hidden" id="win-resume" data-id="resume" style="width: 780px; height: 560px; top: 80px; left: 200px;">
+            <!-- WINDOW 12: RESUME PDF VIEWER -->
+            <div class="win-window hidden" id="win-resume" data-id="resume" style="width: 780px; height: 560px; top: 75px; left: 200px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-file-pdf text-red"></i> PDF Reader — Bhavy_Resume.pdf
@@ -588,8 +866,8 @@
                 </div>
             </div>
 
-            <!-- WINDOW 7: COMMAND PROMPT (CMD.EXE) -->
-            <div class="win-window hidden" id="win-cmd" data-id="cmd" style="width: 720px; height: 460px; top: 130px; left: 240px;">
+            <!-- WINDOW 13: COMMAND PROMPT (CMD.EXE) -->
+            <div class="win-window hidden" id="win-cmd" data-id="cmd" style="width: 720px; height: 460px; top: 110px; left: 220px;">
                 <div class="win-titlebar cmd-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-terminal"></i> Command Prompt - bhavy@portfolio-os:~
@@ -615,8 +893,8 @@
                 </div>
             </div>
 
-            <!-- WINDOW 8: MINESWEEPER GAME -->
-            <div class="win-window hidden" id="win-minesweeper" data-id="minesweeper" style="width: 440px; height: 500px; top: 120px; left: 320px;">
+            <!-- WINDOW 14: MINESWEEPER GAME -->
+            <div class="win-window hidden" id="win-minesweeper" data-id="minesweeper" style="width: 440px; height: 500px; top: 100px; left: 300px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-bomb"></i> Minesweeper Classic
@@ -639,8 +917,8 @@
                 </div>
             </div>
 
-            <!-- WINDOW 9: RECYCLE BIN -->
-            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width: 680px; height: 440px; top: 140px; left: 280px;">
+            <!-- WINDOW 15: RECYCLE BIN -->
+            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width: 680px; height: 440px; top: 120px; left: 240px;">
                 <div class="win-titlebar">
                     <div class="win-title">
                         <i class="fa-solid fa-trash-can"></i> Recycle Bin
@@ -705,9 +983,13 @@
                 </div>
                 
                 <div class="app-letter-heading">C</div>
+                <div class="start-app-item" data-window="calculator">
+                    <i class="fa-solid fa-calculator text-blue"></i>
+                    <span>Calculator</span>
+                </div>
                 <div class="start-app-item" data-window="cmd">
                     <i class="fa-solid fa-terminal text-green"></i>
-                    <span>Command Prompt (cmd.exe)</span>
+                    <span>Command Prompt</span>
                 </div>
                 <div class="start-app-item" data-window="skills">
                     <i class="fa-solid fa-sliders text-cyan"></i>
@@ -725,12 +1007,26 @@
                 </div>
 
                 <div class="app-letter-heading">M</div>
+                <div class="start-app-item" data-window="edge">
+                    <i class="fa-brands fa-edge text-blue"></i>
+                    <span>Microsoft Edge Browser</span>
+                </div>
                 <div class="start-app-item" data-window="minesweeper">
                     <i class="fa-solid fa-bomb text-red"></i>
                     <span>Minesweeper Classic</span>
                 </div>
 
+                <div class="app-letter-heading">N</div>
+                <div class="start-app-item" data-window="notepad">
+                    <i class="fa-solid fa-file-lines text-yellow"></i>
+                    <span>Notepad</span>
+                </div>
+
                 <div class="app-letter-heading">P</div>
+                <div class="start-app-item" data-window="paint">
+                    <i class="fa-solid fa-palette text-pink"></i>
+                    <span>Paint Sketch</span>
+                </div>
                 <div class="start-app-item" data-window="projects">
                     <i class="fa-solid fa-folder-open text-gold"></i>
                     <span>Projects Explorer</span>
@@ -740,6 +1036,18 @@
                 <div class="start-app-item" data-window="resume">
                     <i class="fa-solid fa-file-pdf text-red"></i>
                     <span>Resume.pdf</span>
+                </div>
+
+                <div class="app-letter-heading">S</div>
+                <div class="start-app-item" data-window="settings">
+                    <i class="fa-solid fa-gear text-cyan"></i>
+                    <span>Settings</span>
+                </div>
+
+                <div class="app-letter-heading">V</div>
+                <div class="start-app-item" data-window="vscode">
+                    <i class="fa-solid fa-code text-cyan"></i>
+                    <span>VS Code Editor</span>
                 </div>
             </div>
 
@@ -759,13 +1067,91 @@
                         <i class="fa-solid fa-code tile-icon"></i>
                         <span class="tile-label">Skills</span>
                     </div>
-                    <div class="start-tile tile-medium tile-orange" data-window="resume">
-                        <i class="fa-solid fa-file-arrow-down tile-icon"></i>
-                        <span class="tile-label">Resume</span>
+                    <div class="start-tile tile-medium tile-orange" data-window="vscode">
+                        <i class="fa-solid fa-code tile-icon"></i>
+                        <span class="tile-label">VS Code</span>
                     </div>
-                    <div class="start-tile tile-medium tile-red" data-window="contact">
-                        <i class="fa-solid fa-paper-plane tile-icon"></i>
-                        <span class="tile-label">Contact</span>
+                    <div class="start-tile tile-medium tile-red" data-window="edge">
+                        <i class="fa-brands fa-edge tile-icon"></i>
+                        <span class="tile-label">Edge</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== TRAY POPOVERS ==================== -->
+        
+        <!-- CALENDAR & CLOCK POPOVER -->
+        <div id="calendar-popover" class="tray-popover hidden">
+            <div class="cal-header">
+                <div class="cal-current-time" id="cal-time-display">12:00:00 PM</div>
+                <div class="cal-current-date" id="cal-date-display">Friday, July 31, 2026</div>
+            </div>
+            <div class="cal-month-nav">
+                <span id="cal-month-name">July 2026</span>
+                <div class="cal-nav-btns">
+                    <button id="cal-prev-month"><i class="fa-solid fa-chevron-up"></i></button>
+                    <button id="cal-next-month"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+            </div>
+            <div class="cal-weekdays">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+            </div>
+            <div class="cal-days-grid" id="cal-days-grid">
+                <!-- Dynamically generated days -->
+            </div>
+        </div>
+
+        <!-- VOLUME SLIDER POPOVER -->
+        <div id="volume-popover" class="tray-popover small-popover hidden">
+            <div class="volume-popover-content">
+                <div class="volume-header">
+                    <i class="fa-solid fa-volume-high" id="volume-icon-pop"></i>
+                    <span>Speakers (High Definition Audio)</span>
+                </div>
+                <div class="volume-slider-row">
+                    <input type="range" id="tray-volume-slider" min="0" max="100" value="80">
+                    <span id="tray-volume-percent">80%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- WIFI NETWORKS POPOVER -->
+        <div id="wifi-popover" class="tray-popover hidden">
+            <div class="wifi-popover-header">Wi-Fi Networks</div>
+            <div class="wifi-networks-list">
+                <div class="wifi-item active">
+                    <i class="fa-solid fa-wifi text-green"></i>
+                    <div class="wifi-info">
+                        <span class="wifi-ssid">Bhavy_5G_Fiber</span>
+                        <span class="wifi-status">Connected, secured</span>
+                    </div>
+                </div>
+                <div class="wifi-item">
+                    <i class="fa-solid fa-wifi"></i>
+                    <div class="wifi-info">
+                        <span class="wifi-ssid">CyberNet_Guest</span>
+                        <span class="wifi-status">Secured</span>
+                    </div>
+                </div>
+                <div class="wifi-item">
+                    <i class="fa-solid fa-wifi"></i>
+                    <div class="wifi-info">
+                        <span class="wifi-ssid">Starlink_Node_X</span>
+                        <span class="wifi-status">Secured</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BATTERY POPOVER -->
+        <div id="battery-popover" class="tray-popover small-popover hidden">
+            <div class="battery-popover-content">
+                <div class="battery-header">
+                    <i class="fa-solid fa-battery-full text-green" style="font-size:2rem;"></i>
+                    <div>
+                        <div style="font-size:1.2rem; font-weight:600;">100% Fully Charged</div>
+                        <div style="font-size:0.8rem; color:#aaa;">Plugged in</div>
                     </div>
                 </div>
             </div>
@@ -833,7 +1219,7 @@
             <!-- Search Bar -->
             <div class="taskbar-search-container">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                <input type="text" id="taskbar-search-input" placeholder="Type here to search (e.g. Projects, Skills, Contact)..." autocomplete="off">
+                <input type="text" id="taskbar-search-input" placeholder="Type here to search (e.g. Projects, Skills, VS Code)..." autocomplete="off">
                 <!-- Search Popover -->
                 <div id="search-popover" class="search-popover hidden">
                     <div class="search-results-header">Search Results</div>
@@ -850,13 +1236,13 @@
 
             <!-- System Tray -->
             <div class="system-tray">
-                <div class="tray-icon" id="tray-wifi" title="Internet Access: Connected">
+                <div class="tray-icon" id="tray-wifi" title="Internet Access">
                     <i class="fa-solid fa-wifi"></i>
                 </div>
-                <div class="tray-icon" id="tray-volume" title="Volume: 100%">
+                <div class="tray-icon" id="tray-volume" title="Volume Control">
                     <i class="fa-solid fa-volume-high"></i>
                 </div>
-                <div class="tray-icon" id="tray-battery" title="Battery: 100% Fully Charged">
+                <div class="tray-icon" id="tray-battery" title="Battery: 100%">
                     <i class="fa-solid fa-battery-full"></i>
                 </div>
                 <div class="tray-clock" id="taskbar-clock" title="Click for Calendar">
@@ -876,6 +1262,8 @@
             <div class="context-divider"></div>
             <div class="context-item" id="ctx-next-wallpaper"><i class="fa-solid fa-image"></i> Next Wallpaper</div>
             <div class="context-item" id="ctx-open-terminal"><i class="fa-solid fa-terminal"></i> Open Command Prompt</div>
+            <div class="context-item" id="ctx-open-vscode"><i class="fa-solid fa-code text-cyan"></i> Open in VS Code</div>
+            <div class="context-item" id="ctx-personalize"><i class="fa-solid fa-palette text-purple"></i> Personalize</div>
             <div class="context-divider"></div>
             <div class="context-item" id="ctx-about-os"><i class="fa-solid fa-circle-info"></i> About Windows 10 OS</div>
         </div>
