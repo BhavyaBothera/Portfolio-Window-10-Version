@@ -406,24 +406,29 @@
     const taskbarAppsContainer = document.getElementById('taskbar-apps-container');
 
     const windowMeta = {
-        'this-pc': { icon: 'fa-solid fa-desktop', label: 'This PC' },
-        'projects': { icon: 'fa-solid fa-folder-open', label: 'Projects' },
-        'skills': { icon: 'fa-solid fa-sliders', label: 'Skills' },
-        'vscode': { icon: 'fa-solid fa-code', label: 'VS Code' },
-        'edge': { icon: 'fa-brands fa-edge', label: 'Edge' },
-        'settings': { icon: 'fa-solid fa-gear', label: 'Settings' },
-        'notepad': { icon: 'fa-solid fa-file-lines', label: 'Notepad' },
-        'calculator': { icon: 'fa-solid fa-calculator', label: 'Calculator' },
-        'paint': { icon: 'fa-solid fa-palette', label: 'Paint' },
-        'experience': { icon: 'fa-solid fa-briefcase', label: 'Experience' },
-        'contact': { icon: 'fa-solid fa-envelope', label: 'Contact' },
-        'resume': { icon: 'fa-solid fa-file-pdf', label: 'Resume' },
-        'cmd': { icon: 'fa-solid fa-terminal', label: 'CMD' },
-        'minesweeper': { icon: 'fa-solid fa-bomb', label: 'Minesweeper' },
-        'recycle-bin': { icon: 'fa-solid fa-trash-can', label: 'Recycle Bin' },
-        'cortana': { icon: 'fa-regular fa-circle', label: 'Cortana' },
-        'taskmgr': { icon: 'fa-solid fa-chart-line', label: 'Task Manager' },
+        'this-pc': { icon: 'fa-solid fa-desktop text-blue', label: 'This PC' },
+        'projects': { icon: 'fa-solid fa-folder-open text-gold', label: 'Projects' },
+        'skills': { icon: 'fa-solid fa-sliders text-cyan', label: 'Skills' },
+        'vscode': { icon: 'fa-solid fa-code text-cyan', label: 'VS Code' },
+        'edge': { icon: 'fa-brands fa-edge text-blue', label: 'Edge' },
+        'settings': { icon: 'fa-solid fa-gear text-cyan', label: 'Settings' },
+        'notepad': { icon: 'fa-solid fa-file-lines text-yellow', label: 'Notepad' },
+        'calculator': { icon: 'fa-solid fa-calculator text-blue', label: 'Calculator' },
+        'paint': { icon: 'fa-solid fa-palette text-pink', label: 'Paint' },
+        'experience': { icon: 'fa-solid fa-briefcase text-purple', label: 'Experience' },
+        'contact': { icon: 'fa-solid fa-envelope text-blue', label: 'Contact' },
+        'resume': { icon: 'fa-solid fa-file-pdf text-red', label: 'Resume' },
+        'cmd': { icon: 'fa-solid fa-terminal text-green', label: 'CMD' },
+        'minesweeper': { icon: 'fa-solid fa-bomb text-red', label: 'Minesweeper' },
+        'recycle-bin': { icon: 'fa-solid fa-trash-can text-orange', label: 'Recycle Bin' },
+        'cortana': { icon: 'fa-regular fa-circle text-cyan', label: 'Cortana' },
+        'taskmgr': { icon: 'fa-solid fa-chart-line text-green', label: 'Task Manager' },
+        'stickynotes': { icon: 'fa-solid fa-note-sticky text-yellow', label: 'Sticky Notes' },
+        'mediaplayer': { icon: 'fa-solid fa-compact-disc text-purple', label: 'Groove Music' }
     };
+
+    const previewPopover = document.getElementById('taskbar-preview-popover');
+    let previewTimeout = null;
 
     function updateTaskbarPills() {
         if (!taskbarAppsContainer) return;
@@ -435,20 +440,62 @@
             const isMinimized = winEl?.classList.contains('minimized');
             const isActive = state.activeWindow === winId && !isMinimized;
 
-            const pill = document.createElement('div');
-            pill.className = `taskbar-app-pill${isActive ? ' active' : ''}`;
-            pill.innerHTML = `<i class="${meta.icon}"></i> <span>${meta.label}</span>`;
-            pill.addEventListener('click', () => {
+            const tile = document.createElement('div');
+            tile.className = `taskbar-app-tile${isActive ? ' active' : ''}${isMinimized ? ' minimized' : ''}`;
+            tile.title = meta.label;
+            tile.innerHTML = `<i class="${meta.icon}"></i>`;
+
+            tile.addEventListener('click', () => {
                 if (isActive) {
                     minimizeWindow(winId);
                 } else {
                     openWindow(winId);
                 }
+                if (previewPopover) previewPopover.classList.add('hidden');
             });
-            taskbarAppsContainer.appendChild(pill);
+
+            // Live Thumbnail Hover Preview
+            tile.addEventListener('mouseenter', () => {
+                if (!previewPopover) return;
+                clearTimeout(previewTimeout);
+                const rect = tile.getBoundingClientRect();
+                previewPopover.style.left = `${Math.max(10, rect.left - 80)}px`;
+
+                const titleText = document.getElementById('tp-title-text');
+                if (titleText) titleText.innerHTML = `<i class="${meta.icon}"></i> ${meta.label}`;
+
+                const iconPreview = document.getElementById('tp-icon-preview');
+                if (iconPreview) iconPreview.className = meta.icon;
+
+                const closeBtn = document.getElementById('tp-close-btn');
+                if (closeBtn) {
+                    closeBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        closeWindow(winId);
+                        previewPopover.classList.add('hidden');
+                    };
+                }
+
+                previewPopover.classList.remove('hidden');
+            });
+
+            tile.addEventListener('mouseleave', () => {
+                previewTimeout = setTimeout(() => {
+                    if (previewPopover) previewPopover.classList.add('hidden');
+                }, 300);
+            });
+
+            taskbarAppsContainer.appendChild(tile);
         });
 
-        // Update task manager process list
+        // Keep preview visible when mouse is over the popover
+        if (previewPopover) {
+            previewPopover.onmouseenter = () => clearTimeout(previewTimeout);
+            previewPopover.onmouseleave = () => {
+                previewTimeout = setTimeout(() => previewPopover.classList.add('hidden'), 300);
+            };
+        }
+
         updateTaskManagerProcessList();
     }
 
