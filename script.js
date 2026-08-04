@@ -644,6 +644,12 @@
 
     startBtn?.addEventListener('click', (e) => { e.stopPropagation(); toggleStartMenu(); });
 
+    // Start rail hamburger toggle
+    document.getElementById('start-btn-hamburger')?.addEventListener('click', () => {
+        document.querySelector('.start-sidebar')?.classList.toggle('expanded');
+        playSound('click');
+    });
+
     // Start menu app items
     document.querySelectorAll('.start-app-item, .start-tile').forEach(item => {
         item.addEventListener('click', () => {

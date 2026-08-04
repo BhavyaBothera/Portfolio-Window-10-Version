@@ -976,13 +976,15 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
         <!-- ==================== START MENU ==================== -->
         <div id="start-menu" class="start-menu hidden">
             <div class="start-sidebar">
+                <button class="start-side-btn" id="start-btn-hamburger" title="START"><i class="fa-solid fa-bars"></i></button>
+                <div style="flex:1;"></div>
                 <button class="start-side-btn" id="start-btn-user" title="Bhavy Profile"><img src="assets/avatar.png" alt="Avatar" class="start-avatar"></button>
                 <button class="start-side-btn" id="start-btn-docs" title="Documents"><i class="fa-regular fa-folder"></i></button>
                 <button class="start-side-btn" id="start-btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
                 <button class="start-side-btn" id="start-btn-power" title="Power Options"><i class="fa-solid fa-power-off"></i></button>
             </div>
             <div class="start-app-list scrollable">
-                <div class="app-letter-heading">B</div>
+                <div class="app-letter-heading">#</div>
                 <div class="start-app-item" data-window="this-pc"><i class="fa-solid fa-desktop text-blue"></i><span>About Bhavy (This PC)</span></div>
                 <div class="app-letter-heading">C</div>
                 <div class="start-app-item" data-window="calculator"><i class="fa-solid fa-calculator text-blue"></i><span>Calculator</span></div>
@@ -991,6 +993,8 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 <div class="start-app-item" data-window="contact"><i class="fa-solid fa-envelope text-blue"></i><span>Contact Me (Mail)</span></div>
                 <div class="app-letter-heading">E</div>
                 <div class="start-app-item" data-window="experience"><i class="fa-solid fa-briefcase text-purple"></i><span>Experience Timeline</span></div>
+                <div class="app-letter-heading">G</div>
+                <div class="start-app-item" data-window="mediaplayer"><i class="fa-solid fa-compact-disc text-purple"></i><span>Groove Music Player</span></div>
                 <div class="app-letter-heading">M</div>
                 <div class="start-app-item" data-window="edge"><i class="fa-brands fa-edge text-blue"></i><span>Microsoft Edge Browser</span></div>
                 <div class="start-app-item" data-window="minesweeper"><i class="fa-solid fa-bomb text-red"></i><span>Minesweeper Classic</span></div>
@@ -1003,17 +1007,22 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 <div class="start-app-item" data-window="resume"><i class="fa-solid fa-file-pdf text-red"></i><span>Resume.pdf</span></div>
                 <div class="app-letter-heading">S</div>
                 <div class="start-app-item" data-window="settings"><i class="fa-solid fa-gear text-cyan"></i><span>Settings</span></div>
+                <div class="start-app-item" data-window="stickynotes"><i class="fa-solid fa-note-sticky text-yellow"></i><span>Sticky Notes</span></div>
                 <div class="app-letter-heading">V</div>
                 <div class="start-app-item" data-window="vscode"><i class="fa-solid fa-code text-cyan"></i><span>VS Code Editor</span></div>
             </div>
             <div class="start-tiles-panel scrollable">
-                <div class="tile-section-header">Pinned Shortcuts</div>
+                <div class="tile-section-header">Life at a glance</div>
                 <div class="tiles-grid">
                     <div class="start-tile tile-large tile-blue" data-window="this-pc"><i class="fa-solid fa-laptop-code tile-icon"></i><span class="tile-label">About Me</span></div>
                     <div class="start-tile tile-medium tile-purple" data-window="projects"><i class="fa-solid fa-folder-open tile-icon"></i><span class="tile-label">Projects</span></div>
                     <div class="start-tile tile-medium tile-green" data-window="skills"><i class="fa-solid fa-code tile-icon"></i><span class="tile-label">Skills</span></div>
+                </div>
+                <div class="tile-section-header" style="margin-top:20px;">Play & Explore</div>
+                <div class="tiles-grid">
                     <div class="start-tile tile-medium tile-orange" data-window="vscode"><i class="fa-solid fa-code tile-icon"></i><span class="tile-label">VS Code</span></div>
                     <div class="start-tile tile-medium tile-red" data-window="edge"><i class="fa-brands fa-edge tile-icon"></i><span class="tile-label">Edge</span></div>
+                    <div class="start-tile tile-medium tile-pink" data-window="mediaplayer"><i class="fa-solid fa-compact-disc tile-icon"></i><span class="tile-label">Groove</span></div>
                 </div>
             </div>
         </div>
@@ -1128,9 +1137,11 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
             </div>
             <div id="taskbar-apps-container" class="taskbar-apps-container"></div>
             <div class="system-tray">
+                <div class="tray-icon" id="tray-overflow" title="Show hidden icons"><i class="fa-solid fa-chevron-up"></i></div>
                 <div class="tray-icon" id="tray-wifi" title="Internet Access"><i class="fa-solid fa-wifi"></i></div>
                 <div class="tray-icon" id="tray-volume" title="Volume Control"><i class="fa-solid fa-volume-high" id="volume-icon-tray"></i></div>
                 <div class="tray-icon" id="tray-battery" title="Battery: 100%"><i class="fa-solid fa-battery-full"></i></div>
+                <div class="tray-lang" id="tray-lang" title="English (United States) Keyboard">ENG</div>
                 <div class="tray-clock" id="taskbar-clock" title="Click for Calendar">
                     <div id="tray-time">12:00 PM</div>
                     <div id="tray-date">04/08/2026</div>
