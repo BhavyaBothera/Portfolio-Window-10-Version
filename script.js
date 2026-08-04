@@ -926,9 +926,15 @@
     document.getElementById('ctx-personalize')?.addEventListener('click', () => openWindow('settings'));
     document.getElementById('ctx-about-os')?.addEventListener('click', () => openWindow('this-pc'));
 
-    // ==========================================================================
-    // 16. SETTINGS: ACCENT COLOR, WALLPAPER, SOUND (with localStorage)
-    // ==========================================================================
+    // Settings 13-category grid card clicks
+    document.querySelectorAll('.settings-category-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const section = card.dataset.section;
+            const title = card.querySelector('.settings-category-title')?.textContent || 'Settings';
+            showToast(`Windows Settings — ${title}`, `Managing ${title.toLowerCase()} preferences and options.`, 'fa-solid fa-gear', 'Settings');
+            playSound('click');
+        });
+    });
     // Load persisted accent color
     const savedAccent = localStorage.getItem('win10-accent');
     if (savedAccent) {

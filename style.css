@@ -2834,10 +2834,160 @@ body.light-mode .win-titlebar {
 .markdown-preview h2 { font-size: 1.3rem; margin-top: 15px; margin-bottom: 8px; }
 .markdown-preview ul { padding-left: 20px; margin-bottom: 15px; }
 
+/* ==========================================================================
+   PHASE 3 UPGRADES — SYSTEM APPS AUTHENTICITY OVERHAUL
+   ========================================================================== */
+
+/* --- File Explorer Ribbon Bar --- */
+.explorer-ribbon {
+    height: 32px;
+    background: #1f1f23;
+    border-bottom: 1px solid var(--win-border);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 15px;
+    font-size: 0.8rem;
+}
+
+.ribbon-tab {
+    padding: 4px 10px;
+    border-radius: 2px 2px 0 0;
+    cursor: pointer;
+    color: var(--win-text-muted);
+}
+
+.ribbon-tab.active {
+    background: var(--win-accent);
+    color: #fff;
+    font-weight: 600;
+}
+
+.explorer-statusbar {
+    height: 24px;
+    background: #19191c;
+    border-top: 1px solid var(--win-border);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 0.75rem;
+    color: var(--win-text-dim);
+    gap: 15px;
+}
+
+/* --- VS Code Activity & Status Bar --- */
+.vscode-activity-bar {
+    width: 48px;
+    background: #333333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    gap: 16px;
+    color: #858585;
+}
+
+.vscode-activity-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 4px;
+    transition: color 0.15s ease;
+}
+
+.vscode-activity-icon:hover, .vscode-activity-icon.active {
+    color: #ffffff;
+}
+
+.vscode-statusbar {
+    height: 22px;
+    background: #0078d7;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 0.75rem;
+    font-family: var(--win-mono);
+}
+
+/* --- Edge Multi-Tab Bar --- */
+.edge-tab-bar {
+    height: 36px;
+    background: #202124;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.edge-tab {
+    height: 30px;
+    padding: 0 16px;
+    background: #292a2d;
+    color: #ccc;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.edge-tab.active {
+    background: #35363a;
+    color: #fff;
+    font-weight: 500;
+}
+
+/* --- Settings 13-Category Grid --- */
+.settings-home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    padding: 20px;
+}
+
+.settings-category-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--win-border);
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.settings-category-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--win-accent);
+}
+
+.settings-category-icon {
+    font-size: 1.8rem;
+    color: var(--win-accent);
+}
+
+.settings-category-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+}
+
+.settings-category-desc {
+    font-size: 0.75rem;
+    color: var(--win-text-dim);
+}
+
 @media (max-width: 768px) {
     .taskbar-search-container { display: none; }
     .start-menu { width: 100vw; height: calc(100vh - var(--win-taskbar-height)); }
     .win-window { width: 95vw !important; left: 2.5vw !important; top: 10px !important; }
 }
+
 
 
