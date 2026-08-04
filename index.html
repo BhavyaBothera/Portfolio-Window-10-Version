@@ -16,22 +16,34 @@
 </head>
 <body>
 
+    <!-- ==================== BOOT SCREEN ==================== -->
+    <div id="boot-screen" class="boot-screen">
+        <div class="boot-content">
+            <i class="fa-brands fa-windows boot-logo"></i>
+            <div class="boot-spinner">
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+                <div class="spinner-dot"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== LOCK SCREEN ==================== -->
     <div id="lock-screen" class="lock-screen">
         <div class="lock-screen-bg"></div>
         <div class="lock-screen-content">
             <div class="lock-clock-container">
                 <div id="lock-time" class="lock-time">12:00</div>
-                <div id="lock-date" class="lock-date">Friday, July 31</div>
+                <div id="lock-date" class="lock-date">Monday, August 4</div>
             </div>
-            
             <div id="lock-login-container" class="lock-login-container">
                 <div class="user-avatar-wrapper">
                     <img src="assets/avatar.png" alt="Bhavy Profile" class="user-avatar-img">
                 </div>
                 <h2 class="user-name">Bhavy</h2>
                 <p class="user-title">Full-Stack Developer & Innovator</p>
-                
                 <button id="unlock-btn" class="win-btn primary-btn">
                     <i class="fa-solid fa-lock-open"></i> Sign In to Portfolio
                 </button>
@@ -41,355 +53,161 @@
     </div>
 
     <!-- ==================== MAIN DESKTOP SHELL ==================== -->
-    <div id="desktop-shell" class="desktop-shell hidden">
+    <div id="desktop-shell" class="desktop-shell">
 
         <!-- Desktop Wallpaper -->
         <div id="desktop-wallpaper" class="desktop-wallpaper"></div>
+        <canvas id="live-canvas-wallpaper"></canvas>
 
         <!-- Marquee Selection Rectangle -->
         <div id="desktop-selection-box" class="selection-box hidden"></div>
 
-        <!-- Window Aero Snap Overlay Preview -->
+        <!-- Window Aero Snap Overlay -->
         <div id="snap-preview-box" class="snap-preview hidden"></div>
 
-        <!-- Desktop Grid / Exact Windows 10 System Icons -->
+        <!-- ==================== DESKTOP ICONS ==================== -->
         <div id="desktop-icons" class="desktop-icons">
-            
-            <!-- Icon 1: This PC (imageres.dll, 109) -->
+
             <div class="desktop-icon" data-window="this-pc" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Monitor Frame -->
-                        <rect x="4" y="8" width="44" height="32" rx="2" fill="url(#pc-bezel)" stroke="#1a202c" stroke-width="2"/>
-                        <!-- Monitor Screen Display -->
-                        <rect x="7" y="11" width="38" height="26" fill="url(#pc-wallpaper)"/>
-                        <path d="M7 11L45 28V37H7V11Z" fill="#0078d7" opacity="0.4"/>
-                        <!-- Monitor Stand -->
-                        <path d="M22 40L18 52H34L30 40H22Z" fill="url(#pc-stand)"/>
-                        <rect x="14" y="52" width="24" height="3" rx="1" fill="#4a5568"/>
-                        <!-- PC Tower -->
-                        <rect x="46" y="16" width="14" height="39" rx="2" fill="url(#pc-tower)" stroke="#1a202c" stroke-width="1.5"/>
-                        <circle cx="53" cy="22" r="2" fill="#0078d7"/> <!-- Power LED -->
-                        <rect x="49" y="28" width="8" height="2" fill="#718096"/>
-                        <rect x="49" y="32" width="8" height="2" fill="#718096"/>
-                        <defs>
-                            <linearGradient id="pc-bezel" x1="4" y1="8" x2="48" y2="40" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#4a5568"/><stop offset="1" stop-color="#1a202c"/>
-                            </linearGradient>
-                            <linearGradient id="pc-wallpaper" x1="7" y1="11" x2="45" y2="37" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#0078d7"/><stop offset="1" stop-color="#002050"/>
-                            </linearGradient>
-                            <linearGradient id="pc-stand" x1="18" y1="40" x2="34" y2="52" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#cbd5e0"/><stop offset="1" stop-color="#718096"/>
-                            </linearGradient>
-                            <linearGradient id="pc-tower" x1="46" y1="16" x2="60" y2="55" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#2d3748"/><stop offset="1" stop-color="#0f172a"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/thispc.png" alt="This PC" draggable="false">
                 </div>
                 <span class="icon-label">This PC</span>
             </div>
 
-            <!-- Icon 2: Projects Explorer (imageres.dll, 3 - Windows 10 Manila Folder) -->
             <div class="desktop-icon" data-window="projects" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Back Folder Body -->
-                        <path d="M4 14C4 11.7909 5.79086 10 8 10H22L28 16H56C58.2091 16 60 17.7909 60 20V50C60 52.2091 58.2091 54 56 54H8C5.79086 54 4 52.2091 4 50V14Z" fill="url(#folder-back)"/>
-                        <!-- Documents Sticking Out -->
-                        <rect x="12" y="16" width="36" height="24" rx="2" fill="#ffffff" opacity="0.9"/>
-                        <!-- Front Folder Pocket -->
-                        <path d="M4 22C4 19.7909 5.79086 18 8 18H56C58.2091 18 60 19.7909 60 22V50C60 52.2091 58.2091 54 56 54H8C5.79086 54 4 52.2091 4 50V22Z" fill="url(#folder-front)"/>
-                        <path d="M4 22H60" stroke="#fef08a" stroke-width="1.5" opacity="0.6"/>
-                        <defs>
-                            <linearGradient id="folder-back" x1="4" y1="10" x2="60" y2="54" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#d97706"/><stop offset="1" stop-color="#b45309"/>
-                            </linearGradient>
-                            <linearGradient id="folder-front" x1="4" y1="18" x2="60" y2="54" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#fbbf24"/><stop offset="1" stop-color="#f59e0b"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/folder.png" alt="Projects" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Projects</span>
             </div>
 
-            <!-- Icon 3: Control Panel (shell32.dll, 22) -->
             <div class="desktop-icon" data-window="skills" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Computer & Sliders -->
-                        <rect x="6" y="8" width="52" height="40" rx="4" fill="url(#cp-bg)" stroke="#1e293b" stroke-width="2"/>
-                        <rect x="10" y="12" width="44" height="32" rx="2" fill="#0f172a"/>
-                        <!-- Sliders & Knobs -->
-                        <line x1="16" y1="20" x2="48" y2="20" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="16" y1="28" x2="48" y2="28" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
-                        <line x1="16" y1="36" x2="48" y2="36" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
-                        <circle cx="28" cy="20" r="5" fill="#0078d7" stroke="#ffffff" stroke-width="1.5"/>
-                        <circle cx="40" cy="28" r="5" fill="#10b981" stroke="#ffffff" stroke-width="1.5"/>
-                        <circle cx="22" cy="36" r="5" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5"/>
-                        <!-- Stand -->
-                        <path d="M24 48L20 56H44L40 48H24Z" fill="#64748b"/>
-                        <defs>
-                            <linearGradient id="cp-bg" x1="6" y1="8" x2="58" y2="48" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#334155"/><stop offset="1" stop-color="#1e293b"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/controlpanel.png" alt="Control Panel" draggable="false">
                 </div>
                 <span class="icon-label">Control Panel</span>
             </div>
 
-            <!-- Icon 4: VS Code (Official Visual Studio Code Logo) -->
             <div class="desktop-icon" data-window="vscode" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <path d="M46 4L58 10V54L46 60L22 42L10 51L4 47V17L10 13L22 22L46 4Z" fill="url(#vscode-blue)"/>
-                        <path d="M46 4L22 22L10 13L4 17V47L10 51L22 42L46 60V4Z" stroke="#005999" stroke-width="2"/>
-                        <path d="M46 4V60L58 54V10L46 4Z" fill="#0098ff"/>
-                        <defs>
-                            <linearGradient id="vscode-blue" x1="4" y1="4" x2="58" y2="60" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#007acc"/><stop offset="1" stop-color="#00539c"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/vscode.png" alt="VS Code" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">VS Code</span>
             </div>
 
-            <!-- Icon 5: Microsoft Edge (Official Fluent Wave Swirl) -->
             <div class="desktop-icon" data-window="edge" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <circle cx="32" cy="32" r="26" fill="url(#edge-fluid)"/>
-                        <path d="M32 12C20.9543 12 12 20.9543 12 32C12 43.0457 20.9543 52 32 52C39.5 52 46 48 49.5 41.5C45.5 43.5 41 44 36.5 42C27.5 38 25 28 32 21C35.5 17.5 41 16.5 45.5 19C49 21 52 25 52 30.5C52 41.5 41 50 30 50" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round"/>
-                        <defs>
-                            <linearGradient id="edge-fluid" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#0284c7"/>
-                                <stop offset="0.5" stop-color="#0078d7"/>
-                                <stop offset="1" stop-color="#10b981"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/edge.png" alt="Microsoft Edge" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Microsoft Edge</span>
             </div>
 
-            <!-- Icon 6: Settings (Windows 10 Fluent Metallic Gear) -->
             <div class="desktop-icon" data-window="settings" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <path d="M28 6H36L38 14L45 17L53 12L58 17L53 25L56 32L64 34V42L56 44L53 51L58 56L53 61L45 56L38 59L36 67H28L26 59L19 56L11 61L6 56L11 51L8 44L0 42V34L8 32L11 25L6 17L11 12L19 17L26 14L28 6Z" fill="url(#gear-metal)" transform="scale(0.85) translate(5, 5)"/>
-                        <circle cx="32" cy="32" r="11" fill="#0f172a"/>
-                        <circle cx="32" cy="32" r="20" stroke="#0078d7" stroke-width="4" stroke-dasharray="8 4"/>
-                        <defs>
-                            <linearGradient id="gear-metal" x1="0" y1="6" x2="64" y2="67" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#64748b"/><stop offset="1" stop-color="#334155"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/settings.png" alt="Settings" draggable="false">
                 </div>
                 <span class="icon-label">Settings</span>
             </div>
 
-            <!-- Icon 7: Experience (imageres.dll, 1022 - Leather Briefcase) -->
             <div class="desktop-icon" data-window="experience" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Briefcase Body -->
-                        <rect x="6" y="20" width="52" height="34" rx="4" fill="url(#case-leather)" stroke="#451a03" stroke-width="2"/>
-                        <!-- Handle -->
-                        <path d="M22 20V13C22 11.3431 23.3431 10 25 10H39C40.6569 10 42 11.3431 42 13V20" stroke="#b45309" stroke-width="4" stroke-linecap="round"/>
-                        <!-- Center Gold Straps & Locks -->
-                        <rect x="6" y="28" width="52" height="4" fill="#78350f"/>
-                        <rect x="18" y="26" width="6" height="8" rx="1" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
-                        <rect x="40" y="26" width="6" height="8" rx="1" fill="#fbbf24" stroke="#d97706" stroke-width="1"/>
-                        <defs>
-                            <linearGradient id="case-leather" x1="6" y1="20" x2="58" y2="54" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#92400e"/><stop offset="1" stop-color="#78350f"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/briefcase.png" alt="Experience" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Experience</span>
             </div>
 
-            <!-- Icon 8: Contact (Windows 10 Mail App) -->
             <div class="desktop-icon" data-window="contact" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <rect x="4" y="14" width="56" height="36" rx="4" fill="url(#mail-blue)"/>
-                        <path d="M4 18L32 37L60 18" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M4 48L24 31" stroke="#1d4ed8" stroke-width="2"/>
-                        <path d="M60 48L40 31" stroke="#1d4ed8" stroke-width="2"/>
-                        <defs>
-                            <linearGradient id="mail-blue" x1="4" y1="14" x2="60" y2="50" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#2563eb"/><stop offset="1" stop-color="#1d4ed8"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/mail.png" alt="Contact Me" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Contact Me</span>
             </div>
 
-            <!-- Icon 9: Resume (Official Adobe PDF Document) -->
             <div class="desktop-icon" data-window="resume" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <path d="M14 6C14 3.79086 15.7909 2 18 2H38L52 16V58C52 60.2091 50.2091 62 48 62H18C15.7909 62 14 60.2091 14 58V6Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-                        <path d="M38 2V16H52" fill="#cbd5e1"/>
-                        <rect x="8" y="32" width="48" height="20" rx="3" fill="#dc2626"/>
-                        <text x="32" y="46" fill="#ffffff" font-family="Segoe UI, sans-serif" font-weight="800" font-size="13" text-anchor="middle" letter-spacing="1">PDF</text>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/pdf.png" alt="Resume.pdf" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Resume.pdf</span>
             </div>
 
-            <!-- Icon 10: Notepad (imageres.dll, 97 - Text Document & Pencil) -->
             <div class="desktop-icon" data-window="notepad" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Paper Sheet -->
-                        <rect x="10" y="6" width="44" height="52" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-                        <rect x="10" y="6" width="44" height="10" rx="2" fill="#0078d7"/>
-                        <!-- Lined Text -->
-                        <line x1="18" y1="22" x2="46" y2="22" stroke="#94a3b8" stroke-width="2"/>
-                        <line x1="18" y1="30" x2="46" y2="30" stroke="#94a3b8" stroke-width="2"/>
-                        <line x1="18" y1="38" x2="46" y2="38" stroke="#94a3b8" stroke-width="2"/>
-                        <line x1="18" y1="46" x2="36" y2="46" stroke="#94a3b8" stroke-width="2"/>
-                        <!-- Yellow Pencil -->
-                        <path d="M44 48L56 20L50 14L38 42L44 48Z" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
-                        <path d="M38 42L36 50L44 48L38 42Z" fill="#1e293b"/>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/notepad.png" alt="README.txt" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">README.txt</span>
             </div>
 
-            <!-- Icon 11: Calculator (imageres.dll, 98) -->
             <div class="desktop-icon" data-window="calculator" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <rect x="10" y="4" width="44" height="56" rx="5" fill="url(#calc-body)" stroke="#1e293b" stroke-width="2"/>
-                        <!-- Green Display Screen -->
-                        <rect x="16" y="10" width="32" height="14" rx="2" fill="#064e3b" stroke="#047857" stroke-width="1"/>
-                        <text x="44" y="21" fill="#34d399" font-family="Fira Code, monospace" font-size="11" font-weight="700" text-anchor="end">3.14159</text>
-                        <!-- Grid Buttons -->
-                        <circle cx="20" cy="32" r="3.5" fill="#64748b"/><circle cx="32" cy="32" r="3.5" fill="#64748b"/><circle cx="44" cy="32" r="3.5" fill="#0078d7"/>
-                        <circle cx="20" cy="42" r="3.5" fill="#64748b"/><circle cx="32" cy="42" r="3.5" fill="#64748b"/><circle cx="44" cy="42" r="3.5" fill="#0078d7"/>
-                        <circle cx="20" cy="51" r="3.5" fill="#64748b"/><circle cx="32" cy="51" r="3.5" fill="#64748b"/><circle cx="44" cy="51" r="3.5" fill="#f97316"/>
-                        <defs>
-                            <linearGradient id="calc-body" x1="10" y1="4" x2="54" y2="60" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#334155"/><stop offset="1" stop-color="#1e293b"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/calculator.png" alt="Calculator" draggable="false">
                 </div>
                 <span class="icon-label">Calculator</span>
             </div>
 
-            <!-- Icon 12: Paint (imageres.dll, 68 - Artist Palette & Brush) -->
             <div class="desktop-icon" data-window="paint" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Wooden Palette -->
-                        <path d="M32 6C17.6421 6 6 17.6421 6 32C6 46.3579 17.6421 58 32 58C36.5 58 39 54.5 39 51C39 48.8 38 47.5 38 45C38 42.5 40 40 42.5 40H48C53.5228 40 58 35.5228 58 30C58 16.7452 46.3579 6 32 6Z" fill="url(#wood-pal)" stroke="#b45309" stroke-width="2"/>
-                        <!-- Paint Dabs -->
-                        <circle cx="18" cy="24" r="4.5" fill="#ef4444"/>
-                        <circle cx="28" cy="16" r="4.5" fill="#3b82f6"/>
-                        <circle cx="42" cy="20" r="4.5" fill="#10b981"/>
-                        <circle cx="50" cy="30" r="4.5" fill="#f59e0b"/>
-                        <circle cx="20" cy="44" r="5" fill="#d97706" opacity="0.4"/> <!-- Thumb hole -->
-                        <!-- Paintbrush -->
-                        <path d="M22 46L46 22L52 28L28 52L22 46Z" fill="#db2777" stroke="#be185d" stroke-width="1.5"/>
-                        <defs>
-                            <linearGradient id="wood-pal" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#fef3c7"/><stop offset="1" stop-color="#fde68a"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/paint.png" alt="Paint" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Paint</span>
             </div>
 
-            <!-- Icon 13: Command Prompt (cmd.exe Console Window) -->
             <div class="desktop-icon" data-window="cmd" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <rect x="4" y="10" width="56" height="44" rx="3" fill="#000000" stroke="#475569" stroke-width="2"/>
-                        <path d="M4 10H60V20H4V10Z" fill="#334155"/>
-                        <circle cx="10" cy="15" r="2.5" fill="#ef4444"/>
-                        <circle cx="17" cy="15" r="2.5" fill="#f59e0b"/>
-                        <circle cx="24" cy="15" r="2.5" fill="#10b981"/>
-                        <text x="10" y="36" fill="#ffffff" font-family="Fira Code, monospace" font-weight="700" font-size="13">C:\&gt;_</text>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/cmd.png" alt="Command Prompt" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Command Prompt</span>
             </div>
 
-            <!-- Icon 14: Minesweeper (Classic Spiked Mine Bomb) -->
             <div class="desktop-icon" data-window="minesweeper" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <rect x="4" y="4" width="56" height="56" rx="6" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>
-                        <circle cx="32" cy="36" r="16" fill="#000000" stroke="#475569" stroke-width="2"/>
-                        <!-- Spikes -->
-                        <line x1="32" y1="12" x2="32" y2="18" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-                        <line x1="12" y1="36" x2="18" y2="36" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-                        <line x1="46" y1="36" x2="52" y2="36" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-                        <line x1="18" y1="22" x2="23" y2="27" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-                        <line x1="41" y1="45" x2="46" y2="50" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
-                        <circle cx="26" cy="30" r="4" fill="#ffffff"/>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/minesweeper.png" alt="Minesweeper" draggable="false">
                     <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
                 </div>
                 <span class="icon-label">Minesweeper</span>
             </div>
 
-            <!-- Icon 15: Recycle Bin (imageres.dll, 54 - Translucent Bin) -->
+            <div class="desktop-icon" data-window="stickynotes" tabindex="0">
+                <div class="win-icon-wrapper">
+                    <img class="win-icon-img" src="assets/icons/notepad.png" alt="Sticky Notes" draggable="false">
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
+                </div>
+                <span class="icon-label">Sticky Notes</span>
+            </div>
+
+            <div class="desktop-icon" data-window="mediaplayer" tabindex="0">
+                <div class="win-icon-wrapper">
+                    <img class="win-icon-img" src="assets/icons/thispc.png" alt="Groove Music" draggable="false">
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
+                </div>
+                <span class="icon-label">Groove Music</span>
+            </div>
+
             <div class="desktop-icon" data-window="recycle-bin" tabindex="0">
                 <div class="win-icon-wrapper">
-                    <svg class="win-system-icon" viewBox="0 0 64 64" fill="none">
-                        <!-- Glass Bin Body -->
-                        <path d="M14 18H50L45 56C45 58.2091 43.2091 60 41 60H23C20.7909 60 19 58.2091 19 56L14 18Z" fill="url(#bin-glass-fluid)" stroke="#38bdf8" stroke-width="2"/>
-                        <!-- Top Rim -->
-                        <rect x="10" y="12" width="44" height="6" rx="2" fill="#0284c7" stroke="#38bdf8" stroke-width="1"/>
-                        <path d="M24 12V7C24 5.89543 24.8954 5 26 5H38C39.1046 5 40 5.89543 40 7V12" fill="#0369a1"/>
-                        <!-- Green Recycle Arrows -->
-                        <path d="M32 24L38 32H26L32 24Z" fill="#10b981"/>
-                        <path d="M24 38L32 44V32L24 38Z" fill="#10b981"/>
-                        <path d="M40 38L32 32V44L40 38Z" fill="#10b981"/>
-                        <defs>
-                            <linearGradient id="bin-glass-fluid" x1="14" y1="18" x2="50" y2="60" gradientUnits="userSpaceOnUse">
-                                <stop stop-color="#38bdf8" stop-opacity="0.55"/>
-                                <stop offset="1" stop-color="#0284c7" stop-opacity="0.85"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
+                    <img class="win-icon-img" src="assets/icons/recyclebin.png" alt="Recycle Bin" draggable="false">
                 </div>
                 <span class="icon-label">Recycle Bin</span>
             </div>
 
-        </div>
+        </div><!-- /desktop-icons -->
 
         <!-- ==================== WINDOWS CONTAINER ==================== -->
         <div id="windows-container" class="windows-container">
 
             <!-- WINDOW 1: THIS PC / ABOUT ME -->
-            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width: 780px; height: 520px; top: 60px; left: 120px;">
+            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width:780px;height:520px;top:60px;left:120px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-desktop"></i> This PC — System Properties & About Bhavy
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-desktop"></i> This PC — System Properties & About Bhavy</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn" title="Minimize"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn" title="Maximize"><i class="fa-regular fa-square"></i></button>
@@ -446,33 +264,52 @@
                         </div>
 
                         <div class="about-section-box">
+                            <h2><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives</h2>
+                            <div class="drives-grid">
+                                <div class="drive-card">
+                                    <i class="fa-solid fa-hard-drive text-blue drive-icon"></i>
+                                    <div class="drive-info">
+                                        <div class="drive-name">Local Disk (C:)</div>
+                                        <div class="drive-bar"><div class="drive-bar-fill" style="width:70%;background:var(--win-accent);"></div></div>
+                                        <div class="drive-space">350 GB free of 500 GB</div>
+                                    </div>
+                                </div>
+                                <div class="drive-card">
+                                    <i class="fa-solid fa-hard-drive text-purple drive-icon"></i>
+                                    <div class="drive-info">
+                                        <div class="drive-name">Data Volume (D:)</div>
+                                        <div class="drive-bar"><div class="drive-bar-fill" style="width:45%;background:#8b5cf6;"></div></div>
+                                        <div class="drive-space">55 GB free of 100 GB</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="about-section-box">
                             <h2><i class="fa-solid fa-user-astronaut"></i> Biography & Background</h2>
                             <p>Hello! I'm <strong>Bhavy</strong>, a passionate software developer who loves bridging the gap between technical engineering and aesthetic design. I specialize in building modern frontend web applications, responsive APIs, and interactive desktop-grade experiences like the one you are interacting with right now!</p>
                             <p>When I'm not writing code, you can find me exploring open-source software, diving into AI/ML tools, customizing developer productivity workflows, or gaming.</p>
                         </div>
 
                         <div class="about-action-bar">
-                            <button class="win-btn primary-btn open-proj-trigger"><i class="fa-solid fa-folder-open"></i> Explore My Projects</button>
-                            <button class="win-btn open-contact-trigger"><i class="fa-solid fa-paper-plane"></i> Get In Touch</button>
+                            <button class="win-btn primary-btn" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open"></i> Explore My Projects</button>
+                            <button class="win-btn" onclick="openWindow('contact')"><i class="fa-solid fa-paper-plane"></i> Get In Touch</button>
                             <a href="assets/avatar.png" download="Bhavy_Profile.png" class="win-btn"><i class="fa-solid fa-download"></i> Save Profile Card</a>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-this-pc -->
 
-            <!-- WINDOW 2: PROJECTS (FILE EXPLORER STYLE) -->
-            <div class="win-window hidden" id="win-projects" data-id="projects" style="width: 860px; height: 560px; top: 70px; left: 160px;">
+            <!-- WINDOW 2: PROJECTS (FILE EXPLORER) -->
+            <div class="win-window hidden" id="win-projects" data-id="projects" style="width:860px;height:560px;top:70px;left:160px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-folder-open"></i> File Explorer — C:\Users\Bhavy\Projects
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-folder-open"></i> File Explorer — C:\Users\Bhavy\Projects</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <!-- Explorer Toolbar & Address Bar -->
                 <div class="explorer-address-bar">
                     <button class="nav-arrow" disabled><i class="fa-solid fa-arrow-left"></i></button>
                     <button class="nav-arrow" disabled><i class="fa-solid fa-arrow-right"></i></button>
@@ -487,105 +324,75 @@
                     </div>
                 </div>
                 <div class="explorer-body">
-                    <!-- Explorer Sidebar -->
                     <div class="explorer-sidebar">
                         <div class="sidebar-section-title">Quick Access</div>
                         <ul class="sidebar-menu">
                             <li class="active" data-filter="all"><i class="fa-solid fa-star text-gold"></i> All Projects</li>
                             <li data-filter="web"><i class="fa-solid fa-globe text-blue"></i> Web Applications</li>
+                            <li data-filter="fullstack"><i class="fa-solid fa-layer-group text-cyan"></i> Fullstack Apps</li>
                             <li data-filter="ai"><i class="fa-solid fa-brain text-purple"></i> AI / Machine Learning</li>
                             <li data-filter="mobile"><i class="fa-solid fa-mobile-screen text-green"></i> Mobile & Tools</li>
                         </ul>
                     </div>
-                    <!-- Explorer Main Content -->
                     <div class="explorer-content scrollable">
                         <div class="projects-grid" id="projects-grid-container">
-                            <!-- Project Card 1 -->
                             <div class="project-item-card" data-category="web">
-                                <div class="proj-banner bg-gradient-1">
-                                    <i class="fa-solid fa-desktop proj-icon-overlay"></i>
-                                    <span class="proj-tag">Featured</span>
-                                </div>
+                                <div class="proj-banner bg-gradient-1"><i class="fa-solid fa-desktop proj-icon-overlay"></i><span class="proj-tag">Featured</span></div>
                                 <div class="proj-details">
                                     <h3>Windows 10 Portfolio OS</h3>
                                     <p class="proj-desc">Interactive OS-style web desktop built with HTML5, CSS3, and Vanilla JavaScript with floating window management and retro apps.</p>
-                                    <div class="proj-tech-stack">
-                                        <span>HTML5</span><span>CSS3</span><span>JS</span><span>Glassmorphic UI</span>
-                                    </div>
+                                    <div class="proj-tech-stack"><span>HTML5</span><span>CSS3</span><span>JS</span><span>Glassmorphic UI</span></div>
                                     <div class="proj-footer-links">
-                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
-                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+                                        <a href="#" class="proj-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Project Card 2 -->
                             <div class="project-item-card" data-category="ai">
-                                <div class="proj-banner bg-gradient-2">
-                                    <i class="fa-solid fa-robot proj-icon-overlay"></i>
-                                    <span class="proj-tag purple">AI Tool</span>
-                                </div>
+                                <div class="proj-banner bg-gradient-2"><i class="fa-solid fa-robot proj-icon-overlay"></i><span class="proj-tag purple">AI Tool</span></div>
                                 <div class="proj-details">
                                     <h3>AI Workspace Assistant</h3>
                                     <p class="proj-desc">Intelligent assistant suite integrating LLMs for automated code generation, document summarization, and workflow automation.</p>
-                                    <div class="proj-tech-stack">
-                                        <span>Python</span><span>FastAPI</span><span>React</span><span>OpenAI API</span>
-                                    </div>
+                                    <div class="proj-tech-stack"><span>Python</span><span>FastAPI</span><span>React</span><span>OpenAI API</span></div>
                                     <div class="proj-footer-links">
-                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
-                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Preview</a>
+                                        <a href="#" class="proj-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Preview</a>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Project Card 3 -->
                             <div class="project-item-card" data-category="web">
-                                <div class="proj-banner bg-gradient-3">
-                                    <i class="fa-solid fa-chart-line proj-icon-overlay"></i>
-                                    <span class="proj-tag green">Full Stack</span>
-                                </div>
+                                <div class="proj-banner bg-gradient-3"><i class="fa-solid fa-chart-line proj-icon-overlay"></i><span class="proj-tag green">Full Stack</span></div>
                                 <div class="proj-details">
                                     <h3>Real-Time Analytics Dashboard</h3>
                                     <p class="proj-desc">Comprehensive data visualization platform tracking system metrics, live user traffic, and server health with WebSockets.</p>
-                                    <div class="proj-tech-stack">
-                                        <span>Next.js</span><span>Tailwind</span><span>Recharts</span><span>WebSockets</span>
-                                    </div>
+                                    <div class="proj-tech-stack"><span>Next.js</span><span>Tailwind</span><span>Recharts</span><span>WebSockets</span></div>
                                     <div class="proj-footer-links">
-                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
-                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
+                                        <a href="#" class="proj-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo</a>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Project Card 4 -->
                             <div class="project-item-card" data-category="mobile">
-                                <div class="proj-banner bg-gradient-4">
-                                    <i class="fa-solid fa-gamepad proj-icon-overlay"></i>
-                                    <span class="proj-tag orange">Game/Tool</span>
-                                </div>
+                                <div class="proj-banner bg-gradient-4"><i class="fa-solid fa-gamepad proj-icon-overlay"></i><span class="proj-tag orange">Game/Tool</span></div>
                                 <div class="proj-details">
                                     <h3>Retro Arcade Engine</h3>
                                     <p class="proj-desc">Web-based classic game collection with custom physics engine, leaderboard API, and retro pixel sound effects.</p>
-                                    <div class="proj-tech-stack">
-                                        <span>JavaScript</span><span>Canvas API</span><span>Web Audio API</span>
-                                    </div>
+                                    <div class="proj-tech-stack"><span>JavaScript</span><span>Canvas API</span><span>Web Audio API</span></div>
                                     <div class="proj-footer-links">
-                                        <a href="#" class="proj-link github-link"><i class="fa-brands fa-github"></i> GitHub</a>
-                                        <a href="#" class="proj-link live-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Play Now</a>
+                                        <a href="#" class="proj-link"><i class="fa-brands fa-github"></i> GitHub</a>
+                                        <a href="#" class="proj-link"><i class="fa-solid fa-arrow-up-right-from-square"></i> Play Now</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-projects -->
 
-            <!-- WINDOW 3: SKILLS (CONTROL PANEL STYLE) -->
-            <div class="win-window hidden" id="win-skills" data-id="skills" style="width: 800px; height: 540px; top: 90px; left: 200px;">
+            <!-- WINDOW 3: SKILLS (CONTROL PANEL) -->
+            <div class="win-window hidden" id="win-skills" data-id="skills" style="width:800px;height:540px;top:90px;left:200px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-sliders"></i> Control Panel — Skills & Technical Capabilities
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-sliders"></i> Control Panel — Skills & Technical Capabilities</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -598,78 +405,24 @@
                             <h2>Technical Competencies & System Specifications</h2>
                             <p>Overview of my technical expertise, frameworks, and developer toolkits.</p>
                         </div>
-
-                        <!-- Skill Category 1 -->
                         <div class="skills-group">
                             <h3 class="group-title"><i class="fa-solid fa-code text-blue"></i> Frontend & UI Development</h3>
                             <div class="skills-grid">
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-brands fa-js text-yellow"></i> JavaScript (ES6+)</span>
-                                        <span class="skill-percent">95%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-brands fa-react text-cyan"></i> React.js / Next.js</span>
-                                        <span class="skill-percent">90%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-brands fa-html5 text-orange"></i> HTML5 / CSS3 / Sass</span>
-                                        <span class="skill-percent">98%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 98%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-solid fa-paintbrush text-purple"></i> UI/UX & Responsive Design</span>
-                                        <span class="skill-percent">92%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%;"></div></div>
-                                </div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-brands fa-js text-yellow"></i> JavaScript (ES6+)</span><span class="skill-percent">95%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:95%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-brands fa-react text-cyan"></i> React.js / Next.js</span><span class="skill-percent">90%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-brands fa-html5 text-orange"></i> HTML5 / CSS3 / Sass</span><span class="skill-percent">98%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:98%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-solid fa-paintbrush text-purple"></i> UI/UX & Responsive Design</span><span class="skill-percent">92%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:92%;"></div></div></div>
                             </div>
                         </div>
-
-                        <!-- Skill Category 2 -->
                         <div class="skills-group">
                             <h3 class="group-title"><i class="fa-solid fa-server text-green"></i> Backend & Database Systems</h3>
                             <div class="skills-grid">
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-brands fa-node text-green"></i> Node.js & Express</span>
-                                        <span class="skill-percent">88%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-brands fa-python text-blue"></i> Python & FastAPI</span>
-                                        <span class="skill-percent">85%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-solid fa-database text-cyan"></i> PostgreSQL & MongoDB</span>
-                                        <span class="skill-percent">85%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%;"></div></div>
-                                </div>
-                                <div class="skill-card">
-                                    <div class="skill-header">
-                                        <span class="skill-name"><i class="fa-solid fa-plug text-gold"></i> REST & GraphQL APIs</span>
-                                        <span class="skill-percent">90%</span>
-                                    </div>
-                                    <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%;"></div></div>
-                                </div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-brands fa-node text-green"></i> Node.js & Express</span><span class="skill-percent">88%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:88%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-brands fa-python text-blue"></i> Python & FastAPI</span><span class="skill-percent">85%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-solid fa-database text-cyan"></i> PostgreSQL & MongoDB</span><span class="skill-percent">85%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:85%;"></div></div></div>
+                                <div class="skill-card"><div class="skill-header"><span class="skill-name"><i class="fa-solid fa-plug text-gold"></i> REST & GraphQL APIs</span><span class="skill-percent">90%</span></div><div class="skill-bar-bg"><div class="skill-bar-fill" style="width:90%;"></div></div></div>
                             </div>
                         </div>
-
-                        <!-- Skill Chips -->
                         <div class="skills-chips-section">
                             <h3><i class="fa-solid fa-toolbox text-orange"></i> Developer Tools & Ecosystem</h3>
                             <div class="chips-flex">
@@ -682,17 +435,14 @@
                                 <span class="skill-chip"><i class="fa-solid fa-bolt"></i> Vite / Webpack</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-skills -->
 
-            <!-- WINDOW 4: VS CODE EDITOR APP -->
-            <div class="win-window hidden" id="win-vscode" data-id="vscode" style="width: 840px; height: 550px; top: 50px; left: 150px;">
+            <!-- WINDOW 4: VS CODE -->
+            <div class="win-window hidden" id="win-vscode" data-id="vscode" style="width:840px;height:550px;top:50px;left:150px;">
                 <div class="win-titlebar vscode-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-code text-cyan"></i> Visual Studio Code — Portfolio Source Code
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-code text-cyan"></i> Visual Studio Code — Portfolio Source Code</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -718,14 +468,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-vscode -->
 
-            <!-- WINDOW 5: MICROSOFT EDGE BROWSER APP -->
-            <div class="win-window hidden" id="win-edge" data-id="edge" style="width: 880px; height: 560px; top: 65px; left: 170px;">
+            <!-- WINDOW 5: MICROSOFT EDGE -->
+            <div class="win-window hidden" id="win-edge" data-id="edge" style="width:880px;height:560px;top:65px;left:170px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-brands fa-edge text-blue"></i> Microsoft Edge — Web Browser
-                    </div>
+                    <div class="win-title"><i class="fa-brands fa-edge text-blue"></i> Microsoft Edge — Web Browser</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -757,14 +505,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-edge -->
 
-            <!-- WINDOW 6: SETTINGS APP -->
-            <div class="win-window hidden" id="win-settings" data-id="settings" style="width: 760px; height: 500px; top: 80px; left: 190px;">
+            <!-- WINDOW 6: SETTINGS -->
+            <div class="win-window hidden" id="win-settings" data-id="settings" style="width:760px;height:500px;top:80px;left:190px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-gear"></i> Windows Settings — Personalization & Preferences
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-gear"></i> Windows Settings — Personalization & Preferences</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -775,7 +521,6 @@
                     <div class="settings-container">
                         <h2>Personalization & System Themes</h2>
                         <p class="settings-subtitle">Customize desktop background, accent colors, and audio options.</p>
-
                         <div class="settings-section">
                             <h3><i class="fa-solid fa-palette text-blue"></i> Choose Accent Color</h3>
                             <div class="color-picker-grid">
@@ -787,17 +532,15 @@
                                 <button class="color-swatch" data-color="#ec4899" style="background:#ec4899;" title="Cyber Pink"></button>
                             </div>
                         </div>
-
                         <div class="settings-section">
                             <h3><i class="fa-solid fa-image text-purple"></i> Desktop Wallpaper Selection</h3>
                             <div class="wallpaper-previews-grid">
-                                <div class="wallpaper-thumb active" data-bg="assets/wallpaper.png" style="background-image:url('assets/wallpaper.png');"><span>Cyber Light</span></div>
-                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80');"><span>Neon Gradient</span></div>
-                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');"><span>Ocean View</span></div>
-                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80');"><span>Deep Space</span></div>
+                                <div class="wallpaper-thumb active" data-bg="assets/wallpaper.png" style="background-image:url('assets/wallpaper.png');"><span>Default</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80');"><span>Neon</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80');"><span>Ocean</span></div>
+                                <div class="wallpaper-thumb" data-bg="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80" style="background-image:url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80');"><span>Space</span></div>
                             </div>
                         </div>
-
                         <div class="settings-section">
                             <h3><i class="fa-solid fa-sliders text-green"></i> Sound & Interaction Preferences</h3>
                             <label class="toggle-switch-label">
@@ -808,14 +551,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-settings -->
 
-            <!-- WINDOW 7: NOTEPAD APP -->
-            <div class="win-window hidden" id="win-notepad" data-id="notepad" style="width: 650px; height: 450px; top: 110px; left: 210px;">
+            <!-- WINDOW 7: NOTEPAD -->
+            <div class="win-window hidden" id="win-notepad" data-id="notepad" style="width:650px;height:450px;top:110px;left:210px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-file-lines text-yellow"></i> Notepad — README.txt
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-file-lines text-yellow"></i> Notepad — README.txt</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -823,7 +564,8 @@
                     </div>
                 </div>
                 <div class="notepad-menu-bar">
-                    <span>File</span><span>Edit</span><span>Format</span><span>View</span><span>Help</span>
+                    <span id="notepad-save-btn" title="Download Text File"><i class="fa-solid fa-floppy-disk text-blue"></i> Save As .txt</span>
+                    <span>Edit</span><span>Format</span><span>View</span><span>Help</span>
                 </div>
                 <div class="win-body notepad-body">
                     <textarea id="notepad-textarea" class="notepad-textarea" spellcheck="false">WELCOME TO BHAVY'S WINDOWS 10 PORTFOLIO OS!
@@ -845,14 +587,12 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
 
 — Bhavy (Software Developer)</textarea>
                 </div>
-            </div>
+            </div><!-- /win-notepad -->
 
-            <!-- WINDOW 8: CALCULATOR APP -->
-            <div class="win-window hidden" id="win-calculator" data-id="calculator" style="width: 320px; height: 460px; top: 120px; left: 340px;">
+            <!-- WINDOW 8: CALCULATOR -->
+            <div class="win-window hidden" id="win-calculator" data-id="calculator" style="width:320px;height:460px;top:120px;left:340px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-calculator"></i> Calculator
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-calculator"></i> Calculator</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -862,39 +602,33 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 <div class="win-body calc-body">
                     <div class="calc-display" id="calc-display">0</div>
                     <div class="calc-keypad">
-                        <button class="calc-btn op" id="calc-clear">C</button>
-                        <button class="calc-btn op" id="calc-back">⌫</button>
-                        <button class="calc-btn op" id="calc-percent">%</button>
-                        <button class="calc-btn op" id="calc-divide">÷</button>
-
-                        <button class="calc-btn num">7</button>
-                        <button class="calc-btn num">8</button>
-                        <button class="calc-btn num">9</button>
-                        <button class="calc-btn op" id="calc-multiply">×</button>
-
-                        <button class="calc-btn num">4</button>
-                        <button class="calc-btn num">5</button>
-                        <button class="calc-btn num">6</button>
-                        <button class="calc-btn op" id="calc-minus">-</button>
-
-                        <button class="calc-btn num">1</button>
-                        <button class="calc-btn num">2</button>
-                        <button class="calc-btn num">3</button>
-                        <button class="calc-btn op" id="calc-plus">+</button>
-
-                        <button class="calc-btn num zero">0</button>
-                        <button class="calc-btn num">.</button>
-                        <button class="calc-btn equals" id="calc-equals">=</button>
+                        <button class="calc-btn op" data-action="clear">C</button>
+                        <button class="calc-btn op" data-action="backspace">⌫</button>
+                        <button class="calc-btn op" data-action="percent">%</button>
+                        <button class="calc-btn op" data-action="op">÷</button>
+                        <button class="calc-btn num" data-val="7">7</button>
+                        <button class="calc-btn num" data-val="8">8</button>
+                        <button class="calc-btn num" data-val="9">9</button>
+                        <button class="calc-btn op" data-action="op">×</button>
+                        <button class="calc-btn num" data-val="4">4</button>
+                        <button class="calc-btn num" data-val="5">5</button>
+                        <button class="calc-btn num" data-val="6">6</button>
+                        <button class="calc-btn op" data-action="op">-</button>
+                        <button class="calc-btn num" data-val="1">1</button>
+                        <button class="calc-btn num" data-val="2">2</button>
+                        <button class="calc-btn num" data-val="3">3</button>
+                        <button class="calc-btn op" data-action="op">+</button>
+                        <button class="calc-btn num" data-val="0">0</button>
+                        <button class="calc-btn num" data-val=".">.</button>
+                        <button class="calc-btn equals" data-action="equals" style="grid-column:span 2;">=</button>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-calculator -->
 
-            <!-- WINDOW 9: PAINT SKETCH APP -->
-            <div class="win-window hidden" id="win-paint" data-id="paint" style="width: 720px; height: 500px; top: 90px; left: 240px;">
+            <!-- WINDOW 9: PAINT -->
+            <div class="win-window hidden" id="win-paint" data-id="paint" style="width:760px;height:520px;top:90px;left:240px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-palette text-pink"></i> Paint — Untitled Drawing
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-palette text-pink"></i> Paint — Untitled Drawing</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -903,26 +637,28 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 </div>
                 <div class="paint-toolbar">
                     <div class="paint-tool-group">
-                        <label>Brush Color:</label>
-                        <input type="color" id="paint-color" value="#0078d7">
+                        <button class="paint-tool-btn active" id="paint-tool-pencil" title="Freehand Brush"><i class="fa-solid fa-paintbrush"></i></button>
+                        <button class="paint-tool-btn" id="paint-tool-eraser" title="Eraser Tool"><i class="fa-solid fa-eraser"></i></button>
+                        <button class="paint-tool-btn" id="paint-tool-fill" title="Fill Bucket Tool"><i class="fa-solid fa-fill-drip"></i></button>
+                        <button class="paint-tool-btn" id="paint-tool-line" title="Line Tool"><i class="fa-solid fa-slash"></i></button>
+                        <button class="paint-tool-btn" id="paint-tool-rect" title="Rectangle Tool"><i class="fa-regular fa-square"></i></button>
+                        <button class="paint-tool-btn" id="paint-tool-circle" title="Circle Tool"><i class="fa-regular fa-circle"></i></button>
                     </div>
-                    <div class="paint-tool-group">
-                        <label>Brush Size:</label>
-                        <input type="range" id="paint-size" min="2" max="30" value="5">
-                    </div>
-                    <button class="win-btn" id="paint-clear"><i class="fa-solid fa-eraser"></i> Clear Canvas</button>
+                    <div class="paint-tool-group"><label>Color:</label><input type="color" id="paint-color" value="#0078d7"></div>
+                    <div class="paint-tool-group"><label>Size:</label><input type="range" id="paint-size" min="2" max="30" value="5"></div>
+                    <button class="win-btn" id="paint-undo" title="Undo"><i class="fa-solid fa-rotate-left"></i> Undo</button>
+                    <button class="win-btn" id="paint-clear"><i class="fa-solid fa-eraser"></i> Clear</button>
+                    <button class="win-btn primary-btn" id="paint-save-png"><i class="fa-solid fa-download"></i> Save PNG</button>
                 </div>
                 <div class="win-body paint-body">
                     <canvas id="paint-canvas"></canvas>
                 </div>
-            </div>
+            </div><!-- /win-paint -->
 
-            <!-- WINDOW 10: EXPERIENCE & TIMELINE -->
-            <div class="win-window hidden" id="win-experience" data-id="experience" style="width: 760px; height: 520px; top: 100px; left: 260px;">
+            <!-- WINDOW 10: EXPERIENCE -->
+            <div class="win-window hidden" id="win-experience" data-id="experience" style="width:760px;height:520px;top:100px;left:260px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-briefcase"></i> Experience & Career Timeline
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-briefcase"></i> Experience & Career Timeline</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -931,55 +667,41 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 </div>
                 <div class="win-body scrollable">
                     <div class="timeline-container">
-                        <div class="timeline-header">
-                            <h2>Work History & Achievements</h2>
-                            <p>A chronological record of my professional growth, software projects, and education.</p>
-                        </div>
-
+                        <div class="timeline-header"><h2>Work History & Achievements</h2><p>A chronological record of my professional growth, software projects, and education.</p></div>
                         <div class="timeline">
-                            <!-- Timeline Item 1 -->
                             <div class="timeline-item">
                                 <div class="timeline-marker"><i class="fa-solid fa-code"></i></div>
                                 <div class="timeline-content">
                                     <div class="timeline-date">2024 — PRESENT</div>
-                                    <h3>Senior Full-Stack Developer</h3>
-                                    <h4>Tech Innovations Lab</h4>
+                                    <h3>Senior Full-Stack Developer</h3><h4>Tech Innovations Lab</h4>
                                     <p>Architecting web applications with React, Next.js, and Node.js. Leading UI modernization efforts, optimizing rendering speeds by 40%, and establishing robust CI/CD pipelines.</p>
                                 </div>
                             </div>
-
-                            <!-- Timeline Item 2 -->
                             <div class="timeline-item">
                                 <div class="timeline-marker"><i class="fa-solid fa-laptop-code"></i></div>
                                 <div class="timeline-content">
                                     <div class="timeline-date">2022 — 2024</div>
-                                    <h3>Frontend Web Developer</h3>
-                                    <h4>Digital Solutions Inc.</h4>
+                                    <h3>Frontend Web Developer</h3><h4>Digital Solutions Inc.</h4>
                                     <p>Developed responsive web interfaces, reusable component libraries, and client dashboard applications. Partnered closely with UI/UX designers to translate Figma mockups into seamless code.</p>
                                 </div>
                             </div>
-
-                            <!-- Timeline Item 3 -->
                             <div class="timeline-item">
                                 <div class="timeline-marker"><i class="fa-solid fa-graduation-cap"></i></div>
                                 <div class="timeline-content">
                                     <div class="timeline-date">2019 — 2023</div>
-                                    <h3>Bachelor of Science in Computer Science</h3>
-                                    <h4>University of Technology</h4>
+                                    <h3>Bachelor of Science in Computer Science</h3><h4>University of Technology</h4>
                                     <p>Graduated with Honors. Specialized in Software Engineering, Data Structures & Algorithms, and Human-Computer Interaction (HCI).</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-experience -->
 
-            <!-- WINDOW 11: CONTACT ME (OUTLOOK MAIL STYLE) -->
-            <div class="win-window hidden" id="win-contact" data-id="contact" style="width: 720px; height: 530px; top: 90px; left: 280px;">
+            <!-- WINDOW 11: CONTACT -->
+            <div class="win-window hidden" id="win-contact" data-id="contact" style="width:720px;height:530px;top:90px;left:280px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-envelope"></i> Windows Mail — New Message to Bhavy
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-envelope"></i> Windows Mail — New Message to Bhavy</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -992,48 +714,30 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                             <button id="send-mail-btn" class="win-btn primary-btn"><i class="fa-solid fa-paper-plane"></i> Send Message</button>
                             <button class="win-btn" id="clear-mail-btn"><i class="fa-solid fa-trash-can"></i> Clear</button>
                         </div>
-                        
                         <form id="contact-form" class="mail-form" onsubmit="return false;">
-                            <div class="form-row">
-                                <label for="sender-to">To:</label>
-                                <input type="text" id="sender-to" value="Bhavy <bhavy@example.com>" disabled class="mail-input readonly">
-                            </div>
-                            <div class="form-row">
-                                <label for="sender-name">Your Name:</label>
-                                <input type="text" id="sender-name" placeholder="John Doe" required class="mail-input">
-                            </div>
-                            <div class="form-row">
-                                <label for="sender-email">Your Email:</label>
-                                <input type="email" id="sender-email" placeholder="john@example.com" required class="mail-input">
-                            </div>
-                            <div class="form-row">
-                                <label for="sender-subject">Subject:</label>
-                                <input type="text" id="sender-subject" placeholder="Project Inquiry / Job Opportunity / Hello!" required class="mail-input">
-                            </div>
-                            <div class="form-row message-row">
-                                <textarea id="sender-message" placeholder="Hi Bhavy, I checked out your portfolio desktop and would love to collaborate..." required class="mail-textarea"></textarea>
-                            </div>
+                            <div class="form-row"><label for="sender-to">To:</label><input type="text" id="sender-to" value="Bhavy <bhavy@example.com>" disabled class="mail-input readonly"></div>
+                            <div class="form-row"><label for="sender-name">Your Name:</label><input type="text" id="sender-name" placeholder="John Doe" required class="mail-input"></div>
+                            <div class="form-row"><label for="sender-email">Your Email:</label><input type="email" id="sender-email" placeholder="john@example.com" required class="mail-input"></div>
+                            <div class="form-row"><label for="sender-subject">Subject:</label><input type="text" id="sender-subject" placeholder="Project Inquiry / Job Opportunity / Hello!" required class="mail-input"></div>
+                            <div class="form-row message-row"><textarea id="sender-message" placeholder="Hi Bhavy, I checked out your portfolio desktop and would love to collaborate..." required class="mail-textarea"></textarea></div>
                         </form>
-
                         <div class="mail-social-bar">
                             <h3>Connect Directly:</h3>
                             <div class="social-buttons-grid">
-                                <a href="https://github.com" target="_blank" class="social-btn github"><i class="fa-brands fa-github"></i> GitHub</a>
-                                <a href="https://linkedin.com" target="_blank" class="social-btn linkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-                                <a href="mailto:bhavy@example.com" class="social-btn email"><i class="fa-solid fa-envelope"></i> Email Me</a>
-                                <a href="https://twitter.com" target="_blank" class="social-btn twitter"><i class="fa-brands fa-x-twitter"></i> Twitter / X</a>
+                                <a href="https://github.com" target="_blank" class="social-btn"><i class="fa-brands fa-github"></i> GitHub</a>
+                                <a href="https://linkedin.com" target="_blank" class="social-btn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                                <a href="mailto:bhavy@example.com" class="social-btn"><i class="fa-solid fa-envelope"></i> Email Me</a>
+                                <a href="https://twitter.com" target="_blank" class="social-btn"><i class="fa-brands fa-x-twitter"></i> Twitter / X</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-contact -->
 
-            <!-- WINDOW 12: RESUME PDF VIEWER -->
-            <div class="win-window hidden" id="win-resume" data-id="resume" style="width: 780px; height: 560px; top: 75px; left: 200px;">
+            <!-- WINDOW 12: RESUME PDF -->
+            <div class="win-window hidden" id="win-resume" data-id="resume" style="width:780px;height:560px;top:75px;left:200px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-file-pdf text-red"></i> PDF Reader — Bhavy_Resume.pdf
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-file-pdf text-red"></i> PDF Reader — Bhavy_Resume.pdf</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -1041,9 +745,7 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                     </div>
                 </div>
                 <div class="pdf-toolbar">
-                    <div class="pdf-page-controls">
-                        <span>Page 1 of 1</span>
-                    </div>
+                    <div class="pdf-page-controls"><span>Page 1 of 1</span></div>
                     <div class="pdf-actions">
                         <button class="win-btn" id="zoom-in-pdf"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
                         <button class="win-btn" id="zoom-out-pdf"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
@@ -1058,39 +760,18 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                             <p class="resume-contact-line">Email: bhavy@example.com | GitHub: github.com | LinkedIn: linkedin.com</p>
                         </div>
                         <hr class="resume-divider">
-                        
-                        <div class="resume-section">
-                            <h3>SUMMARY</h3>
-                            <p>Versatile Software Engineer with strong background in frontend & full-stack development, modern web standards, and UI/UX craftsmanship. Skilled at transforming complex requirements into clean, performant codebases.</p>
-                        </div>
-
-                        <div class="resume-section">
-                            <h3>TECHNICAL SKILLS</h3>
-                            <p><strong>Languages:</strong> JavaScript (ES6+), TypeScript, Python, HTML5, CSS3/Sass, SQL</p>
-                            <p><strong>Frameworks & Libraries:</strong> React.js, Next.js, Node.js, Express, FastAPI, Tailwind CSS</p>
-                            <p><strong>Tools & Platforms:</strong> Git, Docker, Webpack/Vite, Vercel, AWS, Linux, VS Code</p>
-                        </div>
-
-                        <div class="resume-section">
-                            <h3>PROJECTS & EXPERIENCE</h3>
-                            <p><strong>Windows 10 Portfolio OS:</strong> Web-based operating system shell mimicking Windows 10 with window management, custom desktop icons, and interactive apps.</p>
-                            <p><strong>AI Workspace Suite:</strong> Automated development tools powered by Large Language Models.</p>
-                        </div>
-
-                        <div class="resume-section">
-                            <h3>EDUCATION</h3>
-                            <p><strong>B.S. in Computer Science</strong> — Graduated with Honors</p>
-                        </div>
+                        <div class="resume-section"><h3>SUMMARY</h3><p>Versatile Software Engineer with strong background in frontend & full-stack development, modern web standards, and UI/UX craftsmanship. Skilled at transforming complex requirements into clean, performant codebases.</p></div>
+                        <div class="resume-section"><h3>TECHNICAL SKILLS</h3><p><strong>Languages:</strong> JavaScript (ES6+), TypeScript, Python, HTML5, CSS3/Sass, SQL</p><p><strong>Frameworks & Libraries:</strong> React.js, Next.js, Node.js, Express, FastAPI, Tailwind CSS</p><p><strong>Tools & Platforms:</strong> Git, Docker, Webpack/Vite, Vercel, AWS, Linux, VS Code</p></div>
+                        <div class="resume-section"><h3>PROJECTS & EXPERIENCE</h3><p><strong>Windows 10 Portfolio OS:</strong> Web-based operating system shell mimicking Windows 10 with window management, custom desktop icons, and interactive apps.</p><p><strong>AI Workspace Suite:</strong> Automated development tools powered by Large Language Models.</p></div>
+                        <div class="resume-section"><h3>EDUCATION</h3><p><strong>B.S. in Computer Science</strong> — Graduated with Honors</p></div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-resume -->
 
-            <!-- WINDOW 13: COMMAND PROMPT (CMD.EXE) -->
-            <div class="win-window hidden" id="win-cmd" data-id="cmd" style="width: 720px; height: 460px; top: 110px; left: 220px;">
+            <!-- WINDOW 13: COMMAND PROMPT -->
+            <div class="win-window hidden" id="win-cmd" data-id="cmd" style="width:720px;height:460px;top:110px;left:220px;">
                 <div class="win-titlebar cmd-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-terminal"></i> Command Prompt - bhavy@portfolio-os:~
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-terminal"></i> Command Prompt - bhavy@portfolio-os:~</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -1110,14 +791,12 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                         <input type="text" id="cmd-input-field" class="cmd-input" autofocus spellcheck="false" autocomplete="off">
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-cmd -->
 
-            <!-- WINDOW 14: MINESWEEPER GAME -->
-            <div class="win-window hidden" id="win-minesweeper" data-id="minesweeper" style="width: 440px; height: 500px; top: 100px; left: 300px;">
+            <!-- WINDOW 14: MINESWEEPER -->
+            <div class="win-window hidden" id="win-minesweeper" data-id="minesweeper" style="width:440px;height:500px;top:100px;left:300px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-bomb"></i> Minesweeper Classic
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-bomb"></i> Minesweeper Classic</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -1130,18 +809,14 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                         <button id="ms-reset-btn" class="ms-face-btn" title="Reset Game">🙂</button>
                         <div class="ms-counter" id="ms-timer">000</div>
                     </div>
-                    <div class="ms-grid" id="ms-grid-container">
-                        <!-- Grid dynamically rendered by JS -->
-                    </div>
+                    <div class="ms-grid" id="ms-grid-container"></div>
                 </div>
-            </div>
+            </div><!-- /win-minesweeper -->
 
             <!-- WINDOW 15: RECYCLE BIN -->
-            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width: 680px; height: 440px; top: 120px; left: 240px;">
+            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width:680px;height:440px;top:120px;left:240px;">
                 <div class="win-titlebar">
-                    <div class="win-title">
-                        <i class="fa-solid fa-trash-can"></i> Recycle Bin
-                    </div>
+                    <div class="win-title"><i class="fa-solid fa-trash-can"></i> Recycle Bin</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
@@ -1156,227 +831,233 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                     <div class="bin-content" id="bin-content-area">
                         <div class="bin-item">
                             <i class="fa-solid fa-bug text-red"></i>
-                            <div class="bin-item-info">
-                                <span class="bin-item-name">Undefined_Null_Pointer_Bug.exe</span>
-                                <span class="bin-item-meta">Deleted: Yesterday • Size: 0 KB</span>
-                            </div>
+                            <div class="bin-item-info"><span class="bin-item-name">Undefined_Null_Pointer_Bug.exe</span><span class="bin-item-meta">Deleted: Yesterday • Size: 0 KB</span></div>
                         </div>
                         <div class="bin-item">
                             <i class="fa-solid fa-file-code text-orange"></i>
-                            <div class="bin-item-info">
-                                <span class="bin-item-name">Old_Portfolio_Draft_v1.html</span>
-                                <span class="bin-item-meta">Deleted: 3 days ago • Size: 14 KB</span>
-                            </div>
+                            <div class="bin-item-info"><span class="bin-item-name">Old_Portfolio_Draft_v1.html</span><span class="bin-item-meta">Deleted: 3 days ago • Size: 14 KB</span></div>
                         </div>
                         <div class="bin-item">
                             <i class="fa-solid fa-mug-hot text-brown"></i>
-                            <div class="bin-item-info">
-                                <span class="bin-item-name">Cold_Coffee_Cups.log</span>
-                                <span class="bin-item-meta">Deleted: Today • Size: 999 MB</span>
-                            </div>
+                            <div class="bin-item-info"><span class="bin-item-name">Cold_Coffee_Cups.log</span><span class="bin-item-meta">Deleted: Today • Size: 999 MB</span></div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- /win-recycle-bin — PROPERLY CLOSED -->
 
-        </div> <!-- End Windows Container -->
+            <!-- WINDOW 16: CORTANA -->
+            <div class="win-window hidden" id="win-cortana" data-id="cortana" style="width:480px;height:580px;top:80px;left:320px;">
+                <div class="win-titlebar cortana-titlebar">
+                    <div class="win-title"><i class="fa-regular fa-circle text-cyan"></i> Cortana — Portfolio Assistant</div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body cortana-body">
+                    <div class="cortana-header">
+                        <div class="cortana-ring"><i class="fa-regular fa-circle"></i></div>
+                        <h2>Hi, I'm Cortana!</h2>
+                        <p>Ask me anything about Bhavy's skills, experience, or projects.</p>
+                    </div>
+                    <div class="cortana-quick-chips">
+                        <button class="cortana-chip" data-query="What are Bhavy's top skills?">💡 Top Skills</button>
+                        <button class="cortana-chip" data-query="Show me featured projects">📁 Featured Projects</button>
+                        <button class="cortana-chip" data-query="How can I hire Bhavy?">📧 Contact / Hire</button>
+                        <button class="cortana-chip" data-query="Download resume">📄 Resume PDF</button>
+                    </div>
+                    <div class="cortana-chat-list scrollable" id="cortana-chat-list">
+                        <div class="cortana-msg assistant">Hello! I am Bhavy's virtual OS assistant. How can I help you explore today?</div>
+                    </div>
+                    <div class="cortana-input-container">
+                        <button id="cortana-speech-toggle" class="win-btn" title="Toggle Cortana Voice Speech" style="width:36px;height:36px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-volume-high" id="cortana-speech-icon"></i></button>
+                        <button id="cortana-mic-btn" class="win-btn" title="Speak to Cortana via Microphone" style="width:36px;height:36px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-microphone"></i></button>
+                        <input type="text" id="cortana-input" placeholder="Ask Cortana or speak..." autocomplete="off">
+                        <button id="cortana-send-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div><!-- /win-cortana -->
+
+            <!-- WINDOW 17: TASK MANAGER -->
+            <div class="win-window hidden" id="win-taskmgr" data-id="taskmgr" style="width:740px;height:520px;top:90px;left:250px;">
+                <div class="win-titlebar">
+                    <div class="win-title"><i class="fa-solid fa-chart-line text-green"></i> Task Manager — System Performance</div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="taskmgr-tabs">
+                    <button class="taskmgr-tab active" data-tab="performance"><i class="fa-solid fa-microchip"></i> Performance</button>
+                    <button class="taskmgr-tab" data-tab="processes"><i class="fa-solid fa-list-check"></i> Processes</button>
+                </div>
+                <div class="win-body scrollable taskmgr-body">
+                    <div id="taskmgr-tab-performance" class="taskmgr-pane">
+                        <div class="taskmgr-graph-grid">
+                            <div class="graph-card">
+                                <div class="graph-header"><span>CPU Usage</span><span id="cpu-percent-val" class="graph-val text-cyan">18%</span></div>
+                                <canvas id="cpu-graph-canvas" height="120"></canvas>
+                                <div class="graph-footer">3.40 GHz • 8 Cores • Portfolio OS Core</div>
+                            </div>
+                            <div class="graph-card">
+                                <div class="graph-header"><span>Memory (RAM)</span><span id="ram-percent-val" class="graph-val text-purple">4.2 / 16.0 GB (26%)</span></div>
+                                <canvas id="ram-graph-canvas" height="120"></canvas>
+                                <div class="graph-footer">DDR4 3200 MHz • Smooth Web Audio Synthesizer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="taskmgr-tab-processes" class="taskmgr-pane hidden">
+                        <table class="taskmgr-table">
+                            <thead><tr><th>Name</th><th>Status</th><th>CPU</th><th>Memory</th><th>Action</th></tr></thead>
+                            <tbody id="taskmgr-process-rows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /win-taskmgr -->
+
+            <!-- WINDOW 18: STICKY NOTES -->
+            <div class="win-window sticky-note sticky-yellow hidden" id="win-stickynotes" data-id="stickynotes" style="width:280px;height:260px;top:140px;left:400px;">
+                <div class="win-titlebar">
+                    <div class="win-title"><i class="fa-solid fa-note-sticky"></i> Sticky Note</div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="sticky-color-picker">
+                    <span class="sticky-color-dot" data-color="yellow" style="background:#fde047;" title="Yellow"></span>
+                    <span class="sticky-color-dot" data-color="pink" style="background:#f472b6;" title="Pink"></span>
+                    <span class="sticky-color-dot" data-color="green" style="background:#4ade80;" title="Green"></span>
+                    <span class="sticky-color-dot" data-color="blue" style="background:#38bdf8;" title="Blue"></span>
+                </div>
+                <textarea id="sticky-note-input" class="sticky-note-textarea" placeholder="Take a quick note here... (saved automatically)"></textarea>
+            </div><!-- /win-stickynotes -->
+
+            <!-- WINDOW 19: GROOVE MEDIA PLAYER -->
+            <div class="win-window hidden" id="win-mediaplayer" data-id="mediaplayer" style="width:520px;height:480px;top:100px;left:280px;">
+                <div class="win-titlebar">
+                    <div class="win-title"><i class="fa-solid fa-compact-disc text-purple"></i> Groove Music Player</div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body mediaplayer-body">
+                    <canvas id="mediaplayer-visualizer" class="mediaplayer-visualizer"></canvas>
+                    <div class="mediaplayer-controls">
+                        <button class="mediaplayer-btn" id="mp-prev-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+                        <button class="mediaplayer-btn" id="mp-play-btn" title="Play / Pause"><i class="fa-solid fa-play" id="mp-play-icon"></i></button>
+                        <button class="mediaplayer-btn" id="mp-next-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+                    </div>
+                    <div class="track-list" id="mp-track-list">
+                        <div class="track-list-item active" data-track="0"><span>1. Synthwave Horizon</span><span>02:45</span></div>
+                        <div class="track-list-item" data-track="1"><span>2. Chill Lo-Fi Chillbeats</span><span>03:10</span></div>
+                        <div class="track-list-item" data-track="2"><span>3. Cyberpunk Retrowave</span><span>02:15</span></div>
+                    </div>
+                </div>
+            </div><!-- /win-mediaplayer -->
+
+        </div><!-- /windows-container -->
+
+        <!-- BSOD OVERLAY -->
+        <div id="bsod-overlay" class="bsod-overlay hidden">
+            <div class="bsod-sad-face">:(</div>
+            <div class="bsod-heading">Your PC ran into a problem and needs to restart. We're just collecting some error info, and then we'll restart for you.</div>
+            <div class="bsod-progress"><span id="bsod-percent">0</span>% complete</div>
+            <div class="bsod-footer">
+                <div class="bsod-qr-box"><i class="fa-solid fa-qrcode" style="font-size:4rem;color:#000;"></i></div>
+                <div><div>Stop code: CRITICAL_PROCESS_DIED</div><div>For more information about this issue and possible fixes, visit https://windows.com/stopcode</div></div>
+            </div>
+        </div>
 
         <!-- ==================== START MENU ==================== -->
         <div id="start-menu" class="start-menu hidden">
-            <!-- Start Menu Sidebar -->
             <div class="start-sidebar">
-                <button class="start-side-btn" id="start-btn-user" title="Bhavy Profile">
-                    <img src="assets/avatar.png" alt="Avatar" class="start-avatar">
-                </button>
+                <button class="start-side-btn" id="start-btn-user" title="Bhavy Profile"><img src="assets/avatar.png" alt="Avatar" class="start-avatar"></button>
                 <button class="start-side-btn" id="start-btn-docs" title="Documents"><i class="fa-regular fa-folder"></i></button>
                 <button class="start-side-btn" id="start-btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
                 <button class="start-side-btn" id="start-btn-power" title="Power Options"><i class="fa-solid fa-power-off"></i></button>
             </div>
-
-            <!-- Start Menu App List -->
             <div class="start-app-list scrollable">
                 <div class="app-letter-heading">B</div>
-                <div class="start-app-item" data-window="this-pc">
-                    <i class="fa-solid fa-desktop text-blue"></i>
-                    <span>About Bhavy (This PC)</span>
-                </div>
-                
+                <div class="start-app-item" data-window="this-pc"><i class="fa-solid fa-desktop text-blue"></i><span>About Bhavy (This PC)</span></div>
                 <div class="app-letter-heading">C</div>
-                <div class="start-app-item" data-window="calculator">
-                    <i class="fa-solid fa-calculator text-blue"></i>
-                    <span>Calculator</span>
-                </div>
-                <div class="start-app-item" data-window="cmd">
-                    <i class="fa-solid fa-terminal text-green"></i>
-                    <span>Command Prompt</span>
-                </div>
-                <div class="start-app-item" data-window="skills">
-                    <i class="fa-solid fa-sliders text-cyan"></i>
-                    <span>Control Panel (Skills)</span>
-                </div>
-                <div class="start-app-item" data-window="contact">
-                    <i class="fa-solid fa-envelope text-blue"></i>
-                    <span>Contact Me (Mail)</span>
-                </div>
-
+                <div class="start-app-item" data-window="calculator"><i class="fa-solid fa-calculator text-blue"></i><span>Calculator</span></div>
+                <div class="start-app-item" data-window="cmd"><i class="fa-solid fa-terminal text-green"></i><span>Command Prompt</span></div>
+                <div class="start-app-item" data-window="skills"><i class="fa-solid fa-sliders text-cyan"></i><span>Control Panel (Skills)</span></div>
+                <div class="start-app-item" data-window="contact"><i class="fa-solid fa-envelope text-blue"></i><span>Contact Me (Mail)</span></div>
                 <div class="app-letter-heading">E</div>
-                <div class="start-app-item" data-window="experience">
-                    <i class="fa-solid fa-briefcase text-purple"></i>
-                    <span>Experience Timeline</span>
-                </div>
-
+                <div class="start-app-item" data-window="experience"><i class="fa-solid fa-briefcase text-purple"></i><span>Experience Timeline</span></div>
                 <div class="app-letter-heading">M</div>
-                <div class="start-app-item" data-window="edge">
-                    <i class="fa-brands fa-edge text-blue"></i>
-                    <span>Microsoft Edge Browser</span>
-                </div>
-                <div class="start-app-item" data-window="minesweeper">
-                    <i class="fa-solid fa-bomb text-red"></i>
-                    <span>Minesweeper Classic</span>
-                </div>
-
+                <div class="start-app-item" data-window="edge"><i class="fa-brands fa-edge text-blue"></i><span>Microsoft Edge Browser</span></div>
+                <div class="start-app-item" data-window="minesweeper"><i class="fa-solid fa-bomb text-red"></i><span>Minesweeper Classic</span></div>
                 <div class="app-letter-heading">N</div>
-                <div class="start-app-item" data-window="notepad">
-                    <i class="fa-solid fa-file-lines text-yellow"></i>
-                    <span>Notepad</span>
-                </div>
-
+                <div class="start-app-item" data-window="notepad"><i class="fa-solid fa-file-lines text-yellow"></i><span>Notepad</span></div>
                 <div class="app-letter-heading">P</div>
-                <div class="start-app-item" data-window="paint">
-                    <i class="fa-solid fa-palette text-pink"></i>
-                    <span>Paint Sketch</span>
-                </div>
-                <div class="start-app-item" data-window="projects">
-                    <i class="fa-solid fa-folder-open text-gold"></i>
-                    <span>Projects Explorer</span>
-                </div>
-
+                <div class="start-app-item" data-window="paint"><i class="fa-solid fa-palette text-pink"></i><span>Paint Sketch</span></div>
+                <div class="start-app-item" data-window="projects"><i class="fa-solid fa-folder-open text-gold"></i><span>Projects Explorer</span></div>
                 <div class="app-letter-heading">R</div>
-                <div class="start-app-item" data-window="resume">
-                    <i class="fa-solid fa-file-pdf text-red"></i>
-                    <span>Resume.pdf</span>
-                </div>
-
+                <div class="start-app-item" data-window="resume"><i class="fa-solid fa-file-pdf text-red"></i><span>Resume.pdf</span></div>
                 <div class="app-letter-heading">S</div>
-                <div class="start-app-item" data-window="settings">
-                    <i class="fa-solid fa-gear text-cyan"></i>
-                    <span>Settings</span>
-                </div>
-
+                <div class="start-app-item" data-window="settings"><i class="fa-solid fa-gear text-cyan"></i><span>Settings</span></div>
                 <div class="app-letter-heading">V</div>
-                <div class="start-app-item" data-window="vscode">
-                    <i class="fa-solid fa-code text-cyan"></i>
-                    <span>VS Code Editor</span>
-                </div>
+                <div class="start-app-item" data-window="vscode"><i class="fa-solid fa-code text-cyan"></i><span>VS Code Editor</span></div>
             </div>
-
-            <!-- Start Menu Tiles -->
             <div class="start-tiles-panel scrollable">
                 <div class="tile-section-header">Pinned Shortcuts</div>
                 <div class="tiles-grid">
-                    <div class="start-tile tile-large tile-blue" data-window="this-pc">
-                        <i class="fa-solid fa-laptop-code tile-icon"></i>
-                        <span class="tile-label">About Me</span>
-                    </div>
-                    <div class="start-tile tile-medium tile-purple" data-window="projects">
-                        <i class="fa-solid fa-folder-open tile-icon"></i>
-                        <span class="tile-label">Projects</span>
-                    </div>
-                    <div class="start-tile tile-medium tile-green" data-window="skills">
-                        <i class="fa-solid fa-code tile-icon"></i>
-                        <span class="tile-label">Skills</span>
-                    </div>
-                    <div class="start-tile tile-medium tile-orange" data-window="vscode">
-                        <i class="fa-solid fa-code tile-icon"></i>
-                        <span class="tile-label">VS Code</span>
-                    </div>
-                    <div class="start-tile tile-medium tile-red" data-window="edge">
-                        <i class="fa-brands fa-edge tile-icon"></i>
-                        <span class="tile-label">Edge</span>
-                    </div>
+                    <div class="start-tile tile-large tile-blue" data-window="this-pc"><i class="fa-solid fa-laptop-code tile-icon"></i><span class="tile-label">About Me</span></div>
+                    <div class="start-tile tile-medium tile-purple" data-window="projects"><i class="fa-solid fa-folder-open tile-icon"></i><span class="tile-label">Projects</span></div>
+                    <div class="start-tile tile-medium tile-green" data-window="skills"><i class="fa-solid fa-code tile-icon"></i><span class="tile-label">Skills</span></div>
+                    <div class="start-tile tile-medium tile-orange" data-window="vscode"><i class="fa-solid fa-code tile-icon"></i><span class="tile-label">VS Code</span></div>
+                    <div class="start-tile tile-medium tile-red" data-window="edge"><i class="fa-brands fa-edge tile-icon"></i><span class="tile-label">Edge</span></div>
                 </div>
             </div>
         </div>
 
         <!-- ==================== TRAY POPOVERS ==================== -->
-        
-        <!-- CALENDAR & CLOCK POPOVER -->
         <div id="calendar-popover" class="tray-popover hidden">
             <div class="cal-header">
                 <div class="cal-current-time" id="cal-time-display">12:00:00 PM</div>
-                <div class="cal-current-date" id="cal-date-display">Friday, July 31, 2026</div>
+                <div class="cal-current-date" id="cal-date-display">Monday, August 4, 2026</div>
             </div>
             <div class="cal-month-nav">
-                <span id="cal-month-name">July 2026</span>
-                <div class="cal-nav-btns">
-                    <button id="cal-prev-month"><i class="fa-solid fa-chevron-up"></i></button>
-                    <button id="cal-next-month"><i class="fa-solid fa-chevron-down"></i></button>
-                </div>
+                <span id="cal-month-name">August 2026</span>
+                <div class="cal-nav-btns"><button id="cal-prev-month"><i class="fa-solid fa-chevron-up"></i></button><button id="cal-next-month"><i class="fa-solid fa-chevron-down"></i></button></div>
             </div>
-            <div class="cal-weekdays">
-                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-            </div>
-            <div class="cal-days-grid" id="cal-days-grid">
-                <!-- Dynamically generated days -->
-            </div>
+            <div class="cal-weekdays"><span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span></div>
+            <div class="cal-days-grid" id="cal-days-grid"></div>
         </div>
 
-        <!-- VOLUME SLIDER POPOVER -->
         <div id="volume-popover" class="tray-popover small-popover hidden">
             <div class="volume-popover-content">
-                <div class="volume-header">
-                    <i class="fa-solid fa-volume-high" id="volume-icon-pop"></i>
-                    <span>Speakers (High Definition Audio)</span>
-                </div>
-                <div class="volume-slider-row">
-                    <input type="range" id="tray-volume-slider" min="0" max="100" value="80">
-                    <span id="tray-volume-percent">80%</span>
-                </div>
+                <div class="volume-header"><i class="fa-solid fa-volume-high" id="volume-icon-pop"></i><span>Speakers (High Definition Audio)</span></div>
+                <div class="volume-slider-row"><input type="range" id="tray-volume-slider" min="0" max="100" value="80"><span id="tray-volume-percent">80%</span></div>
             </div>
         </div>
 
-        <!-- WIFI NETWORKS POPOVER -->
         <div id="wifi-popover" class="tray-popover hidden">
             <div class="wifi-popover-header">Wi-Fi Networks</div>
             <div class="wifi-networks-list">
-                <div class="wifi-item active">
-                    <i class="fa-solid fa-wifi text-green"></i>
-                    <div class="wifi-info">
-                        <span class="wifi-ssid">Bhavy_5G_Fiber</span>
-                        <span class="wifi-status">Connected, secured</span>
-                    </div>
-                </div>
-                <div class="wifi-item">
-                    <i class="fa-solid fa-wifi"></i>
-                    <div class="wifi-info">
-                        <span class="wifi-ssid">CyberNet_Guest</span>
-                        <span class="wifi-status">Secured</span>
-                    </div>
-                </div>
-                <div class="wifi-item">
-                    <i class="fa-solid fa-wifi"></i>
-                    <div class="wifi-info">
-                        <span class="wifi-ssid">Starlink_Node_X</span>
-                        <span class="wifi-status">Secured</span>
-                    </div>
-                </div>
+                <div class="wifi-item active"><i class="fa-solid fa-wifi text-green"></i><div class="wifi-info"><span class="wifi-ssid">Bhavy_5G_Fiber</span><span class="wifi-status">Connected, secured</span></div></div>
+                <div class="wifi-item"><i class="fa-solid fa-wifi"></i><div class="wifi-info"><span class="wifi-ssid">CyberNet_Guest</span><span class="wifi-status">Secured</span></div></div>
+                <div class="wifi-item"><i class="fa-solid fa-wifi"></i><div class="wifi-info"><span class="wifi-ssid">Starlink_Node_X</span><span class="wifi-status">Secured</span></div></div>
             </div>
         </div>
 
-        <!-- BATTERY POPOVER -->
         <div id="battery-popover" class="tray-popover small-popover hidden">
             <div class="battery-popover-content">
                 <div class="battery-header">
                     <i class="fa-solid fa-battery-full text-green" style="font-size:2rem;"></i>
-                    <div>
-                        <div style="font-size:1.2rem; font-weight:600;">100% Fully Charged</div>
-                        <div style="font-size:0.8rem; color:#aaa;">Plugged in</div>
-                    </div>
+                    <div><div style="font-size:1.2rem;font-weight:600;">100% Fully Charged</div><div style="font-size:0.8rem;color:#aaa;">Plugged in</div></div>
                 </div>
             </div>
         </div>
 
-        <!-- ==================== POWER OPTIONS MODAL ==================== -->
+        <!-- ==================== POWER MODAL ==================== -->
         <div id="power-modal" class="power-modal hidden">
             <div class="power-modal-card">
                 <i class="fa-solid fa-power-off power-icon"></i>
@@ -1391,91 +1072,64 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
             </div>
         </div>
 
-        <!-- ==================== ACTION CENTER / NOTIFICATION PANEL ==================== -->
+        <!-- ==================== ACTION CENTER ==================== -->
         <div id="action-center" class="action-center hidden">
-            <div class="action-center-header">
-                <h3>Notifications</h3>
-                <button id="clear-notifications" class="clear-btn">Clear all</button>
-            </div>
+            <div class="action-center-header"><h3>Notifications</h3><button id="clear-notifications" class="clear-btn">Clear all</button></div>
             <div class="notifications-list">
                 <div class="notification-card">
-                    <div class="notif-header">
-                        <i class="fa-solid fa-laptop-code text-blue"></i>
-                        <span>Windows Portfolio OS</span>
-                        <span class="notif-time">Just now</span>
-                    </div>
+                    <div class="notif-header"><i class="fa-solid fa-laptop-code text-blue"></i><span>Windows Portfolio OS</span><span class="notif-time">Just now</span></div>
                     <div class="notif-title">Welcome to Bhavy's Portfolio!</div>
                     <div class="notif-body">Double click desktop icons or search from the taskbar to explore projects, skills, and interactive apps.</div>
                 </div>
             </div>
             <div class="quick-actions-grid">
-                <div class="quick-action-tile active" id="toggle-dark-mode">
-                    <i class="fa-solid fa-moon"></i>
-                    <span>Dark Mode</span>
-                </div>
-                <div class="quick-action-tile" id="toggle-wallpaper">
-                    <i class="fa-solid fa-image"></i>
-                    <span>Wallpaper</span>
-                </div>
-                <div class="quick-action-tile active" id="toggle-sound">
-                    <i class="fa-solid fa-volume-high"></i>
-                    <span>Sound: ON</span>
-                </div>
-                <div class="quick-action-tile" id="toggle-fullscreen">
-                    <i class="fa-solid fa-expand"></i>
-                    <span>Full Screen</span>
-                </div>
+                <div class="quick-action-tile active" id="toggle-dark-mode"><i class="fa-solid fa-moon"></i><span>Dark Mode</span></div>
+                <div class="quick-action-tile" id="toggle-wallpaper"><i class="fa-solid fa-image"></i><span>Wallpaper</span></div>
+                <div class="quick-action-tile active" id="toggle-sound"><i class="fa-solid fa-volume-high"></i><span>Sound: ON</span></div>
+                <div class="quick-action-tile" id="toggle-fullscreen"><i class="fa-solid fa-expand"></i><span>Full Screen</span></div>
             </div>
+        </div>
+
+        <!-- ==================== TASK VIEW ==================== -->
+        <div id="task-view-overlay" class="task-view-overlay hidden">
+            <div class="task-view-topbar">
+                <div class="desktop-switcher">
+                    <button class="desktop-pill active"><i class="fa-solid fa-desktop"></i> Desktop 1</button>
+                    <button class="desktop-pill"><i class="fa-solid fa-plus"></i> New desktop</button>
+                </div>
+                <button id="close-task-view-btn" class="close-task-view"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="task-view-grid" id="task-view-grid"></div>
         </div>
 
         <!-- ==================== TASKBAR ==================== -->
         <div id="taskbar" class="taskbar">
-            <!-- Start Button -->
-            <button id="start-btn" class="taskbar-btn start-button" title="Start">
-                <i class="fa-brands fa-windows win-logo-icon"></i>
-            </button>
-
-            <!-- Search Bar -->
+            <button id="start-btn" class="taskbar-btn start-button" title="Start"><i class="fa-brands fa-windows win-logo-icon"></i></button>
+            <button id="cortana-btn" class="taskbar-btn cortana-button" title="Talk to Cortana AI"><i class="fa-regular fa-circle cortana-icon text-cyan"></i></button>
+            <button id="task-view-btn" class="taskbar-btn task-view-button" title="Task View (Win+Tab)"><i class="fa-solid fa-table-cells-large task-view-icon"></i></button>
             <div class="taskbar-search-container">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
                 <input type="text" id="taskbar-search-input" placeholder="Type here to search (e.g. Projects, Skills, VS Code)..." autocomplete="off">
-                <!-- Search Popover -->
                 <div id="search-popover" class="search-popover hidden">
                     <div class="search-results-header">Search Results</div>
-                    <div id="search-results-list" class="search-results-list scrollable">
-                        <!-- Dynamic Search Results -->
-                    </div>
+                    <div id="search-results-list" class="search-results-list scrollable"></div>
                 </div>
             </div>
-
-            <!-- Taskbar Open Windows Pills -->
-            <div id="taskbar-apps-container" class="taskbar-apps-container">
-                <!-- Dynamic taskbar items generated by JS -->
-            </div>
-
-            <!-- System Tray -->
+            <div id="taskbar-apps-container" class="taskbar-apps-container"></div>
             <div class="system-tray">
-                <div class="tray-icon" id="tray-wifi" title="Internet Access">
-                    <i class="fa-solid fa-wifi"></i>
-                </div>
-                <div class="tray-icon" id="tray-volume" title="Volume Control">
-                    <i class="fa-solid fa-volume-high"></i>
-                </div>
-                <div class="tray-icon" id="tray-battery" title="Battery: 100%">
-                    <i class="fa-solid fa-battery-full"></i>
-                </div>
+                <div class="tray-icon" id="tray-wifi" title="Internet Access"><i class="fa-solid fa-wifi"></i></div>
+                <div class="tray-icon" id="tray-volume" title="Volume Control"><i class="fa-solid fa-volume-high" id="volume-icon-tray"></i></div>
+                <div class="tray-icon" id="tray-battery" title="Battery: 100%"><i class="fa-solid fa-battery-full"></i></div>
                 <div class="tray-clock" id="taskbar-clock" title="Click for Calendar">
                     <div id="tray-time">12:00 PM</div>
-                    <div id="tray-date">31/07/2026</div>
+                    <div id="tray-date">04/08/2026</div>
                 </div>
-                <div class="tray-icon" id="tray-action-center" title="Action Center">
-                    <i class="fa-regular fa-comment"></i>
-                </div>
+                <div class="tray-icon" id="tray-action-center" title="Action Center"><i class="fa-regular fa-comment"></i><span id="notif-badge" class="notif-badge hidden">0</span></div>
                 <div class="peek-desktop-bar" id="peek-desktop" title="Show Desktop"></div>
             </div>
         </div>
 
-        <!-- ==================== DESKTOP CONTEXT MENU (RIGHT CLICK) ==================== -->
+        <!-- ==================== CONTEXT MENU ==================== -->
         <div id="context-menu" class="context-menu hidden">
             <div class="context-item" id="ctx-refresh"><i class="fa-solid fa-rotate-right"></i> Refresh</div>
             <div class="context-divider"></div>
@@ -1484,12 +1138,15 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
             <div class="context-item" id="ctx-open-vscode"><i class="fa-solid fa-code text-cyan"></i> Open in VS Code</div>
             <div class="context-item" id="ctx-personalize"><i class="fa-solid fa-palette text-purple"></i> Personalize</div>
             <div class="context-divider"></div>
-            <div class="context-item" id="ctx-about-os"><i class="fa-solid fa-circle-info"></i> About Windows 10 OS</div>
+            <div class="context-item" id="ctx-about-os"><i class="fa-solid fa-circle-info text-blue"></i> About This OS</div>
         </div>
 
-    </div> <!-- End Desktop Shell -->
+    </div><!-- /desktop-shell -->
 
-    <!-- Main JavaScript -->
+    <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Main JS -->
     <script src="script.js"></script>
 </body>
 </html>
