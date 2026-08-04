@@ -1519,58 +1519,88 @@ const showToast = (title, body) => { /* ... */ };`,
     });
 
     // ==========================================================================
-    // 25. CORTANA CHATBOT
+    // 25. CORTANA CHATBOT (INTELLIGENT RESPONSES & SPEECH SYNTHESIS)
     // ==========================================================================
     const cortanaChatList = document.getElementById('cortana-chat-list');
     const cortanaInput = document.getElementById('cortana-input');
 
-    const cortanaResponses = {
-        'skills': 'Bhavy specializes in: JavaScript (ES6+), React/Next.js, Node.js, Python, PostgreSQL, MongoDB, Docker, Git, and modern UI/UX design. Open <strong>Control Panel</strong> for full details!',
-        'projects': 'Check out featured projects like the <strong>Windows 10 Portfolio OS</strong> (this app!), an <strong>AI Workspace Assistant</strong>, and a <strong>Real-Time Analytics Dashboard</strong>. Open the <strong>Projects Explorer</strong> for more!',
-        'contact': 'You can reach Bhavy via the <strong>Contact Mail app</strong> on this desktop, or connect on GitHub, LinkedIn, and Twitter. Open the Mail window to send a message!',
-        'resume': 'Bhavy\'s resume includes experience as a Senior Full-Stack Developer, Frontend Developer, and a B.S. in Computer Science. Open the <strong>Resume PDF Reader</strong> to see the full document!',
-        'hire': 'Bhavy is currently <strong style="color:#10b981;">available for hire</strong>! Send a message through the Contact Mail app or connect on LinkedIn.',
-        'experience': 'Bhavy has worked as a Senior Full-Stack Developer at Tech Innovations Lab, and a Frontend Developer at Digital Solutions Inc. Open <strong>Experience Timeline</strong> for the full career history.',
-    };
-
     const getCortanaResponse = (query) => {
         const q = query.toLowerCase();
 
-        // Smart Action Triggers
+        // 1. App Launch Triggers
         const appTriggers = [
-            { key: 'project', winId: 'projects', name: 'Projects Explorer' },
-            { key: 'skill', winId: 'skills', name: 'Control Panel (Skills)' },
-            { key: 'contact', winId: 'contact', name: 'Contact Mail' },
-            { key: 'mail', winId: 'contact', name: 'Contact Mail' },
-            { key: 'resume', winId: 'resume', name: 'Resume PDF Reader' },
-            { key: 'paint', winId: 'paint', name: 'MS Paint' },
-            { key: 'code', winId: 'vscode', name: 'VS Code' },
-            { key: 'terminal', winId: 'cmd', name: 'Command Prompt' },
-            { key: 'cmd', winId: 'cmd', name: 'Command Prompt' },
-            { key: 'edge', winId: 'edge', name: 'Microsoft Edge' },
-            { key: 'browser', winId: 'edge', name: 'Microsoft Edge' },
-            { key: 'setting', winId: 'settings', name: 'Settings' },
-            { key: 'calculator', winId: 'calculator', name: 'Calculator' },
-            { key: 'minesweeper', winId: 'minesweeper', name: 'Minesweeper' },
-            { key: 'task manager', winId: 'taskmgr', name: 'Task Manager' },
-            { key: 'about', winId: 'this-pc', name: 'About Bhavy' }
+            { keys: ['project', 'folder', 'work'], winId: 'projects', name: 'Projects Explorer' },
+            { keys: ['skill', 'ability', 'control panel'], winId: 'skills', name: 'Control Panel (Skills)' },
+            { keys: ['contact', 'mail', 'email', 'message', 'send'], winId: 'contact', name: 'Contact Mail' },
+            { keys: ['resume', 'cv', 'pdf'], winId: 'resume', name: 'Resume PDF Reader' },
+            { keys: ['paint', 'draw', 'sketch'], winId: 'paint', name: 'MS Paint' },
+            { keys: ['code', 'vscode', 'source'], winId: 'vscode', name: 'VS Code' },
+            { keys: ['cmd', 'terminal', 'command prompt', 'cli'], winId: 'cmd', name: 'Command Prompt' },
+            { keys: ['edge', 'browser', 'web', 'internet'], winId: 'edge', name: 'Microsoft Edge' },
+            { keys: ['setting', 'theme', 'wallpaper', 'personalize'], winId: 'settings', name: 'Settings' },
+            { keys: ['calc', 'calculator', 'math'], winId: 'calculator', name: 'Calculator' },
+            { keys: ['minesweeper', 'game', 'play'], winId: 'minesweeper', name: 'Minesweeper' },
+            { keys: ['task manager', 'cpu', 'ram', 'process'], winId: 'taskmgr', name: 'Task Manager' },
+            { keys: ['music', 'song', 'groove', 'player', 'lofi'], winId: 'mediaplayer', name: 'Groove Music' },
+            { keys: ['sticky', 'note'], winId: 'stickynotes', name: 'Sticky Notes' },
+            { keys: ['about', 'who is', 'this pc'], winId: 'this-pc', name: 'About Bhavy' }
         ];
 
-        if (q.includes('open') || q.includes('launch') || q.includes('show') || q.includes('go to')) {
+        if (q.includes('open') || q.includes('launch') || q.includes('show') || q.includes('go to') || q.includes('start') || q.includes('run')) {
             for (const item of appTriggers) {
-                if (q.includes(item.key)) {
+                if (item.keys.some(k => q.includes(k))) {
                     openWindow(item.winId);
                     return `🚀 Opening <strong>${item.name}</strong> for you right now!`;
                 }
             }
         }
 
-        for (const [key, response] of Object.entries(cortanaResponses)) {
-            if (q.includes(key)) return response;
+        // 2. Specific Topic Answers
+        if (q.includes('skill') || q.includes('know') || q.includes('tech stack')) {
+            return 'Bhavy is proficient in <strong>JavaScript (ES6+)</strong>, <strong>React / Next.js</strong>, <strong>Node.js</strong>, <strong>Python</strong>, <strong>HTML5/CSS3</strong>, <strong>PostgreSQL</strong>, <strong>MongoDB</strong>, and <strong>Docker</strong>!';
         }
-        if (q.includes('hello') || q.includes('hi')) return 'Hello! 👋 I\'m Cortana, Bhavy\'s portfolio assistant. Ask me about skills, projects, experience, or tell me to open any app!';
-        if (q.includes('name') || q.includes('who')) return 'I\'m Cortana — Bhavy\'s virtual assistant built into this Windows 10 Portfolio OS!';
-        return 'I can help you explore Bhavy\'s portfolio! Try asking me to open <strong>projects</strong>, <strong>settings</strong>, <strong>resume</strong>, or <strong>skills</strong>.';
+        if (q.includes('project') || q.includes('portfolio') || q.includes('apps')) {
+            return 'Bhavy built the <strong>Windows 10 Portfolio OS</strong>, an <strong>AI Workspace Suite</strong>, a <strong>Real-Time Analytics Dashboard</strong>, and an <strong>Arcade Engine</strong>! Opening Projects Explorer...';
+        }
+        if (q.includes('resume') || q.includes('cv')) {
+            openWindow('resume');
+            return 'Opening Bhavy\'s official <strong>Resume.pdf</strong> for you!';
+        }
+        if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('reach')) {
+            openWindow('contact');
+            return 'Bhavy is <strong style="color:#10b981;">available for hire</strong>! You can send an email via Windows Mail or connect on GitHub/LinkedIn.';
+        }
+        if (q.includes('experience') || q.includes('job') || q.includes('work history')) {
+            openWindow('experience');
+            return 'Bhavy has worked as a <strong>Senior Full-Stack Developer</strong> at Tech Innovations Lab and <strong>Frontend Web Developer</strong> at Digital Solutions Inc.';
+        }
+        if (q.includes('education') || q.includes('degree') || q.includes('college') || q.includes('university')) {
+            return 'Bhavy holds a <strong>B.S. in Computer Science</strong> with Honors from University of Technology, specializing in Software Engineering and HCI.';
+        }
+        if (q.includes('how are you') || q.includes('how\'s it going') || q.includes('whats up')) {
+            return 'I\'m running at 100% efficiency! Thanks for asking. How can I help you explore Bhavy\'s portfolio today?';
+        }
+        if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('greetings')) {
+            return 'Hello! 👋 I\'m Cortana, Bhavy\'s virtual assistant. Feel free to ask about skills, projects, experience, or tell me to open any app!';
+        }
+        if (q.includes('who are you') || q.includes('what are you') || q.includes('name')) {
+            return 'I am <strong>Cortana</strong>, your AI guide inside Bhavy\'s Windows 10 Portfolio OS!';
+        }
+        if (q.includes('who is bhavy') || q.includes('about bhavy') || q.includes('creator') || q.includes('developer')) {
+            return 'Bhavy is a passionate Full-Stack Software Engineer who crafts high-performance web applications and interactive digital experiences!';
+        }
+        if (q.includes('joke') || q.includes('funny')) {
+            return 'Why do programmers prefer dark mode? Because light attracts bugs! 🐛';
+        }
+        if (q.includes('thanks') || q.includes('thank you')) {
+            return 'You\'re very welcome! Let me know if you need anything else.';
+        }
+        if (q.includes('bye') || q.includes('goodbye')) {
+            return 'Goodbye! Have a great time exploring the portfolio desktop.';
+        }
+
+        // Default Fallback
+        return 'I can help you explore Bhavy\'s portfolio! Try asking me to open <strong>projects</strong>, <strong>skills</strong>, <strong>resume</strong>, or <strong>contact info</strong>.';
     };
 
     const sendCortanaMessage = (queryText) => {
@@ -1590,10 +1620,16 @@ const showToast = (title, body) => { /* ... */ };`,
         setTimeout(() => {
             const botMsg = document.createElement('div');
             botMsg.className = 'cortana-msg assistant';
-            botMsg.innerHTML = getCortanaResponse(query);
+            const replyHtml = getCortanaResponse(query);
+            botMsg.innerHTML = replyHtml;
             cortanaChatList.appendChild(botMsg);
             cortanaChatList.scrollTop = cortanaChatList.scrollHeight;
-        }, 600);
+
+            // Cortana speaks text
+            if (typeof speakCortanaText === 'function') {
+                speakCortanaText(replyHtml);
+            }
+        }, 500);
 
         cortanaChatList.scrollTop = cortanaChatList.scrollHeight;
         playSound('click');
@@ -1941,7 +1977,7 @@ const showToast = (title, body) => { /* ... */ };`,
     // ==========================================================================
     let cortanaSpeechEnabled = true;
 
-    const speakCortanaText = (text) => {
+    function speakCortanaText(text) {
         if (!cortanaSpeechEnabled || !('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
         const plainText = text.replace(/<[^>]*>?/gm, ''); // strip HTML tags
@@ -1949,7 +1985,7 @@ const showToast = (title, body) => { /* ... */ };`,
         utterance.rate = 1.0;
         utterance.pitch = 1.1;
         window.speechSynthesis.speak(utterance);
-    };
+    }
 
     document.getElementById('cortana-speech-toggle')?.addEventListener('click', (e) => {
         cortanaSpeechEnabled = !cortanaSpeechEnabled;
