@@ -338,7 +338,59 @@
         // Click anywhere on window to focus
         winEl.addEventListener('mousedown', () => focusWindow(windowId));
 
-        // --- WINDOW DRAGGING ---
+        // --- 8-AXIS RESIZE HANDLES INJECTION ---
+        const handleTypes = ['n', 's', 'e', 'w', 'nw', 'ne', 'sw', 'se'];
+        handleTypes.forEach(type => {
+            const h = document.createElement('div');
+            h.className = `win-resize-handle win-resize-${type}`;
+            h.dataset.type = type;
+            winEl.appendChild(h);
+
+            h.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                if (winEl.classList.contains('maximized')) return;
+
+                let startX = e.clientX, startY = e.clientY;
+                let startW = winEl.offsetWidth, startH = winEl.offsetHeight;
+                let startL = winEl.offsetLeft, startT = winEl.offsetTop;
+                focusWindow(windowId);
+
+                const onMouseMove = (me) => {
+                    const dx = me.clientX - startX;
+                    const dy = me.clientY - startY;
+
+                    if (type.includes('e')) winEl.style.width = `${Math.max(320, startW + dx)}px`;
+                    if (type.includes('s')) winEl.style.height = `${Math.max(200, startH + dy)}px`;
+
+                    if (type.includes('w')) {
+                        const newW = Math.max(320, startW - dx);
+                        if (newW > 320) {
+                            winEl.style.width = `${newW}px`;
+                            winEl.style.left = `${startL + dx}px`;
+                        }
+                    }
+
+                    if (type.includes('n')) {
+                        const newH = Math.max(200, startH - dy);
+                        if (newH > 200) {
+                            winEl.style.height = `${newH}px`;
+                            winEl.style.top = `${Math.max(0, startT + dy)}px`;
+                        }
+                    }
+                };
+
+                const onMouseUp = () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                };
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            });
+        });
+
+        // --- WINDOW DRAGGING & QUADRANT AERO SNAP ---
         let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
 
         titlebar?.addEventListener('mousedown', (e) => {
@@ -358,17 +410,39 @@
             winEl.style.left = `${newX}px`;
             winEl.style.top = `${Math.max(0, newY)}px`;
 
-            // Show Aero Snap preview
+            // Show Aero Snap preview (Side, Maximize, and 4 Quadrants)
             const snapPreview = document.getElementById('snap-preview-box');
             if (snapPreview) {
                 const taskbarH = 40;
-                if (e.clientX <= 5) {
+                const winW = window.innerWidth;
+                const winH = window.innerHeight;
+
+                if (e.clientX <= 15 && e.clientY <= 15) {
+                    // Top-Left Quadrant
+                    snapPreview.classList.remove('hidden');
+                    Object.assign(snapPreview.style, { left: '0', top: '0', width: '50vw', height: `calc(50vh - ${taskbarH/2}px)` });
+                } else if (e.clientX >= winW - 15 && e.clientY <= 15) {
+                    // Top-Right Quadrant
+                    snapPreview.classList.remove('hidden');
+                    Object.assign(snapPreview.style, { left: '50vw', top: '0', width: '50vw', height: `calc(50vh - ${taskbarH/2}px)` });
+                } else if (e.clientX <= 15 && e.clientY >= winH - 60) {
+                    // Bottom-Left Quadrant
+                    snapPreview.classList.remove('hidden');
+                    Object.assign(snapPreview.style, { left: '0', top: '50vh', width: '50vw', height: `calc(50vh - ${taskbarH}px)` });
+                } else if (e.clientX >= winW - 15 && e.clientY >= winH - 60) {
+                    // Bottom-Right Quadrant
+                    snapPreview.classList.remove('hidden');
+                    Object.assign(snapPreview.style, { left: '50vw', top: '50vh', width: '50vw', height: `calc(50vh - ${taskbarH}px)` });
+                } else if (e.clientX <= 5) {
+                    // Left 50%
                     snapPreview.classList.remove('hidden');
                     Object.assign(snapPreview.style, { left: '0', top: '0', width: '50vw', height: `calc(100vh - ${taskbarH}px)` });
-                } else if (e.clientX >= window.innerWidth - 5) {
+                } else if (e.clientX >= winW - 5) {
+                    // Right 50%
                     snapPreview.classList.remove('hidden');
                     Object.assign(snapPreview.style, { left: '50vw', top: '0', width: '50vw', height: `calc(100vh - ${taskbarH}px)` });
                 } else if (e.clientY <= 3) {
+                    // Top Maximize
                     snapPreview.classList.remove('hidden');
                     Object.assign(snapPreview.style, { left: '0', top: '0', width: '100vw', height: `calc(100vh - ${taskbarH}px)` });
                 } else {
@@ -382,13 +456,27 @@
             isDragging = false;
             winEl.style.transition = '';
 
-            // Apply Aero Snap
             const taskbarH = 40;
-            if (e.clientX <= 5) {
-                // Snap left
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+
+            if (e.clientX <= 15 && e.clientY <= 15) {
+                // Top-Left Quadrant Snap
+                Object.assign(winEl.style, { left: '0', top: '0', width: '50vw', height: `calc(50vh - ${taskbarH/2}px)` });
+            } else if (e.clientX >= winW - 15 && e.clientY <= 15) {
+                // Top-Right Quadrant Snap
+                Object.assign(winEl.style, { left: '50vw', top: '0', width: '50vw', height: `calc(50vh - ${taskbarH/2}px)` });
+            } else if (e.clientX <= 15 && e.clientY >= winH - 60) {
+                // Bottom-Left Quadrant Snap
+                Object.assign(winEl.style, { left: '0', top: '50vh', width: '50vw', height: `calc(50vh - ${taskbarH}px)` });
+            } else if (e.clientX >= winW - 15 && e.clientY >= winH - 60) {
+                // Bottom-Right Quadrant Snap
+                Object.assign(winEl.style, { left: '50vw', top: '50vh', width: '50vw', height: `calc(50vh - ${taskbarH}px)` });
+            } else if (e.clientX <= 5) {
+                // Snap left 50%
                 Object.assign(winEl.style, { left: '0', top: '0', width: '50vw', height: `calc(100vh - ${taskbarH}px)` });
-            } else if (e.clientX >= window.innerWidth - 5) {
-                // Snap right
+            } else if (e.clientX >= winW - 5) {
+                // Snap right 50%
                 Object.assign(winEl.style, { left: '50vw', top: '0', width: '50vw', height: `calc(100vh - ${taskbarH}px)` });
             } else if (e.clientY <= 3) {
                 // Snap maximize
@@ -2154,9 +2242,90 @@ const showToast = (title, body) => { /* ... */ };`,
     initLiveWallpaperCanvas();
 
     // ==========================================================================
+    // 27. VIRTUAL FILE SYSTEM (VFS) MODULE
+    // ==========================================================================
+    const defaultVFS = {
+        "C:": {
+            type: "dir",
+            children: {
+                "Users": {
+                    type: "dir",
+                    children: {
+                        "Bhavy": {
+                            type: "dir",
+                            children: {
+                                "Desktop": {
+                                    type: "dir",
+                                    children: {
+                                        "Welcome.txt": { type: "file", content: "Welcome to Windows 10 Portfolio OS!\nFeel free to explore projects, apps, and games." }
+                                    }
+                                },
+                                "Documents": {
+                                    type: "dir",
+                                    children: {
+                                        "Resume_Summary.txt": { type: "file", content: "Bhavy — Full-Stack Software Engineer\nSpecialized in React, Node.js, Python, and Web Systems." }
+                                    }
+                                },
+                                "Downloads": { type: "dir", children: {} },
+                                "Pictures": { type: "dir", children: {} }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    window.VFS = {
+        data: JSON.parse(localStorage.getItem('win10-vfs') || JSON.stringify(defaultVFS)),
+        save() {
+            localStorage.setItem('win10-vfs', JSON.stringify(this.data));
+        },
+        resolvePath(pathStr) {
+            const parts = pathStr.replace(/\\/g, '/').split('/').filter(Boolean);
+            let current = this.data;
+            for (const part of parts) {
+                if (current && current.type === 'dir' && current.children[part]) {
+                    current = current.children[part];
+                } else {
+                    return null;
+                }
+            }
+            return current;
+        },
+        createFile(pathStr, fileName, content = '') {
+            const dir = this.resolvePath(pathStr);
+            if (dir && dir.type === 'dir') {
+                dir.children[fileName] = { type: 'file', content };
+                this.save();
+                return true;
+            }
+            return false;
+        },
+        createDir(pathStr, dirName) {
+            const dir = this.resolvePath(pathStr);
+            if (dir && dir.type === 'dir') {
+                dir.children[dirName] = { type: 'dir', children: {} };
+                this.save();
+                return true;
+            }
+            return false;
+        },
+        deletePath(pathStr, name) {
+            const dir = this.resolvePath(pathStr);
+            if (dir && dir.type === 'dir' && dir.children[name]) {
+                delete dir.children[name];
+                this.save();
+                return true;
+            }
+            return false;
+        }
+    };
+
+    // ==========================================================================
     // INITIALIZATION COMPLETE
     // ==========================================================================
-    console.log('%c Windows 10 Portfolio OS v4.0 — Package 4 Upgrades Active ', 'background:#0078d7;color:#fff;padding:8px;border-radius:4px;font-size:1rem;font-weight:bold;');
+    console.log('%c Windows 10 Portfolio OS v5.0 — Module 1 AAA Upgrades Active ', 'background:#0078d7;color:#fff;padding:8px;border-radius:4px;font-size:1rem;font-weight:bold;');
 
 })();
 
