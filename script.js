@@ -512,7 +512,8 @@
         'cortana': { icon: 'fa-regular fa-circle text-cyan', label: 'Cortana' },
         'taskmgr': { icon: 'fa-solid fa-chart-line text-green', label: 'Task Manager' },
         'stickynotes': { icon: 'fa-solid fa-note-sticky text-yellow', label: 'Sticky Notes' },
-        'mediaplayer': { icon: 'fa-solid fa-compact-disc text-purple', label: 'Groove Music' }
+        'mediaplayer': { icon: 'fa-solid fa-compact-disc text-purple', label: 'Groove Music' },
+        'solitaire': { icon: 'fa-solid fa-heart text-red', label: 'Solitaire' }
     };
 
     const previewPopover = document.getElementById('taskbar-preview-popover');
@@ -1445,6 +1446,14 @@ const showToast = (title, body) => { /* ... */ };`,
                 if (lines > 20) { clearInterval(interval); appendCmdText('<br>  <span class="text-gold">You are the One, Neo.</span><br>'); }
             }, 80);
         },
+        sysinfo: () => appendCmdText(`<br>  <strong style="color:#0078d7;">OS Name:</strong> Microsoft Windows 10 Portfolio OS<br>  <strong style="color:#0078d7;">Version:</strong> 22H2 (Build 19045.3803)<br>  <strong style="color:#0078d7;">Processor:</strong> Intel(R) Core(TM) i9-13900H @ 2.60GHz<br>  <strong style="color:#0078d7;">Memory:</strong> 32768MB RAM<br>  <strong style="color:#0078d7;">Graphics:</strong> NVIDIA GeForce RTX 4070 Laptop GPU<br>`),
+        tree: () => appendCmdText(`<br>Folder PATH listing for volume OS_DRIVE<br>C:.
+├───Desktop
+│   └─── Welcome.txt
+├───Documents
+│   └─── Resume_Summary.txt
+├───Downloads
+└───Pictures<br>`),
         cls: () => { if (cmdOutput) cmdOutput.innerHTML = ''; },
         clear: () => { if (cmdOutput) cmdOutput.innerHTML = ''; },
         exit: () => closeWindow('cmd'),
@@ -1478,6 +1487,25 @@ const showToast = (title, body) => { /* ... */ };`,
             const rawVal = cmdInputField.value.trim();
             const input = rawVal.toLowerCase();
             appendCmdText(`<br><span class="cmd-prompt-str">C:\\Users\\Bhavy&gt;</span> <span style="color:#fff;">${cmdInputField.value}</span>`);
+
+            if (rawVal) {
+                cmdHistory.push(rawVal);
+                cmdHistoryIdx = -1;
+            }
+
+            if (input.startsWith('js ')) {
+                const jsExpr = rawVal.slice(3);
+                try {
+                    const result = eval(jsExpr);
+                    appendCmdText(`<br>  <span class="text-green">=&gt; ${result}</span><br>`);
+                } catch (err) {
+                    appendCmdText(`<br>  <span class="text-red">JS Error: ${err.message}</span><br>`);
+                }
+            } else if (cmdCommands[input]) {
+                cmdCommands[input]();
+            } else if (input) {
+                appendCmdText(`<br>  '${rawVal}' is not recognized as an internal or external command.<br>  Type <span class="text-gold">help</span> for a list of available commands.<br>`);
+            }
             cmdInputField.value = '';
 
             if (rawVal) {
@@ -2176,6 +2204,124 @@ const showToast = (title, body) => { /* ... */ };`,
     // ==========================================================================
     let liveWpMode = localStorage.getItem('win10-live-wp') || 'none';
     let liveWpAnimId = null;
+
+    // ==========================================================================
+    // 28. PHYSICAL FILE DRAG-AND-DROP IMPORT TO DESKTOP
+    // ==========================================================================
+    const desktopEl = document.getElementById('desktop');
+    if (desktopEl) {
+        desktopEl.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            desktopEl.style.outline = '2px dashed var(--win-accent)';
+        });
+        desktopEl.addEventListener('dragleave', () => {
+            desktopEl.style.outline = 'none';
+        });
+        desktopEl.addEventListener('drop', (e) => {
+            e.preventDefault();
+            desktopEl.style.outline = 'none';
+            if (e.dataTransfer && e.dataTransfer.files.length > 0) {
+                Array.from(e.dataTransfer.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        const content = event.target.result;
+                        if (window.VFS) {
+                            window.VFS.createFile('C:\\Users\\Bhavy\\Desktop', file.name, content);
+                            showToast('File Imported', `Imported ${file.name} to Desktop VFS.`, 'fa-solid fa-file-import', 'Explorer');
+                            playSound('click');
+                        }
+                    };
+                    if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.json') || file.name.endsWith('.md')) {
+                        reader.readAsText(file);
+                    } else {
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    }
+
+    // ==========================================================================
+    // 29. MICROSOFT SOLITAIRE COLLECTION GAME ENGINE
+    // ==========================================================================
+    function initSolitaireGame() {
+        const stockSlot = document.getElementById('sol-stock');
+        const wasteSlot = document.getElementById('sol-waste');
+        const newGameBtn = document.getElementById('solitaire-new-game');
+        if (!stockSlot || !newGameBtn) return;
+
+        const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+        const suitIcons = { hearts: '♥️', diamonds: '♦️', clubs: '♣️', spades: '♠️' };
+        const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+        let deck = [];
+        let score = 0;
+        let timer = 0;
+        let timerInterval = null;
+
+        function createDeck() {
+            deck = [];
+            suits.forEach(suit => {
+                ranks.forEach((rank, val) => {
+                    deck.push({ suit, rank, value: val + 1, color: (suit === 'hearts' || suit === 'diamonds') ? 'red' : 'black', faceUp: false });
+                });
+            });
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+        }
+
+        function startNewGame() {
+            createDeck();
+            score = 0;
+            timer = 0;
+            const scoreEl = document.getElementById('sol-score');
+            const timerEl = document.getElementById('sol-timer');
+            if (scoreEl) scoreEl.textContent = score;
+            if (timerEl) timerEl.textContent = '00:00';
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timer++;
+                const m = String(Math.floor(timer / 60)).padStart(2, '0');
+                const s = String(timer % 60).padStart(2, '0');
+                if (timerEl) timerEl.textContent = `${m}:${s}`;
+            }, 1000);
+
+            for (let c = 0; c < 7; c++) {
+                const colEl = document.querySelector(`.sol-column[data-col="${c}"]`);
+                if (colEl) {
+                    colEl.innerHTML = '';
+                    for (let r = 0; r <= c; r++) {
+                        if (deck.length > 0) {
+                            const card = deck.pop();
+                            if (r === c) card.faceUp = true;
+                            const cardEl = renderCard(card);
+                            cardEl.style.top = `${r * 20}px`;
+                            colEl.appendChild(cardEl);
+                        }
+                    }
+                }
+            }
+
+            if (stockSlot) stockSlot.innerHTML = deck.length > 0 ? '🃏' : '🔄';
+            if (wasteSlot) wasteSlot.innerHTML = '';
+        }
+
+        function renderCard(card) {
+            const cardEl = document.createElement('div');
+            cardEl.className = `sol-card ${card.faceUp ? card.color : 'back'}`;
+            if (card.faceUp) {
+                cardEl.innerHTML = `<div>${card.rank}</div><div style="font-size:1.2rem;align-self:center;">${suitIcons[card.suit]}</div><div style="align-self:flex-end;">${card.rank}</div>`;
+            }
+            return cardEl;
+        }
+
+        newGameBtn.addEventListener('click', startNewGame);
+        startNewGame();
+    }
+
+    initSolitaireGame();
 
     function initLiveWallpaperCanvas() {
         const canvas = document.getElementById('live-canvas-wallpaper');

@@ -2999,11 +2999,112 @@ body.light-mode .win-titlebar {
     color: var(--win-text-dim);
 }
 
+/* --- Solitaire Classic Game Styles --- */
+.solitaire-body {
+    background: #00703c;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 36px);
+    user-select: none;
+}
+
+.solitaire-header {
+    height: 42px;
+    background: #00562e;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    color: #fff;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.solitaire-btn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+.solitaire-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+.solitaire-table {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.solitaire-top-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.solitaire-deck-zone, .solitaire-foundations {
+    display: flex;
+    gap: 12px;
+}
+
+.sol-card-slot {
+    width: 65px;
+    height: 92px;
+    border: 2px dashed rgba(255, 255, 255, 0.25);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1.5rem;
+    position: relative;
+}
+
+.solitaire-tableau {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.sol-column {
+    width: 65px;
+    min-height: 200px;
+    position: relative;
+}
+
+.sol-card {
+    width: 65px;
+    height: 92px;
+    background: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    position: absolute;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 4px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.sol-card.back {
+    background: linear-gradient(135deg, #0078d7, #004578);
+    border: 2px solid #fff;
+}
+
+.sol-card.red { color: #d83b01; }
+.sol-card.black { color: #111111; }
+
 @media (max-width: 768px) {
     .taskbar-search-container { display: none; }
     .start-menu { width: 100vw; height: calc(100vh - var(--win-taskbar-height)); }
     .win-window { width: 95vw !important; left: 2.5vw !important; top: 10px !important; }
 }
+
 
 
 

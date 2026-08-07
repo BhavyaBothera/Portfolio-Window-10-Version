@@ -192,6 +192,14 @@
                 <span class="icon-label">Groove Music</span>
             </div>
 
+            <div class="desktop-icon" data-window="solitaire" tabindex="0">
+                <div class="win-icon-wrapper">
+                    <img class="win-icon-img" src="assets/icons/minesweeper.png" alt="Solitaire" draggable="false">
+                    <div class="shortcut-arrow"><i class="fa-solid fa-arrow-turn-up"></i></div>
+                </div>
+                <span class="icon-label">Solitaire</span>
+            </div>
+
             <div class="desktop-icon" data-window="recycle-bin" tabindex="0">
                 <div class="win-icon-wrapper">
                     <img class="win-icon-img" src="assets/icons/recyclebin.png" alt="Recycle Bin" draggable="false">
@@ -974,6 +982,48 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                     </div>
                 </div>
             </div><!-- /win-mediaplayer -->
+
+            <!-- WINDOW 20: SOLITAIRE CLASSIC -->
+            <div class="win-window hidden" id="win-solitaire" data-id="solitaire" style="width:720px;height:540px;top:70px;left:200px;">
+                <div class="win-titlebar">
+                    <div class="win-title"><i class="fa-solid fa-heart text-red"></i> Microsoft Solitaire Collection</div>
+                    <div class="win-controls">
+                        <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
+                        <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
+                        <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+                </div>
+                <div class="win-body solitaire-body">
+                    <div class="solitaire-header">
+                        <button class="solitaire-btn" id="solitaire-new-game"><i class="fa-solid fa-rotate-right"></i> New Game</button>
+                        <div class="solitaire-score">Score: <span id="sol-score">0</span></div>
+                        <div class="solitaire-timer">Time: <span id="sol-timer">00:00</span></div>
+                    </div>
+                    <div class="solitaire-table">
+                        <div class="solitaire-top-row">
+                            <div class="solitaire-deck-zone">
+                                <div class="sol-card-slot" id="sol-stock"></div>
+                                <div class="sol-card-slot" id="sol-waste"></div>
+                            </div>
+                            <div class="solitaire-foundations">
+                                <div class="sol-card-slot foundation" data-suit="hearts" id="sol-f-hearts">♥️</div>
+                                <div class="sol-card-slot foundation" data-suit="diamonds" id="sol-f-diamonds">♦️</div>
+                                <div class="sol-card-slot foundation" data-suit="clubs" id="sol-f-clubs">♣️</div>
+                                <div class="sol-card-slot foundation" data-suit="spades" id="sol-f-spades">♠️</div>
+                            </div>
+                        </div>
+                        <div class="solitaire-tableau" id="sol-tableau">
+                            <div class="sol-column" data-col="0"></div>
+                            <div class="sol-column" data-col="1"></div>
+                            <div class="sol-column" data-col="2"></div>
+                            <div class="sol-column" data-col="3"></div>
+                            <div class="sol-column" data-col="4"></div>
+                            <div class="sol-column" data-col="5"></div>
+                            <div class="sol-column" data-col="6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /win-solitaire -->
 
         </div><!-- /windows-container -->
 
