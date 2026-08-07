@@ -556,6 +556,28 @@
                 const iconPreview = document.getElementById('tp-icon-preview');
                 if (iconPreview) iconPreview.className = meta.icon;
 
+                // Render Live Canvas Window Snapshot
+                const cvs = document.getElementById('tp-canvas-preview');
+                if (cvs && winEl) {
+                    const ctx = cvs.getContext('2d');
+                    ctx.fillStyle = '#1c1c20';
+                    ctx.fillRect(0, 0, cvs.width, cvs.height);
+                    ctx.fillStyle = '#2d2d32';
+                    ctx.fillRect(0, 0, cvs.width, 22);
+                    ctx.fillStyle = '#0078d7';
+                    ctx.fillRect(8, 6, 10, 10);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '10px Segoe UI, sans-serif';
+                    ctx.fillText(meta.label.slice(0, 18), 24, 14);
+                    ctx.fillStyle = '#28282e';
+                    ctx.fillRect(8, 28, cvs.width - 16, cvs.height - 34);
+                    ctx.fillStyle = '#3a3a42';
+                    ctx.fillRect(14, 34, 120, 10);
+                    ctx.fillRect(14, 50, 160, 8);
+                    ctx.fillRect(14, 64, 140, 8);
+                    ctx.fillRect(14, 78, 90, 8);
+                }
+
                 const closeBtn = document.getElementById('tp-close-btn');
                 if (closeBtn) {
                     closeBtn.onclick = (e) => {
