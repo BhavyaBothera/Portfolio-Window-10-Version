@@ -630,6 +630,15 @@
             const winId = icon.dataset.window;
             if (winId) openWindow(winId);
         });
+
+        // Keypress Enter or Space to open when focused
+        icon.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const winId = icon.dataset.window;
+                if (winId) openWindow(winId);
+            }
+        });
     });
 
     // Click on empty desktop to deselect icons
@@ -1332,12 +1341,38 @@ const showToast = (title, body) => { /* ... */ };`,
 
         paintCanvas.onmousemove = (e) => {
             if (!isDrawing) return;
+            const currentX = e.offsetX;
+            const currentY = e.offsetY;
+            const color = document.getElementById('paint-color')?.value || '#0078d7';
+            const size = document.getElementById('paint-size')?.value || 5;
+
             if (currentPaintTool === 'pencil' || currentPaintTool === 'eraser') {
-                paintCtx.lineTo(e.offsetX, e.offsetY);
-                paintCtx.strokeStyle = currentPaintTool === 'eraser' ? '#ffffff' : (document.getElementById('paint-color')?.value || '#000');
-                paintCtx.lineWidth = document.getElementById('paint-size')?.value || 5;
+                paintCtx.lineTo(currentX, currentY);
+                paintCtx.strokeStyle = currentPaintTool === 'eraser' ? '#ffffff' : color;
+                paintCtx.lineWidth = size;
                 paintCtx.lineCap = 'round';
                 paintCtx.stroke();
+            } else if (['line', 'rect', 'circle'].includes(currentPaintTool)) {
+                if (strokeHistory.length > 0) {
+                    paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
+                }
+                paintCtx.strokeStyle = color;
+                paintCtx.fillStyle = color;
+                paintCtx.lineWidth = size;
+
+                if (currentPaintTool === 'line') {
+                    paintCtx.beginPath();
+                    paintCtx.moveTo(startX, startY);
+                    paintCtx.lineTo(currentX, currentY);
+                    paintCtx.stroke();
+                } else if (currentPaintTool === 'rect') {
+                    paintCtx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+                } else if (currentPaintTool === 'circle') {
+                    paintCtx.beginPath();
+                    const radius = Math.sqrt(Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2));
+                    paintCtx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                    paintCtx.stroke();
+                }
             }
         };
 
@@ -1346,7 +1381,7 @@ const showToast = (title, body) => { /* ... */ };`,
             isDrawing = false;
             const endX = e.offsetX;
             const endY = e.offsetY;
-            const color = document.getElementById('paint-color')?.value || '#000';
+            const color = document.getElementById('paint-color')?.value || '#0078d7';
             const size = document.getElementById('paint-size')?.value || 5;
 
             paintCtx.strokeStyle = color;
@@ -1357,13 +1392,16 @@ const showToast = (title, body) => { /* ... */ };`,
                 paintCtx.fillStyle = color;
                 paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
             } else if (currentPaintTool === 'line') {
+                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
                 paintCtx.beginPath();
                 paintCtx.moveTo(startX, startY);
                 paintCtx.lineTo(endX, endY);
                 paintCtx.stroke();
             } else if (currentPaintTool === 'rect') {
+                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
                 paintCtx.strokeRect(startX, startY, endX - startX, endY - startY);
             } else if (currentPaintTool === 'circle') {
+                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
                 paintCtx.beginPath();
                 const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
                 paintCtx.arc(startX, startY, radius, 0, 2 * Math.PI);
@@ -1515,6 +1553,11 @@ const showToast = (title, body) => { /* ... */ };`,
                 cmdHistoryIdx = -1;
             }
 
+            if (input === '') {
+                cmdInputField.value = '';
+                return;
+            }
+
             if (input.startsWith('js ')) {
                 const jsExpr = rawVal.slice(3);
                 try {
@@ -1525,23 +1568,11 @@ const showToast = (title, body) => { /* ... */ };`,
                 }
             } else if (cmdCommands[input]) {
                 cmdCommands[input]();
-            } else if (input) {
-                appendCmdText(`<br>  '${rawVal}' is not recognized as an internal or external command.<br>  Type <span class="text-gold">help</span> for a list of available commands.<br>`);
-            }
-            cmdInputField.value = '';
-
-            if (rawVal) {
-                cmdHistory.push(rawVal);
-                cmdHistoryIdx = -1;
-            }
-
-            if (input === '') return;
-            if (cmdCommands[input]) {
-                cmdCommands[input]();
             } else {
-                appendCmdText(`<br>  <span class="text-red">'${input}' is not recognized as a command.</span><br>  Type <span class="text-gold">'help'</span> for a list of available commands.<br>`);
+                appendCmdText(`<br>  '${rawVal}' is not recognized as an internal or external command.<br>  Type <span class="text-gold">help</span> for a list of available commands.<br>`);
                 playSound('error');
             }
+            cmdInputField.value = '';
         }
     });
 
@@ -1965,6 +1996,34 @@ const showToast = (title, body) => { /* ... */ };`,
         const doc = document.getElementById('pdf-document');
         if (doc) doc.style.transform = `scale(${pdfZoom})`;
     });
+    document.getElementById('download-resume-btn')?.addEventListener('click', () => {
+        const resumeText = `BHAVY — Full-Stack Software Engineer
+Email: bhavy@example.com | Portfolio: Windows 10 OS
+
+SUMMARY:
+Versatile Software Engineer with strong background in frontend & full-stack development, modern web standards, and UI/UX craftsmanship. Skilled at transforming complex requirements into clean, performant codebases.
+
+TECHNICAL SKILLS:
+- Languages: JavaScript (ES6+), TypeScript, Python, HTML5, CSS3/Sass, SQL
+- Frameworks & Libraries: React.js, Next.js, Node.js, Express, FastAPI, Tailwind CSS
+- Tools & Platforms: Git, Docker, Webpack/Vite, Vercel, AWS, Linux, VS Code
+
+EXPERIENCE & PROJECTS:
+- Windows 10 Portfolio OS: Web-based operating system shell mimicking Windows 10 with window management, desktop icons, and interactive apps.
+- Senior Full-Stack Developer @ Tech Innovations Lab (2024-Present)
+- Frontend Web Developer @ Digital Solutions Inc. (2022-2024)
+
+EDUCATION:
+- B.S. in Computer Science — Graduated with Honors`;
+
+        const blob = new Blob([resumeText], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'Bhavy_Resume.txt';
+        a.click();
+        URL.revokeObjectURL(a.href);
+        showToast('Resume Downloaded', 'Saved Bhavy_Resume.txt to your device.', 'fa-solid fa-download', 'Resume');
+    });
 
     // ==========================================================================
     // 28. CONTACT FORM
@@ -2142,6 +2201,21 @@ const showToast = (title, body) => { /* ... */ };`,
         if (mpPlaying) playSound('click');
     });
 
+    document.querySelectorAll('.track-list-item').forEach((item, idx) => {
+        item.addEventListener('click', () => {
+            mpCurrentTrack = idx;
+            document.querySelectorAll('.track-list-item').forEach((t, i) => {
+                t.classList.toggle('active', i === mpCurrentTrack);
+            });
+            if (!mpPlaying) {
+                toggleMusicPlay();
+            } else {
+                playSound('click');
+                showToast('Now Playing 🎵', mpTracks[mpCurrentTrack].name, 'fa-solid fa-compact-disc', 'Groove Music');
+            }
+        });
+    });
+
     // ==========================================================================
     // 33. BSOD EASTER EGG
     // ==========================================================================
@@ -2230,7 +2304,7 @@ const showToast = (title, body) => { /* ... */ };`,
     // ==========================================================================
     // 28. PHYSICAL FILE DRAG-AND-DROP IMPORT TO DESKTOP
     // ==========================================================================
-    const desktopEl = document.getElementById('desktop');
+    const desktopEl = document.getElementById('desktop-shell');
     if (desktopEl) {
         desktopEl.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -2277,6 +2351,9 @@ const showToast = (title, body) => { /* ... */ };`,
         const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
         let deck = [];
+        let waste = [];
+        let foundations = { hearts: [], diamonds: [], clubs: [], spades: [] };
+        let tableau = [[], [], [], [], [], [], []];
         let score = 0;
         let timer = 0;
         let timerInterval = null;
@@ -2294,13 +2371,126 @@ const showToast = (title, body) => { /* ... */ };`,
             }
         }
 
+        function updateUI() {
+            const scoreEl = document.getElementById('sol-score');
+            if (scoreEl) scoreEl.textContent = score;
+
+            if (stockSlot) stockSlot.innerHTML = deck.length > 0 ? '🃏' : (waste.length > 0 ? '🔄' : '');
+            if (wasteSlot) {
+                wasteSlot.innerHTML = '';
+                if (waste.length > 0) {
+                    const topWaste = waste[waste.length - 1];
+                    topWaste.faceUp = true;
+                    const cardEl = renderCard(topWaste);
+                    cardEl.style.cursor = 'pointer';
+                    cardEl.onclick = () => tryAutoMove(topWaste, 'waste');
+                    wasteSlot.appendChild(cardEl);
+                }
+            }
+
+            suits.forEach(s => {
+                const fSlot = document.getElementById(`sol-f-${s}`);
+                if (fSlot) {
+                    const arr = foundations[s];
+                    fSlot.innerHTML = arr.length > 0 ? `${suitIcons[s]} ${arr[arr.length - 1].rank}` : suitIcons[s];
+                }
+            });
+
+            for (let c = 0; c < 7; c++) {
+                const colEl = document.querySelector(`.sol-column[data-col="${c}"]`);
+                if (colEl) {
+                    colEl.innerHTML = '';
+                    tableau[c].forEach((card, r) => {
+                        const cardEl = renderCard(card);
+                        cardEl.style.top = `${r * 22}px`;
+                        cardEl.onclick = () => {
+                            if (!card.faceUp && r === tableau[c].length - 1) {
+                                card.faceUp = true;
+                                playSound('click');
+                                updateUI();
+                            } else if (card.faceUp) {
+                                tryAutoMove(card, 'tableau', c, r);
+                            }
+                        };
+                        colEl.appendChild(cardEl);
+                    });
+                }
+            }
+        }
+
+        function tryAutoMove(card, source, colIdx, rowIdx) {
+            const fCards = foundations[card.suit];
+            if (fCards.length + 1 === card.value) {
+                if (source === 'waste') waste.pop();
+                else if (source === 'tableau') {
+                    tableau[colIdx].splice(rowIdx);
+                    if (tableau[colIdx].length > 0) tableau[colIdx][tableau[colIdx].length - 1].faceUp = true;
+                }
+                foundations[card.suit].push(card);
+                score += 15;
+                playSound('click');
+                updateUI();
+                checkWin();
+                return;
+            }
+
+            for (let targetCol = 0; targetCol < 7; targetCol++) {
+                if (source === 'tableau' && targetCol === colIdx) continue;
+                const colCards = tableau[targetCol];
+                if (colCards.length === 0) {
+                    if (card.rank === 'K') {
+                        let cardsToMove = (source === 'waste') ? [waste.pop()] : tableau[colIdx].splice(rowIdx);
+                        if (source === 'tableau' && tableau[colIdx].length > 0) tableau[colIdx][tableau[colIdx].length - 1].faceUp = true;
+                        tableau[targetCol].push(...cardsToMove);
+                        score += 5;
+                        playSound('click');
+                        updateUI();
+                        return;
+                    }
+                } else {
+                    const topTarget = colCards[colCards.length - 1];
+                    if (topTarget.faceUp && topTarget.color !== card.color && topTarget.value === card.value + 1) {
+                        let cardsToMove = (source === 'waste') ? [waste.pop()] : tableau[colIdx].splice(rowIdx);
+                        if (source === 'tableau' && tableau[colIdx].length > 0) tableau[colIdx][tableau[colIdx].length - 1].faceUp = true;
+                        tableau[targetCol].push(...cardsToMove);
+                        score += 5;
+                        playSound('click');
+                        updateUI();
+                        return;
+                    }
+                }
+            }
+        }
+
+        function checkWin() {
+            const totalInF = Object.values(foundations).reduce((acc, arr) => acc + arr.length, 0);
+            if (totalInF === 52) {
+                clearInterval(timerInterval);
+                showToast('🎉 Solitaire Victory!', `You cleared Solitaire with a score of ${score}!`, 'fa-solid fa-trophy', 'Solitaire');
+            }
+        }
+
+        stockSlot.onclick = () => {
+            if (deck.length > 0) {
+                const card = deck.pop();
+                card.faceUp = true;
+                waste.push(card);
+            } else if (waste.length > 0) {
+                deck = waste.reverse().map(c => { c.faceUp = false; return c; });
+                waste = [];
+            }
+            playSound('click');
+            updateUI();
+        };
+
         function startNewGame() {
             createDeck();
+            waste = [];
+            foundations = { hearts: [], diamonds: [], clubs: [], spades: [] };
+            tableau = [[], [], [], [], [], [], []];
             score = 0;
             timer = 0;
-            const scoreEl = document.getElementById('sol-score');
             const timerEl = document.getElementById('sol-timer');
-            if (scoreEl) scoreEl.textContent = score;
             if (timerEl) timerEl.textContent = '00:00';
             clearInterval(timerInterval);
             timerInterval = setInterval(() => {
@@ -2311,23 +2501,15 @@ const showToast = (title, body) => { /* ... */ };`,
             }, 1000);
 
             for (let c = 0; c < 7; c++) {
-                const colEl = document.querySelector(`.sol-column[data-col="${c}"]`);
-                if (colEl) {
-                    colEl.innerHTML = '';
-                    for (let r = 0; r <= c; r++) {
-                        if (deck.length > 0) {
-                            const card = deck.pop();
-                            if (r === c) card.faceUp = true;
-                            const cardEl = renderCard(card);
-                            cardEl.style.top = `${r * 20}px`;
-                            colEl.appendChild(cardEl);
-                        }
+                for (let r = 0; r <= c; r++) {
+                    if (deck.length > 0) {
+                        const card = deck.pop();
+                        if (r === c) card.faceUp = true;
+                        tableau[c].push(card);
                     }
                 }
             }
-
-            if (stockSlot) stockSlot.innerHTML = deck.length > 0 ? '🃏' : '🔄';
-            if (wasteSlot) wasteSlot.innerHTML = '';
+            updateUI();
         }
 
         function renderCard(card) {
@@ -2339,7 +2521,7 @@ const showToast = (title, body) => { /* ... */ };`,
             return cardEl;
         }
 
-        newGameBtn.addEventListener('click', startNewGame);
+        newGameBtn.onclick = startNewGame;
         startNewGame();
     }
 
