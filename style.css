@@ -69,7 +69,7 @@ body, html {
 
 /* --- Utility Classes --- */
 .hidden { display: none !important; }
-.scrollable { overflow-y: auto; overflow-x: hidden; }
+.scrollable { overflow-y: auto !important; overflow-x: hidden; scroll-behavior: smooth; }
 .accent-text {
     background: var(--win-accent-gradient);
     -webkit-background-clip: text;
@@ -650,9 +650,16 @@ body, html {
 /* --- Window Body --- */
 .win-body {
     flex: 1;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     background: #141418;
+    scroll-behavior: smooth;
+}
+
+.win-body.scrollable {
+    overflow-y: auto !important;
+    overflow-x: hidden;
 }
 
 /* ==========================================================================
