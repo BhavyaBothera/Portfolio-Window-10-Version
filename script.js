@@ -2124,19 +2124,34 @@ Or say <em>"open [app name]"</em> to launch any app!`;
     // ==========================================================================
     function startTaskManagerUpdates() {
         if (state.tmIntervalId) return;
-        state.tmIntervalId = setInterval(() => {
-            // Update CPU
-            const cpuVal = Math.floor(12 + Math.random() * 20);
+        state.tmIntervalId = setInterval(async () => {
+            let cpuVal = Math.floor(12 + Math.random() * 20);
+            let ramVal = Math.floor(22 + Math.random() * 10);
+            let ramText = `${(ramVal / 100 * 16).toFixed(1)} / 16.0 GB (${ramVal}%)`;
+
+            try {
+                const res = await fetch('/api/system/stats');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success) {
+                        cpuVal = data.cpu.percent;
+                        ramVal = data.memory.percent;
+                        ramText = `${data.memory.used_gb} / ${data.memory.total_gb} GB (${ramVal}%)`;
+                    }
+                }
+            } catch (err) {
+                /* Backend offline, fallback to simulated telemetry */
+            }
+
             state.tmCpuData.push(cpuVal);
             if (state.tmCpuData.length > 40) state.tmCpuData.shift();
-            document.getElementById('cpu-percent-val').textContent = `${cpuVal}%`;
+            const cpuEl = document.getElementById('cpu-percent-val');
+            if (cpuEl) cpuEl.textContent = `${cpuVal}%`;
 
-            // Update RAM
-            const ramVal = Math.floor(22 + Math.random() * 10);
             state.tmRamData.push(ramVal);
             if (state.tmRamData.length > 40) state.tmRamData.shift();
-            const ramGB = (ramVal / 100 * 16).toFixed(1);
-            document.getElementById('ram-percent-val').textContent = `${ramGB} / 16.0 GB (${ramVal}%)`;
+            const ramEl = document.getElementById('ram-percent-val');
+            if (ramEl) ramEl.textContent = ramText;
 
             drawGraph('cpu-graph-canvas', state.tmCpuData, '#06b6d4');
             drawGraph('ram-graph-canvas', state.tmRamData, '#a855f7');
@@ -2277,7 +2292,7 @@ EDUCATION:
     // ==========================================================================
     // 28. CONTACT FORM
     // ==========================================================================
-    document.getElementById('send-mail-btn')?.addEventListener('click', () => {
+    document.getElementById('send-mail-btn')?.addEventListener('click', async () => {
         const name = document.getElementById('sender-name')?.value?.trim();
         const email = document.getElementById('sender-email')?.value?.trim();
         const subject = document.getElementById('sender-subject')?.value?.trim();
@@ -2287,6 +2302,22 @@ EDUCATION:
             showToast('Missing Fields', 'Please fill out all required fields before sending.', 'fa-solid fa-triangle-exclamation', 'Mail');
             playSound('error');
             return;
+        }
+
+        try {
+            const res = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, subject, message })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('Message Saved to DB! ✉️', `Thanks ${name}! Your message was saved in portfolio database.`, 'fa-solid fa-check-circle', 'Windows Mail');
+                playSound('notify');
+                return;
+            }
+        } catch (err) {
+            /* Backend offline, fallback to standard toast */
         }
 
         showToast('Message Sent! ✉️', `Thanks ${name}! Your message about "${subject}" has been sent successfully.`, 'fa-solid fa-check-circle', 'Windows Mail');
