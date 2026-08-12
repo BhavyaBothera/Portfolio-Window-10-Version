@@ -4290,3 +4290,15 @@ body.light-mode .win-titlebar {
     line-height: 1.5;
 }
 
+/* ==================== NIGHT LIGHT AMBIENT OVERLAY ==================== */
+body.night-light-active::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 145, 0, 0.14);
+    pointer-events: none;
+    z-index: 999999;
+    mix-blend-mode: multiply;
+    transition: background 0.5s ease;
+}
+

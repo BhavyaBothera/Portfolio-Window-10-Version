@@ -677,9 +677,18 @@
     // ==========================================================================
     // 8. DESKTOP ICONS (click to select, dblclick to open)
     // ==========================================================================
-    const desktopIcons = document.querySelectorAll('.desktop-icon');
+    // --- DRAGGABLE & GRID-SNAPPED DESKTOP ICONS ---
+    let draggedIcon = null, iconOffsetX = 0, iconOffsetY = 0;
+    const savedIconPositions = JSON.parse(localStorage.getItem('win10-icon-pos') || '{}');
 
     desktopIcons.forEach(icon => {
+        const winId = icon.dataset.window;
+        if (winId && savedIconPositions[winId]) {
+            icon.style.position = 'absolute';
+            icon.style.left = `${savedIconPositions[winId].left}px`;
+            icon.style.top = `${savedIconPositions[winId].top}px`;
+        }
+
         // Single click to select
         icon.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -691,18 +700,63 @@
         // Double click to open
         icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
-            const winId = icon.dataset.window;
             if (winId) openWindow(winId);
+        });
+
+        // Single tap for mobile / touch screens
+        let lastTapTime = 0;
+        icon.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTapTime < 400 || window.innerWidth <= 768) {
+                e.preventDefault();
+                if (winId) openWindow(winId);
+            }
+            lastTapTime = now;
         });
 
         // Keypress Enter or Space to open when focused
         icon.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                const winId = icon.dataset.window;
                 if (winId) openWindow(winId);
             }
         });
+
+        // Icon dragging start
+        icon.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            draggedIcon = icon;
+            icon.classList.add('dragging');
+            const rect = icon.getBoundingClientRect();
+            iconOffsetX = e.clientX - rect.left;
+            iconOffsetY = e.clientY - rect.top;
+        });
+    });
+
+    document.addEventListener('mousemove', (e) => {
+        if (!draggedIcon) return;
+        draggedIcon.style.position = 'absolute';
+        const newLeft = Math.max(10, Math.min(e.clientX - iconOffsetX, window.innerWidth - 100));
+        const newTop = Math.max(10, Math.min(e.clientY - iconOffsetY, window.innerHeight - 120));
+        draggedIcon.style.left = `${newLeft}px`;
+        draggedIcon.style.top = `${newTop}px`;
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!draggedIcon) return;
+        const gridX = Math.round(draggedIcon.offsetLeft / 100) * 100 + 15;
+        const gridY = Math.round(draggedIcon.offsetTop / 110) * 110 + 15;
+        draggedIcon.style.left = `${gridX}px`;
+        draggedIcon.style.top = `${gridY}px`;
+
+        const winId = draggedIcon.dataset.window;
+        if (winId) {
+            savedIconPositions[winId] = { left: gridX, top: gridY };
+            localStorage.setItem('win10-icon-pos', JSON.stringify(savedIconPositions));
+        }
+
+        draggedIcon.classList.remove('dragging');
+        draggedIcon = null;
     });
 
     // Click on empty desktop to deselect icons
@@ -1074,14 +1128,85 @@
         else document.exitFullscreen();
     });
 
-    document.getElementById('peek-desktop')?.addEventListener('click', () => {
+    document.getElementById('toggle-night-light')?.addEventListener('click', (e) => {
+        document.body.classList.toggle('night-light-active');
+        const isActive = document.body.classList.contains('night-light-active');
+        e.currentTarget.classList.toggle('active', isActive);
+        showToast('Night Light', `Warm blue-light filter is now ${isActive ? 'ENABLED' : 'DISABLED'}.`, 'fa-solid fa-eye', 'Display');
+        playSound('click');
+    });
+
+    const peekDesktopBar = document.getElementById('peek-desktop');
+    peekDesktopBar?.addEventListener('mouseenter', () => {
+        document.querySelectorAll('.win-window:not(.hidden)').forEach(w => w.style.opacity = '0.15');
+    });
+    peekDesktopBar?.addEventListener('mouseleave', () => {
+        document.querySelectorAll('.win-window:not(.hidden)').forEach(w => w.style.opacity = '1');
+    });
+
+    peekDesktopBar?.addEventListener('click', () => {
         document.querySelectorAll('.win-window').forEach(win => win.classList.add('minimized'));
         updateTaskbarPills();
+        showToast('Desktop Shown', 'Minimized all open windows.', 'fa-solid fa-desktop', 'System');
+        playSound('click');
     });
 
     document.getElementById('clear-notifications')?.addEventListener('click', () => {
         const list = document.querySelector('.notifications-list');
         if (list) list.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">No notifications</div>';
+    });
+
+    // ==========================================================================
+    // GLOBAL DESKTOP KEYBOARD SHORTCUTS ENGINE
+    // (Win+D, Win+E, Win+R, Win+Tab, Alt+Tab, Escape)
+    // ==========================================================================
+    document.addEventListener('keydown', (e) => {
+        if (['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+            if (e.key === 'Escape') closeAllPopovers();
+            return;
+        }
+
+        if (e.key === 'Escape') {
+            closeAllPopovers();
+            const taskViewOverlay = document.getElementById('task-view-overlay');
+            if (taskViewOverlay && !taskViewOverlay.classList.contains('hidden')) {
+                taskViewOverlay.classList.add('hidden');
+            }
+        }
+
+        // Win + D: Peek Desktop
+        if (e.code === 'KeyD' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
+            peekDesktopBar?.click();
+        }
+
+        // Win + E: File Explorer
+        if (e.code === 'KeyE' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
+            openWindow('this-pc');
+        }
+
+        // Win + R: Command Prompt
+        if (e.code === 'KeyR' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
+            openWindow('cmd');
+        }
+
+        // Win + Tab: Task View
+        if (e.code === 'Tab' && (e.metaKey || e.ctrlKey)) {
+            e.preventDefault();
+            toggleTaskView();
+        }
+
+        // Alt + Tab: Switch active window
+        if (e.code === 'Tab' && e.altKey) {
+            e.preventDefault();
+            if (state.openWindows.length > 0) {
+                const currentIdx = state.openWindows.indexOf(state.activeWindow);
+                const nextIdx = (currentIdx + 1) % state.openWindows.length;
+                openWindow(state.openWindows[nextIdx]);
+            }
+        }
     });
 
     // ==========================================================================
