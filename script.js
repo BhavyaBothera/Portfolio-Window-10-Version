@@ -280,6 +280,7 @@
             if (windowId === 'minesweeper') initMinesweeper();
             if (windowId === 'vscode') loadVsCodeContent('index.html');
             if (windowId === 'taskmgr') startTaskManagerUpdates();
+            if (windowId === 'calculator') initCalculator();
 
             // Mobile auto-fullscreen
             if (window.innerWidth <= 768) {
@@ -2946,6 +2947,307 @@ EDUCATION:
             return false;
         }
     };
+    // ==========================================================================
+    // 30. MS PAINT CANVAS DRAWING ENGINE
+    // ==========================================================================
+    let paintCanvasInited = false;
+    function initPaintCanvas() {
+        const canvas = document.getElementById('paint-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const container = canvas.parentElement;
+
+        if (!paintCanvasInited) {
+            canvas.width = Math.min(container.clientWidth - 24 || 700, 700);
+            canvas.height = 360;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            paintCanvasInited = true;
+        }
+
+        let isDrawing = false;
+        let startX = 0, startY = 0;
+        let currentTool = 'pencil';
+        let undoStack = [];
+
+        function saveUndoState() {
+            if (undoStack.length > 15) undoStack.shift();
+            undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        }
+
+        saveUndoState();
+
+        document.querySelectorAll('.paint-tool-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.paint-tool-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const id = btn.id;
+                if (id.includes('pencil')) currentTool = 'pencil';
+                else if (id.includes('eraser')) currentTool = 'eraser';
+                else if (id.includes('fill')) currentTool = 'fill';
+                else if (id.includes('line')) currentTool = 'line';
+                else if (id.includes('rect')) currentTool = 'rect';
+                else if (id.includes('circle')) currentTool = 'circle';
+                playSound('click');
+            });
+        });
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left,
+                y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
+            };
+        }
+
+        function startDraw(e) {
+            isDrawing = true;
+            const pos = getPos(e);
+            startX = pos.x;
+            startY = pos.y;
+            saveUndoState();
+
+            const color = document.getElementById('paint-color')?.value || '#0078d7';
+            const size = document.getElementById('paint-size')?.value || 5;
+
+            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = currentTool === 'eraser' ? size * 3 : size;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            if (currentTool === 'pencil' || currentTool === 'eraser') {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+            } else if (currentTool === 'fill') {
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const pos = getPos(e);
+
+            if (currentTool === 'pencil' || currentTool === 'eraser') {
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
+        }
+
+        function stopDraw(e) {
+            if (!isDrawing) return;
+            isDrawing = false;
+            const pos = e ? getPos(e) : { x: startX, y: startY };
+
+            if (currentTool === 'line') {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            } else if (currentTool === 'rect') {
+                ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
+            } else if (currentTool === 'circle') {
+                const radius = Math.sqrt(Math.pow(pos.x - startX, 2) + Math.pow(pos.y - startY, 2));
+                ctx.beginPath();
+                ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+        }
+
+        canvas.onmousedown = startDraw;
+        canvas.onmousemove = draw;
+        canvas.onmouseup = stopDraw;
+        canvas.ontouchstart = startDraw;
+        canvas.ontouchmove = draw;
+        canvas.ontouchend = stopDraw;
+
+        const undoBtn = document.getElementById('paint-undo');
+        if (undoBtn) {
+            undoBtn.onclick = () => {
+                if (undoStack.length > 1) {
+                    undoStack.pop();
+                    const prevState = undoStack[undoStack.length - 1];
+                    ctx.putImageData(prevState, 0, 0);
+                    playSound('click');
+                }
+            };
+        }
+
+        const clearBtn = document.getElementById('paint-clear');
+        if (clearBtn) {
+            clearBtn.onclick = () => {
+                saveUndoState();
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                playSound('click');
+            };
+        }
+
+        const saveBtn = document.getElementById('paint-save-png');
+        if (saveBtn) {
+            saveBtn.onclick = () => {
+                const link = document.createElement('a');
+                link.download = 'My_Artwork.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                showToast('🎨 Artwork Saved', 'Saved My_Artwork.png to your device.', 'fa-solid fa-download', 'MS Paint');
+                playSound('notify');
+            };
+        }
+    }
+
+    // ==========================================================================
+    // 31. VS CODE SOURCE CODE VIEWER ENGINE
+    // ==========================================================================
+    const vsCodeFiles = {
+        'index.html': `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bhavy | Windows 10 Portfolio OS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="desktop-shell">
+        <!-- Windows 10 OS Desktop Shell -->
+        <div id="desktop-wallpaper"></div>
+        <div class="taskbar">...</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>`,
+        'style.css': `/* Windows 10 Fluent Glassmorphism System */
+:root {
+    --win-accent: #0078d7;
+    --win-font: 'Segoe UI', system-ui, sans-serif;
+}
+.win-window {
+    background: rgba(24, 24, 30, 0.85);
+    backdrop-filter: blur(35px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+}`,
+        'script.js': `// Windows 10 Portfolio OS Engine
+(function() {
+    'use strict';
+    const state = {
+        activeWindow: null,
+        openWindows: [],
+        zIndexCounter: 100
+    };
+    function openWindow(id) { ... }
+})();`,
+        'package.json': `{
+  "name": "windows-10-portfolio-os",
+  "version": "6.0.0",
+  "description": "Interactive Web OS Portfolio",
+  "author": "Bhavy",
+  "license": "MIT"
+}`
+    };
+
+    function loadVsCodeContent(fileName = 'index.html') {
+        const container = document.getElementById('vscode-code-display');
+        const tabsContainer = document.getElementById('vscode-tabs');
+        if (!container) return;
+
+        const rawCode = vsCodeFiles[fileName] || `// File: ${fileName}\nconsole.log("Exploring portfolio codebase...");`;
+        
+        const lines = rawCode.split('\n');
+        const formattedHtml = lines.map((line, idx) => {
+            const lineNum = idx + 1;
+            const escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return `<div class="code-line"><span class="code-line-num">${lineNum}</span><span class="code-line-text">${escaped}</span></div>`;
+        }).join('');
+
+        container.innerHTML = formattedHtml;
+
+        if (tabsContainer) {
+            const iconClass = fileName.endsWith('.html') ? 'fa-brands fa-html5 text-orange' :
+                              fileName.endsWith('.css') ? 'fa-brands fa-css3-alt text-blue' :
+                              fileName.endsWith('.js') ? 'fa-brands fa-js text-yellow' : 'fa-solid fa-gear text-green';
+            tabsContainer.innerHTML = `<div class="vscode-tab"><i class="${iconClass}"></i> ${fileName}</div>`;
+        }
+
+        document.querySelectorAll('.vscode-file-tree li').forEach(item => {
+            item.classList.toggle('active', item.dataset.file === fileName);
+        });
+    }
+
+    document.querySelectorAll('.vscode-file-tree li').forEach(item => {
+        item.addEventListener('click', () => {
+            const fileName = item.dataset.file;
+            if (fileName) {
+                loadVsCodeContent(fileName);
+                playSound('click');
+            }
+        });
+    });
+
+    // ==========================================================================
+    // 32. CALCULATOR ENGINE
+    // ==========================================================================
+    let calcCurrentInput = '0';
+    let calcPreviousInput = '';
+    let calcOperator = null;
+
+    function initCalculator() {
+        const display = document.getElementById('calc-display');
+        if (!display) return;
+
+        const updateDisplay = () => {
+            display.textContent = calcCurrentInput || '0';
+        };
+
+        document.querySelectorAll('.calc-btn').forEach(btn => {
+            btn.onclick = () => {
+                const val = btn.dataset.val;
+                const action = btn.dataset.action;
+
+                if (val !== undefined) {
+                    if (calcCurrentInput === '0' && val !== '.') calcCurrentInput = val;
+                    else if (val === '.' && calcCurrentInput.includes('.')) return;
+                    else calcCurrentInput += val;
+                    playSound('click');
+                } else if (action === 'clear') {
+                    calcCurrentInput = '0';
+                    calcPreviousInput = '';
+                    calcOperator = null;
+                    playSound('click');
+                } else if (action === 'backspace') {
+                    calcCurrentInput = calcCurrentInput.slice(0, -1) || '0';
+                    playSound('click');
+                } else if (action === 'percent') {
+                    calcCurrentInput = String(parseFloat(calcCurrentInput) / 100);
+                    playSound('click');
+                } else if (action === 'op') {
+                    calcOperator = btn.textContent.trim();
+                    calcPreviousInput = calcCurrentInput;
+                    calcCurrentInput = '0';
+                    playSound('click');
+                } else if (action === 'equals') {
+                    if (!calcOperator || !calcPreviousInput) return;
+                    const prev = parseFloat(calcPreviousInput);
+                    const curr = parseFloat(calcCurrentInput);
+                    let res = 0;
+                    if (calcOperator === '+') res = prev + curr;
+                    else if (calcOperator === '-') res = prev - curr;
+                    else if (calcOperator === '×') res = prev * curr;
+                    else if (calcOperator === '÷') res = curr !== 0 ? prev / curr : 'Error';
+                    
+                    calcCurrentInput = String(res);
+                    calcPreviousInput = '';
+                    calcOperator = null;
+                    playSound('notify');
+                }
+                updateDisplay();
+            };
+        });
+    }
+
+    // Expose init functions to window scope for openWindow
+    window.initPaintCanvas = initPaintCanvas;
+    window.loadVsCodeContent = loadVsCodeContent;
+    window.initCalculator = initCalculator;
 
     // ==========================================================================
     // INITIALIZATION COMPLETE
@@ -2953,4 +3255,5 @@ EDUCATION:
     console.log('%c Windows 10 Portfolio OS v6.0 — All 6 Feature Enhancements Active ', 'background:#0078d7;color:#fff;padding:8px;border-radius:4px;font-size:1rem;font-weight:bold;');
 
 })();
+
 
