@@ -3279,6 +3279,7 @@ EDUCATION:
     window.initPaintCanvas = initPaintCanvas;
     window.loadVsCodeContent = loadVsCodeContent;
     window.initCalculator = initCalculator;
+    window.initMinesweeper = initMinesweeper;
 
     // ==========================================================================
     // INITIALIZATION COMPLETE

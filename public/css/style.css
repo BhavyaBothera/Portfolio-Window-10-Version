@@ -185,7 +185,7 @@ body, html {
 .lock-screen-bg {
     position: absolute;
     inset: 0;
-    background: url('assets/lockscreen.png') center/cover no-repeat;
+    background: url('../assets/lockscreen.png') center/cover no-repeat;
     filter: brightness(0.85);
     transition: filter 0.5s ease, transform 0.5s ease;
 }
@@ -392,7 +392,7 @@ body, html {
 .desktop-wallpaper {
     position: absolute;
     inset: 0;
-    background: url('assets/wallpaper.png') center/cover no-repeat;
+    background: url('../assets/wallpaper.png') center/cover no-repeat;
     z-index: var(--z-wallpaper);
     transition: background-image 0.5s ease;
 }
