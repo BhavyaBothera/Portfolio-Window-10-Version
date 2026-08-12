@@ -3500,26 +3500,47 @@ body.light-mode .win-titlebar {
     /* Hide search bar on mobile */
     .taskbar-search-container { display: none; }
 
-    /* Start menu fills viewport width */
+    /* Start menu adaptation for touch screens */
     .start-menu {
-        width: 100vw;
-        height: calc(100vh - var(--win-taskbar-height));
+        width: 100vw !important;
+        height: calc(100vh - var(--win-taskbar-height)) !important;
         left: 0 !important;
-        border-radius: 0;
+        bottom: var(--win-taskbar-height) !important;
+        border-radius: 0 !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+        z-index: var(--z-start-menu) !important;
     }
 
-    .start-menu .start-tiles-panel {
-        padding: 14px;
+    .start-sidebar {
+        width: 100% !important;
+        height: 48px !important;
+        flex-direction: row !important;
+        justify-content: flex-start !important;
+        padding: 0 12px !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .start-app-list {
+        width: 100% !important;
+        max-height: 220px !important;
+        overflow-y: auto !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--win-border) !important;
+        padding: 10px !important;
+    }
+
+    .start-tiles-panel {
+        flex: 1 !important;
+        padding: 14px !important;
+        overflow-y: auto !important;
     }
 
     .start-menu .tiles-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-
-    .start-menu .start-app-list {
-        width: 200px;
-        padding: 12px 8px;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
     }
 
     /* Windows auto-fullscreen on mobile */
@@ -3538,13 +3559,32 @@ body.light-mode .win-titlebar {
         top: 0 !important;
     }
 
-    /* Simplified titlebar on mobile */
+    /* Titlebar touch targets */
     .win-titlebar {
-        padding: 0 6px !important;
+        height: 40px !important;
+        padding: 0 8px !important;
     }
 
     .win-titlebar-label {
-        font-size: 0.78rem;
+        font-size: 0.82rem;
+    }
+
+    .win-control-btn {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Enable smooth touch scrolling inside window bodies */
+    .win-body,
+    .explorer-body,
+    .settings-body,
+    .projects-body,
+    .vscode-body,
+    .pdf-viewer-body,
+    .cmd-body {
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
     }
 
     /* Taskbar adjustments */
@@ -3553,18 +3593,18 @@ body.light-mode .win-titlebar {
     }
 
     .taskbar-app-tile {
-        width: 38px;
-        height: 34px;
-        font-size: 1rem;
+        width: 40px;
+        height: 36px;
+        font-size: 1.05rem;
     }
 
     .start-button {
-        width: 44px;
+        width: 46px;
     }
 
     .cortana-button,
     .task-view-button {
-        width: 38px;
+        width: 40px;
     }
 
     /* System tray compact */
@@ -3589,13 +3629,13 @@ body.light-mode .win-titlebar {
 
     /* Desktop icons grid */
     .desktop-icons-grid {
-        grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
-        gap: 6px;
-        padding: 8px;
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 8px;
+        padding: 10px;
     }
 
     .desktop-icon {
-        width: 65px;
+        width: 70px;
     }
 
     .desktop-icon i {
@@ -3603,7 +3643,7 @@ body.light-mode .win-titlebar {
     }
 
     .desktop-icon span {
-        font-size: 0.68rem;
+        font-size: 0.7rem;
     }
 
     /* Search popover full width */
@@ -3615,14 +3655,14 @@ body.light-mode .win-titlebar {
 
     /* Minesweeper grid smaller */
     .ms-grid {
-        grid-template-columns: repeat(9, 26px);
-        grid-template-rows: repeat(9, 26px);
+        grid-template-columns: repeat(9, 28px);
+        grid-template-rows: repeat(9, 28px);
     }
 
     .ms-cell {
-        width: 26px;
-        height: 26px;
-        font-size: 0.9rem;
+        width: 28px;
+        height: 28px;
+        font-size: 0.95rem;
     }
 
     /* Task Manager graph grid single column */
@@ -3630,15 +3670,21 @@ body.light-mode .win-titlebar {
         grid-template-columns: 1fr;
     }
 
-    /* Solitaire smaller cards */
+    /* Solitaire container horizontal scroll */
+    .solitaire-body {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
     .sol-card-slot,
     .sol-card {
-        width: 50px;
-        height: 72px;
+        width: 48px;
+        height: 70px;
+        font-size: 0.78rem;
     }
 
     .sol-column {
-        width: 50px;
+        width: 48px;
     }
 
     /* Explorer sidebar hidden on mobile */
@@ -3660,7 +3706,7 @@ body.light-mode .win-titlebar {
     /* PDF viewer */
     .pdf-paper-document {
         width: 100%;
-        padding: 20px;
+        padding: 18px;
     }
 
     /* Power modal */
@@ -3674,7 +3720,7 @@ body.light-mode .win-titlebar {
     }
 }
 
-/* Tablet-specific adjustments */
+/* Tablet-specific adjustments (769px to 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
     .start-menu {
         width: 580px;
@@ -3696,3 +3742,4 @@ body.light-mode .win-titlebar {
         gap: 8px;
     }
 }
+
