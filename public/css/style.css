@@ -203,12 +203,21 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     padding: 60px 80px;
     color: #fff;
+    cursor: pointer;
 }
 
 .lock-clock-container {
+    align-self: flex-start;
     animation: fadeInDown 0.8s ease;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.lock-screen.sign-in-mode .lock-clock-container {
+    transform: translateY(-20px) scale(0.88);
+    align-self: center;
 }
 
 .lock-time {
@@ -228,20 +237,50 @@ body, html {
     letter-spacing: 0.5px;
 }
 
+.lock-stage-hint {
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 25px;
+    animation: pulseHint 2s infinite ease-in-out;
+    transition: opacity 0.4s ease;
+}
+
+.lock-screen.sign-in-mode .lock-stage-hint {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes pulseHint {
+    0%, 100% { opacity: 0.6; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-5px); }
+}
+
 .lock-login-container {
     align-self: center;
-    margin-bottom: 70px;
+    margin-top: auto;
+    margin-bottom: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    animation: fadeInUp 0.8s ease;
     background: rgba(14, 14, 20, 0.65);
     backdrop-filter: blur(30px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 20px;
-    padding: 40px 50px;
+    padding: 35px 45px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lock-screen.sign-in-mode .lock-login-container {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
 }
 
 .user-avatar-wrapper {

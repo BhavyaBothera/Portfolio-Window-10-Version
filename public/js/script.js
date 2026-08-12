@@ -217,40 +217,77 @@
     // 5. BOOT SCREEN & LOCK SCREEN
     // ==========================================================================
     const bootScreen = document.getElementById('boot-screen');
+    // ==========================================================================
+    // 5. AUTHENTIC 2-STAGE LOCK SCREEN ENGINE
+    // Stage 1 (Lock Stage): Wallpaper + Large Time/Date + "Press key or click to sign in"
+    // Stage 2 (Sign In Stage): Blurred Wallpaper + Profile Avatar + "Sign In" button
+    // ==========================================================================
     const lockScreen = document.getElementById('lock-screen');
 
-    const unlockOS = () => {
-        if (lockScreen && !lockScreen.classList.contains('unlocked')) {
-            lockScreen.classList.add('unlocked');
-            playSound('startup');
-            setTimeout(() => {
-                showToast('Welcome Back, Bhavy!', 'Your Windows Portfolio OS is ready. Explore desktop icons, apps, and tools!', 'fa-solid fa-laptop-code', 'Windows OS');
-            }, 800);
+    const showSignInStage = () => {
+        if (lockScreen && !lockScreen.classList.contains('sign-in-mode')) {
+            lockScreen.classList.add('sign-in-mode');
+            playSound('click');
         }
     };
 
-    // Boot sequence: boot screen → lock screen → desktop
+    const unlockOS = () => {
+        if (!lockScreen) return;
+        if (!lockScreen.classList.contains('sign-in-mode')) {
+            showSignInStage();
+            return;
+        }
+        if (!lockScreen.classList.contains('unlocked')) {
+            lockScreen.classList.add('unlocked');
+            playSound('startup');
+            setTimeout(() => {
+                lockScreen.style.display = 'none';
+                showToast('Welcome Back, Bhavy!', 'Your Windows Portfolio OS is ready. Explore desktop icons, apps, and tools!', 'fa-solid fa-laptop-code', 'Windows OS');
+            }, 700);
+        }
+    };
+
+    const lockOS = () => {
+        if (!lockScreen) return;
+        lockScreen.style.display = 'flex';
+        void lockScreen.offsetWidth; // Force layout reflow
+        lockScreen.classList.remove('unlocked', 'sign-in-mode');
+        showToast('Screen Locked', 'Press any key or click to sign in.', 'fa-solid fa-lock', 'System');
+    };
+
+    // Boot sequence: boot screen → stage 1 lock screen
     if (bootScreen) {
         setTimeout(() => {
             bootScreen.classList.add('fade-out');
             setTimeout(() => {
                 bootScreen.remove();
-                // After boot screen fades, lock screen is visible. Show sign-in mode.
-                if (lockScreen) lockScreen.classList.add('sign-in-mode');
             }, 800);
-        }, 2800);
+        }, 2400);
     }
 
-    // Lock screen click or keypress to unlock
+    // Lock screen click:
+    // - Click unlock-btn directly unlocks OS
+    // - Click anywhere else on Stage 1 transitions to Stage 2 (Sign-in mode)
+    lockScreen?.addEventListener('click', (e) => {
+        if (e.target.closest('#unlock-btn')) {
+            unlockOS();
+        } else if (!lockScreen.classList.contains('sign-in-mode')) {
+            showSignInStage();
+        }
+    });
+
     document.getElementById('unlock-btn')?.addEventListener('click', (e) => {
         e.stopPropagation();
         unlockOS();
     });
 
-    lockScreen?.addEventListener('click', () => unlockOS());
     document.addEventListener('keydown', (e) => {
         if (lockScreen && !lockScreen.classList.contains('unlocked')) {
-            unlockOS();
+            if (!lockScreen.classList.contains('sign-in-mode')) {
+                showSignInStage();
+            } else if (e.key === 'Enter') {
+                unlockOS();
+            }
         }
     });
 
@@ -818,7 +855,7 @@
 
     document.getElementById('power-lock-btn')?.addEventListener('click', () => {
         powerModal?.classList.add('hidden');
-        lockScreen?.classList.remove('unlocked', 'sign-in-mode');
+        lockOS();
     });
 
     document.getElementById('power-restart-btn')?.addEventListener('click', () => {
