@@ -3359,12 +3359,340 @@ body.light-mode .win-titlebar {
 .sol-card.red { color: #d83b01; }
 .sol-card.black { color: #111111; }
 
-@media (max-width: 768px) {
-    .taskbar-search-container { display: none; }
-    .start-menu { width: 100vw; height: calc(100vh - var(--win-taskbar-height)); }
-    .win-window { width: 95vw !important; left: 2.5vw !important; top: 10px !important; }
+/* ==========================================================================
+   MATRIX MODE THEME (CMD Easter Egg)
+   ========================================================================== */
+.matrix-mode::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 0, 0.03) 2px,
+        rgba(0, 255, 0, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 999999;
+    animation: matrixScanline 8s linear infinite;
 }
 
+@keyframes matrixScanline {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100vh; }
+}
 
+.matrix-mode .taskbar {
+    background: rgba(0, 20, 0, 0.88) !important;
+    border-top-color: rgba(0, 255, 0, 0.3) !important;
+}
 
+.matrix-mode .win-titlebar {
+    background: rgba(0, 20, 0, 0.9) !important;
+}
 
+/* ==========================================================================
+   SYNTHWAVE MODE THEME (CMD Easter Egg)
+   ========================================================================== */
+.synthwave-mode {
+    --win-accent: #ff00ff;
+    --win-accent-glow: rgba(255, 0, 255, 0.35);
+}
+
+.synthwave-mode .taskbar {
+    background: linear-gradient(90deg, rgba(20, 0, 40, 0.92), rgba(40, 0, 60, 0.92)) !important;
+    border-top: 1px solid rgba(255, 0, 255, 0.4) !important;
+    box-shadow: 0 -5px 30px rgba(255, 0, 255, 0.2) !important;
+}
+
+.synthwave-mode .start-menu {
+    background: rgba(20, 0, 40, 0.92) !important;
+    border-color: rgba(255, 0, 255, 0.3) !important;
+    box-shadow: 0 30px 90px rgba(255, 0, 255, 0.2), inset 0 1px 0 rgba(255, 0, 255, 0.2) !important;
+}
+
+.synthwave-mode .win-titlebar {
+    background: linear-gradient(90deg, rgba(30, 0, 50, 0.95), rgba(50, 0, 80, 0.95)) !important;
+}
+
+.synthwave-mode .taskbar-app-tile.active {
+    border-bottom-color: #ff00ff !important;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5) !important;
+}
+
+.synthwave-mode .start-button:hover,
+.synthwave-mode .start-button.active {
+    color: #ff00ff !important;
+    box-shadow: inset 0 -2px 0 #ff00ff !important;
+}
+
+.synthwave-mode .cortana-button:hover {
+    color: #ff00ff !important;
+}
+
+.synthwave-mode .win-window {
+    border-color: rgba(255, 0, 255, 0.2) !important;
+    box-shadow: 0 12px 60px rgba(255, 0, 255, 0.15), 0 0 1px rgba(255, 0, 255, 0.3) !important;
+}
+
+.synthwave-mode .toast-notification {
+    border-color: rgba(255, 0, 255, 0.3) !important;
+    box-shadow: 0 10px 40px rgba(255, 0, 255, 0.2) !important;
+}
+
+/* ==========================================================================
+   DRAG-AND-DROP WALLPAPER VISUAL FEEDBACK
+   ========================================================================== */
+#desktop-shell[style*="outline"] {
+    transition: outline-color 0.3s ease;
+}
+
+#desktop-shell[style*="dashed"]::after {
+    content: '🖼️ Drop image to set as wallpaper';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    padding: 20px 40px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    z-index: 999998;
+    pointer-events: none;
+    animation: fadeIn 0.2s ease;
+}
+
+/* ==========================================================================
+   CORTANA SPEECH WAVE INDICATOR
+   ========================================================================== */
+.cortana-msg.assistant.speaking {
+    position: relative;
+    overflow: hidden;
+}
+
+.cortana-msg.assistant.speaking::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--win-accent), #00d2ff, var(--win-accent), transparent);
+    background-size: 200% 100%;
+    animation: speechWave 1.5s ease-in-out infinite;
+}
+
+@keyframes speechWave {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   MOBILE & TABLET RESPONSIVE LAYOUT (≤768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Hide search bar on mobile */
+    .taskbar-search-container { display: none; }
+
+    /* Start menu fills viewport width */
+    .start-menu {
+        width: 100vw;
+        height: calc(100vh - var(--win-taskbar-height));
+        left: 0 !important;
+        border-radius: 0;
+    }
+
+    .start-menu .start-tiles-panel {
+        padding: 14px;
+    }
+
+    .start-menu .tiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .start-menu .start-app-list {
+        width: 200px;
+        padding: 12px 8px;
+    }
+
+    /* Windows auto-fullscreen on mobile */
+    .win-window {
+        width: 100vw !important;
+        height: calc(100vh - var(--win-taskbar-height)) !important;
+        left: 0 !important;
+        top: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .win-window.maximized {
+        width: 100vw !important;
+        height: calc(100vh - var(--win-taskbar-height)) !important;
+        left: 0 !important;
+        top: 0 !important;
+    }
+
+    /* Simplified titlebar on mobile */
+    .win-titlebar {
+        padding: 0 6px !important;
+    }
+
+    .win-titlebar-label {
+        font-size: 0.78rem;
+    }
+
+    /* Taskbar adjustments */
+    .taskbar {
+        height: var(--win-taskbar-height);
+    }
+
+    .taskbar-app-tile {
+        width: 38px;
+        height: 34px;
+        font-size: 1rem;
+    }
+
+    .start-button {
+        width: 44px;
+    }
+
+    .cortana-button,
+    .task-view-button {
+        width: 38px;
+    }
+
+    /* System tray compact */
+    .system-tray {
+        padding: 0 6px;
+        gap: 6px;
+    }
+
+    .tray-icons {
+        gap: 6px;
+    }
+
+    .tray-icon {
+        font-size: 0.85rem;
+    }
+
+    .system-clock {
+        font-size: 0.72rem;
+        min-width: auto;
+        padding: 0 4px;
+    }
+
+    /* Desktop icons grid */
+    .desktop-icons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .desktop-icon {
+        width: 65px;
+    }
+
+    .desktop-icon i {
+        font-size: 1.8rem;
+    }
+
+    .desktop-icon span {
+        font-size: 0.68rem;
+    }
+
+    /* Search popover full width */
+    .search-popover {
+        width: 100vw;
+        left: 0;
+        border-radius: 0;
+    }
+
+    /* Minesweeper grid smaller */
+    .ms-grid {
+        grid-template-columns: repeat(9, 26px);
+        grid-template-rows: repeat(9, 26px);
+    }
+
+    .ms-cell {
+        width: 26px;
+        height: 26px;
+        font-size: 0.9rem;
+    }
+
+    /* Task Manager graph grid single column */
+    .taskmgr-graph-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Solitaire smaller cards */
+    .sol-card-slot,
+    .sol-card {
+        width: 50px;
+        height: 72px;
+    }
+
+    .sol-column {
+        width: 50px;
+    }
+
+    /* Explorer sidebar hidden on mobile */
+    .explorer-sidebar {
+        display: none;
+    }
+
+    /* Toast notifications full width */
+    .toast-notification {
+        right: 8px;
+        width: calc(100vw - 16px);
+    }
+
+    /* Cortana input */
+    .cortana-msg {
+        max-width: 90%;
+    }
+
+    /* PDF viewer */
+    .pdf-paper-document {
+        width: 100%;
+        padding: 20px;
+    }
+
+    /* Power modal */
+    .power-modal-content {
+        width: 85vw;
+    }
+
+    /* Context menu */
+    .context-menu {
+        max-width: 90vw;
+    }
+}
+
+/* Tablet-specific adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .start-menu {
+        width: 580px;
+    }
+
+    .win-window {
+        min-width: 320px;
+    }
+
+    .taskbar-search-container {
+        width: 200px;
+    }
+
+    .desktop-icons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    }
+
+    .tiles-grid {
+        gap: 8px;
+    }
+}

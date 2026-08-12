@@ -114,6 +114,25 @@
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
                     osc.start(now); osc.stop(now + 0.8);
                     break;
+                case 'trash-empty':
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(200, now + 0.25);
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                    osc.start(now); osc.stop(now + 0.3);
+                    break;
+                case 'solitaire-victory': {
+                    gain.gain.setValueAtTime(0.07, now);
+                    osc.type = 'sine';
+                    const melody = [523, 659, 784, 1047, 784, 1047, 1319];
+                    melody.forEach((freq, i) => {
+                        osc.frequency.setValueAtTime(freq, now + i * 0.12);
+                    });
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+                    osc.start(now); osc.stop(now + 1.0);
+                    break;
+                }
                 default:
                     osc.frequency.setValueAtTime(600, now);
                     osc.type = 'sine';
@@ -261,6 +280,11 @@
             if (windowId === 'minesweeper') initMinesweeper();
             if (windowId === 'vscode') loadVsCodeContent('index.html');
             if (windowId === 'taskmgr') startTaskManagerUpdates();
+
+            // Mobile auto-fullscreen
+            if (window.innerWidth <= 768) {
+                winEl.classList.add('maximized');
+            }
         } else if (winEl.classList.contains('minimized')) {
             winEl.classList.remove('minimized');
             state.zIndexCounter++;
@@ -645,6 +669,7 @@
     const wallpaperEl = document.getElementById('desktop-wallpaper');
     const selectionBox = document.getElementById('desktop-selection-box');
     let isSelecting = false, selectStartX = 0, selectStartY = 0;
+
 
     wallpaperEl?.addEventListener('mousedown', (e) => {
         if (e.button !== 0 || e.target !== wallpaperEl) return;
@@ -1177,29 +1202,92 @@ const showToast = (title, body) => { /* ... */ };`,
     const edgeUrlInput = document.getElementById('edge-url-input');
     const edgeViewport = document.getElementById('edge-viewport-content');
 
+    // Load a URL inside Edge's iframe sandbox
+    window.openProjectInEdge = function(url) {
+        openWindow('edge');
+        if (edgeUrlInput) edgeUrlInput.value = url;
+        if (edgeViewport) {
+            edgeViewport.innerHTML = `
+                <div class="edge-iframe-container" style="width:100%;height:100%;display:flex;flex-direction:column;">
+                    <div class="edge-tab-bar" style="height:34px;background:#18181c;display:flex;align-items:center;padding:0 12px;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <span style="background:rgba(0,120,215,0.3);padding:4px 14px;border-radius:12px;font-size:0.78rem;color:#7dd3fc;font-weight:600;"><i class="fa-solid fa-globe" style="margin-right:6px;"></i>${new URL(url).hostname}</span>
+                        <div style="flex:1;"></div>
+                        <button onclick="document.getElementById('edge-live-iframe').src=document.getElementById('edge-live-iframe').src" style="background:transparent;border:none;color:#aaa;cursor:pointer;font-size:0.85rem;" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button onclick="window.open('${url}','_blank')" style="background:transparent;border:none;color:#aaa;cursor:pointer;font-size:0.85rem;" title="Open in New Tab"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                    </div>
+                    <iframe id="edge-live-iframe" src="${url}" style="flex:1;width:100%;border:none;background:#fff;border-radius:0 0 6px 6px;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" loading="lazy"></iframe>
+                </div>`;
+        }
+        playSound('open');
+    };
+
     const navigateEdge = (url) => {
         if (!edgeViewport || !edgeUrlInput) return;
         edgeUrlInput.value = url;
         playSound('click');
 
-        if (url.includes('github.com')) {
-            edgeViewport.innerHTML = `<div style="padding:40px;text-align:center;color:#fff;"><i class="fa-brands fa-github" style="font-size:4rem;color:#0078d7;margin-bottom:15px;"></i><h2>Bhavy's GitHub Profile</h2><p style="color:#aaa;max-width:500px;margin:10px auto 20px;">Explore open-source repositories, system architecture projects, and frontend experiments.</p><a href="https://github.com" target="_blank" style="background:#0078d7;color:#fff;padding:10px 24px;text-decoration:none;border-radius:4px;font-weight:600;display:inline-block;">Open External GitHub ↗</a></div>`;
-        } else if (url.includes('linkedin.com')) {
-            edgeViewport.innerHTML = `<div style="padding:40px;text-align:center;color:#fff;"><i class="fa-brands fa-linkedin" style="font-size:4rem;color:#0a66c2;margin-bottom:15px;"></i><h2>Bhavy's LinkedIn Network</h2><p style="color:#aaa;max-width:500px;margin:10px auto 20px;">Connect professionally, view endorsement badges, and explore career history.</p><a href="https://linkedin.com" target="_blank" style="background:#0a66c2;color:#fff;padding:10px 24px;text-decoration:none;border-radius:4px;font-weight:600;display:inline-block;">Open External LinkedIn ↗</a></div>`;
+        // Check if it's a full URL that can be embedded
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            // Try to load in iframe sandbox
+            edgeViewport.innerHTML = `
+                <div class="edge-iframe-container" style="width:100%;height:100%;display:flex;flex-direction:column;">
+                    <div class="edge-tab-bar" style="height:34px;background:#18181c;display:flex;align-items:center;padding:0 12px;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <span style="background:rgba(0,120,215,0.3);padding:4px 14px;border-radius:12px;font-size:0.78rem;color:#7dd3fc;font-weight:600;"><i class="fa-solid fa-globe" style="margin-right:6px;"></i>${url.replace(/^https?:\/\//, '').split('/')[0]}</span>
+                        <div style="flex:1;"></div>
+                        <button onclick="document.getElementById('edge-live-iframe').src=document.getElementById('edge-live-iframe').src" style="background:transparent;border:none;color:#aaa;cursor:pointer;font-size:0.85rem;" title="Reload"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button onclick="window.open('${url}','_blank')" style="background:transparent;border:none;color:#aaa;cursor:pointer;font-size:0.85rem;" title="Open Externally"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+                    </div>
+                    <iframe id="edge-live-iframe" src="${url}" style="flex:1;width:100%;border:none;background:#fff;border-radius:0 0 6px 6px;" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" loading="lazy"
+                        onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#aaa;\'><i class=\'fa-solid fa-ban\' style=\'font-size:3rem;margin-bottom:15px;\'></i><h3>This site cannot be embedded</h3><p>Try opening externally instead.</p><a href=\'${url}\' target=\'_blank\' style=\'color:#00d2ff;\'>Open ${url.replace(/^https?:\/\//, '').split('/')[0]} ↗</a></div>'"
+                    ></iframe>
+                </div>`;
         } else {
             const displayUrl = url.replace(/^https?:\/\//, '');
             edgeViewport.innerHTML = `<div style="padding:30px;color:#fff;"><div style="font-size:0.85rem;color:#888;margin-bottom:10px;"><i class="fa-solid fa-globe"></i> Results for: <strong>${displayUrl}</strong></div><div style="background:#141418;padding:20px;border-radius:6px;border:1px solid var(--win-border);"><h3 style="color:#60a5fa;margin-bottom:6px;">Bhavy — Full-Stack Software Engineer</h3><p style="color:#ccc;font-size:0.9rem;line-height:1.5;">Welcome to Bhavy's Web Application OS. Experienced in building high-performance web apps, responsive designs, complex UI systems, and interactive portfolio experiences.</p><div style="margin-top:15px;display:flex;gap:10px;"><button onclick="openWindow('projects')" style="background:#0078d7;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Explore Projects</button><button onclick="openWindow('contact')" style="background:rgba(255,255,255,0.1);color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Contact Me</button></div></div></div>`;
         }
     };
 
+    // Reset Edge to start page
+    const resetEdgeStartPage = () => {
+        if (edgeViewport) {
+            edgeViewport.innerHTML = document.getElementById('win-edge')?.querySelector('.edge-start-page')?.outerHTML || '';
+            // Rebind bookmark buttons
+            edgeViewport.querySelectorAll('.edge-bookmark-btn').forEach(btn => {
+                btn.addEventListener('click', () => navigateEdge(btn.dataset.url));
+            });
+        }
+        if (edgeUrlInput) edgeUrlInput.value = 'https://bhavy-portfolio.dev/welcome';
+    };
+
     document.getElementById('edge-go')?.addEventListener('click', () => navigateEdge(edgeUrlInput?.value || ''));
     edgeUrlInput?.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateEdge(edgeUrlInput.value); });
-    document.getElementById('edge-refresh')?.addEventListener('click', () => navigateEdge(edgeUrlInput?.value || ''));
-    document.getElementById('edge-back')?.addEventListener('click', () => navigateEdge('https://bhavy-portfolio.dev/welcome'));
+    document.getElementById('edge-refresh')?.addEventListener('click', () => {
+        const iframe = document.getElementById('edge-live-iframe');
+        if (iframe) iframe.src = iframe.src;
+        else navigateEdge(edgeUrlInput?.value || '');
+    });
+    document.getElementById('edge-back')?.addEventListener('click', () => resetEdgeStartPage());
     document.getElementById('edge-forward')?.addEventListener('click', () => navigateEdge('https://github.com'));
 
     document.querySelectorAll('.edge-bookmark-btn').forEach(btn => {
         btn.addEventListener('click', () => navigateEdge(btn.dataset.url));
+    });
+
+    // Wire project Live Demo links to open inside Edge
+    document.querySelectorAll('.proj-link').forEach(link => {
+        const text = link.textContent.trim().toLowerCase();
+        if (text.includes('live') || text.includes('demo') || text.includes('preview') || text.includes('play')) {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = link.getAttribute('href');
+                if (href && href !== '#') {
+                    window.openProjectInEdge(href);
+                } else {
+                    openWindow('edge');
+                    showToast('Live Demo', 'This project demo will be available soon!', 'fa-brands fa-edge', 'Edge');
+                }
+            });
+        }
     });
 
     // ==========================================================================
@@ -1474,21 +1562,28 @@ const showToast = (title, body) => { /* ... */ };`,
     const cmdCommands = {
         help: () => {
             appendCmdText(`<br><strong style="color:#60a5fa;">AVAILABLE COMMANDS:</strong>
-<br>  <span class="text-gold">help</span>         — Show this help menu
-<br>  <span class="text-gold">about</span>        — About this system and developer
-<br>  <span class="text-gold">skills</span>       — List technical skills
-<br>  <span class="text-gold">projects</span>     — Open the Projects Explorer
-<br>  <span class="text-gold">contact</span>      — Open the Contact / Mail app
-<br>  <span class="text-gold">resume</span>       — View resume
-<br>  <span class="text-gold">date</span>         — Show current date and time
-<br>  <span class="text-gold">whoami</span>       — Display current user
-<br>  <span class="text-gold">hostname</span>     — Display hostname
-<br>  <span class="text-gold">matrix</span>       — Enter the Matrix...
-<br>  <span class="text-gold">cls / clear</span>  — Clear screen
-<br>  <span class="text-gold">exit</span>         — Close terminal
+<br>  <span class="text-gold">help</span>           — Show this help menu
+<br>  <span class="text-gold">about</span>          — About this system and developer
+<br>  <span class="text-gold">skills</span>         — List technical skills
+<br>  <span class="text-gold">projects</span>       — Open the Projects Explorer
+<br>  <span class="text-gold">contact</span>        — Open the Contact / Mail app
+<br>  <span class="text-gold">resume</span>         — View resume
+<br>  <span class="text-gold">cat resume</span>     — Display resume in terminal
+<br>  <span class="text-gold">date</span>           — Show current date and time
+<br>  <span class="text-gold">whoami</span>         — Display current user
+<br>  <span class="text-gold">hostname</span>       — Display hostname
+<br>  <span class="text-gold">matrix</span>         — Enter the Matrix...
+<br>  <span class="text-gold">synthwave</span>      — Toggle synthwave neon theme
+<br>  <span class="text-gold">sudo hire-me</span>   — 🎯 Ultimate easter egg
+<br>  <span class="text-gold">ascii</span>          — Display ASCII art logo
+<br>  <span class="text-gold">sysinfo</span>        — Display system info
+<br>  <span class="text-gold">tree</span>           — Show file tree
+<br>  <span class="text-gold">cls / clear</span>    — Clear screen
+<br>  <span class="text-gold">exit</span>           — Close terminal
+<br>  <span class="text-cyan">TIP: Press TAB for command auto-completion!</span>
 <br>`);
         },
-        about: () => appendCmdText(`<br>  <strong>Windows 10 Portfolio OS</strong> v3.0<br>  Full-Stack Developer: Bhavy<br>  Built with: HTML5, CSS3, Vanilla JavaScript<br>  Architecture: Single-page, state-managed, Web Audio API<br>`),
+        about: () => appendCmdText(`<br>  <strong>Windows 10 Portfolio OS</strong> v5.0<br>  Full-Stack Developer: Bhavy<br>  Built with: HTML5, CSS3, Vanilla JavaScript<br>  Architecture: Single-page, state-managed, Web Audio API<br>  Features: 20 apps, Cortana AI, live wallpapers, sound engine<br>`),
         skills: () => appendCmdText(`<br>  <span class="text-cyan">Frontend:</span> JavaScript, TypeScript, React, Next.js, HTML5, CSS3<br>  <span class="text-cyan">Backend:</span> Node.js, Express, Python, FastAPI<br>  <span class="text-cyan">Database:</span> PostgreSQL, MongoDB, Redis<br>  <span class="text-cyan">Tools:</span> Git, Docker, Vercel, AWS, VS Code, Linux<br>`),
         projects: () => { openWindow('projects'); appendCmdText(`<br>  <span class="text-green">Opening File Explorer → Projects...</span><br>`); },
         contact: () => { openWindow('contact'); appendCmdText(`<br>  <span class="text-green">Opening Mail App...</span><br>`); },
@@ -1498,13 +1593,38 @@ const showToast = (title, body) => { /* ... */ };`,
         hostname: () => appendCmdText(`<br>  BHAVY-PORTFOLIO-OS<br>`),
         matrix: () => {
             appendCmdText('<br>');
-            let lines = 0;
-            const interval = setInterval(() => {
-                const chars = Array.from({ length: 60 }, () => String.fromCharCode(0x30A0 + Math.random() * 96)).join('');
-                appendCmdText(`<span style="color:#00ff00;font-size:0.7rem;">${chars}</span>`);
-                lines++;
-                if (lines > 20) { clearInterval(interval); appendCmdText('<br>  <span class="text-gold">You are the One, Neo.</span><br>'); }
-            }, 80);
+            document.body.classList.toggle('matrix-mode');
+            const isOn = document.body.classList.contains('matrix-mode');
+            if (isOn) {
+                let lines = 0;
+                const interval = setInterval(() => {
+                    const chars = Array.from({ length: 60 }, () => String.fromCharCode(0x30A0 + Math.random() * 96)).join('');
+                    appendCmdText(`<span style="color:#00ff00;font-size:0.7rem;">${chars}</span>`);
+                    lines++;
+                    if (lines > 20) { clearInterval(interval); appendCmdText('<br>  <span class="text-gold">You are the One, Neo. Matrix mode ACTIVATED.</span><br>'); }
+                }, 80);
+            } else {
+                appendCmdText('  <span class="text-gold">Matrix mode DEACTIVATED. Welcome back to reality.</span><br>');
+            }
+        },
+        synthwave: () => {
+            document.body.classList.toggle('synthwave-mode');
+            const isOn = document.body.classList.contains('synthwave-mode');
+            appendCmdText(`<br>  <span style="color:${isOn ? '#ff00ff' : '#00d2ff'};">⚡ Synthwave mode ${isOn ? 'ACTIVATED' : 'DEACTIVATED'}!</span><br>`);
+            if (isOn) {
+                showToast('🌆 Synthwave Mode', 'Neon retro theme activated! Run synthwave again to disable.', 'fa-solid fa-wand-magic-sparkles', 'System');
+            }
+            playSound('click');
+        },
+        ascii: () => {
+            appendCmdText(`<br><pre style="color:#00d2ff;font-size:0.65rem;line-height:1.1;">
+ ____  _   _    _  __     ____   __
+| __ )| | | |  / \\  \\ \\   / /\\ \\ / /
+|  _ \\| |_| | / _ \\  \\ \\ / /  \\ V /
+| |_) |  _  |/ ___ \\  \\ V /    | |
+|____/|_| |_/_/   \\_\\  \\_/     |_|
+   Software Engineer & Creator
+</pre><br>`);
         },
         sysinfo: () => appendCmdText(`<br>  <strong style="color:#0078d7;">OS Name:</strong> Microsoft Windows 10 Portfolio OS<br>  <strong style="color:#0078d7;">Version:</strong> 22H2 (Build 19045.3803)<br>  <strong style="color:#0078d7;">Processor:</strong> Intel(R) Core(TM) i9-13900H @ 2.60GHz<br>  <strong style="color:#0078d7;">Memory:</strong> 32768MB RAM<br>  <strong style="color:#0078d7;">Graphics:</strong> NVIDIA GeForce RTX 4070 Laptop GPU<br>`),
         tree: () => appendCmdText(`<br>Folder PATH listing for volume OS_DRIVE<br>C:.
@@ -1519,6 +1639,9 @@ const showToast = (title, body) => { /* ... */ };`,
         exit: () => closeWindow('cmd'),
     };
 
+    // All available command names for Tab auto-completion
+    const cmdCommandNames = Object.keys(cmdCommands).concat(['sudo hire-me', 'cat resume', 'js', 'bsod', 'crash']);
+
     let cmdHistory = [];
     let cmdHistoryIdx = -1;
 
@@ -1527,6 +1650,26 @@ const showToast = (title, body) => { /* ... */ };`,
     });
 
     cmdInputField?.addEventListener('keydown', (e) => {
+        // Tab auto-completion
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const partial = cmdInputField.value.toLowerCase().trim();
+            if (!partial) return;
+            const matches = cmdCommandNames.filter(cmd => cmd.startsWith(partial));
+            if (matches.length === 1) {
+                cmdInputField.value = matches[0];
+            } else if (matches.length > 1) {
+                appendCmdText(`<br><span style="color:#888;">  ${matches.join('  ')}</span>`);
+                // Find common prefix
+                let common = matches[0];
+                for (const m of matches) {
+                    while (!m.startsWith(common)) common = common.slice(0, -1);
+                }
+                cmdInputField.value = common;
+            }
+            return;
+        }
+
         if (e.key === 'ArrowUp') {
             e.preventDefault();
             if (cmdHistory.length > 0) {
@@ -1558,7 +1701,50 @@ const showToast = (title, body) => { /* ... */ };`,
                 return;
             }
 
-            if (input.startsWith('js ')) {
+            // Special multi-word commands
+            if (input === 'sudo hire-me') {
+                appendCmdText(`<br>
+<span style="color:#ff00ff;font-weight:700;">  ╔══════════════════════════════════════════════════╗</span>
+<span style="color:#ff00ff;">  ║  🎯 ACCESS GRANTED — RECRUITER MODE ACTIVATED    ║</span>
+<span style="color:#ff00ff;">  ╚══════════════════════════════════════════════════╝</span>
+<br>
+<span style="color:#00ff00;">  ✅ Bhavy is AVAILABLE FOR HIRE!</span>
+<span style="color:#00d2ff;">  📧 Email: bhavy@example.com</span>
+<span style="color:#00d2ff;">  🔗 GitHub: github.com/BhavyaBothera</span>
+<span style="color:#00d2ff;">  💼 LinkedIn: linkedin.com/in/bhavy</span>
+<br>
+<span style="color:#fcc419;">  Skills: React, Next.js, Node.js, Python, TypeScript</span>
+<span style="color:#fcc419;">  Status: Ready to build amazing things together! 🚀</span>
+<br>`);
+                openWindow('contact');
+                showToast('🎯 Recruiter Mode', 'Contact form opened! Bhavy is available for hire.', 'fa-solid fa-handshake', 'System');
+                playSound('solitaire-victory');
+            } else if (input === 'cat resume' || input === 'cat cv') {
+                appendCmdText(`<br>
+<span style="color:#00d2ff;font-weight:700;">══════════════════════════════════════════</span>
+<span style="color:#fff;font-weight:700;">  BHAVY — Full-Stack Software Engineer</span>
+<span style="color:#00d2ff;">══════════════════════════════════════════</span>
+<br>
+<span style="color:#fcc419;">  [SUMMARY]</span>
+<span style="color:#ccc;">  Versatile Software Engineer with strong</span>
+<span style="color:#ccc;">  background in frontend & full-stack dev.</span>
+<br>
+<span style="color:#fcc419;">  [SKILLS]</span>
+<span style="color:#34d399;">  Frontend:</span> <span style="color:#ccc;">JS, TS, React, Next.js, HTML/CSS</span>
+<span style="color:#34d399;">  Backend:</span>  <span style="color:#ccc;">Node.js, Express, Python, FastAPI</span>
+<span style="color:#34d399;">  Database:</span> <span style="color:#ccc;">PostgreSQL, MongoDB, Redis</span>
+<span style="color:#34d399;">  DevOps:</span>  <span style="color:#ccc;">Docker, AWS, Vercel, Git, CI/CD</span>
+<br>
+<span style="color:#fcc419;">  [EXPERIENCE]</span>
+<span style="color:#ccc;">  Sr. Full-Stack Dev @ Tech Innovations Lab</span>
+<span style="color:#ccc;">  Frontend Dev @ Digital Solutions Inc.</span>
+<br>
+<span style="color:#fcc419;">  [EDUCATION]</span>
+<span style="color:#ccc;">  B.S. Computer Science — Honors</span>
+<br>
+<span style="color:#00d2ff;">══════════════════════════════════════════</span>
+<br>`);
+            } else if (input.startsWith('js ')) {
                 const jsExpr = rawVal.slice(3);
                 try {
                     const result = eval(jsExpr);
@@ -1715,6 +1901,7 @@ const showToast = (title, body) => { /* ... */ };`,
             const faceBtn = document.getElementById('ms-reset-btn');
             if (faceBtn) faceBtn.textContent = '😎';
             showToast('🎉 Minesweeper Victory!', `You cleared the board in ${msSeconds} seconds!`, 'fa-solid fa-trophy', 'Minesweeper');
+            playSound('solitaire-victory');
         }
     }
 
@@ -1739,6 +1926,7 @@ const showToast = (title, body) => { /* ... */ };`,
     document.getElementById('empty-bin-btn')?.addEventListener('click', () => {
         const binArea = document.getElementById('bin-content-area');
         if (binArea) binArea.innerHTML = '<div style="padding:40px;text-align:center;color:#888;"><i class="fa-regular fa-trash-can" style="font-size:3rem;margin-bottom:10px;opacity:0.4;"></i><p>Recycle Bin is empty.</p></div>';
+        playSound('trash-empty');
         showToast('Recycle Bin Emptied', 'All deleted items have been permanently removed.', 'fa-solid fa-trash-can', 'Recycle Bin');
     });
 
@@ -1783,52 +1971,112 @@ const showToast = (title, body) => { /* ... */ };`,
             }
         }
 
-        // 2. Specific Topic Answers
-        if (q.includes('skill') || q.includes('know') || q.includes('tech stack')) {
-            return 'Bhavy is proficient in <strong>JavaScript (ES6+)</strong>, <strong>React / Next.js</strong>, <strong>Node.js</strong>, <strong>Python</strong>, <strong>HTML5/CSS3</strong>, <strong>PostgreSQL</strong>, <strong>MongoDB</strong>, and <strong>Docker</strong>!';
+        // 2. Specific Topic Answers — Deep Knowledge Base
+        if (q.includes('skill') || q.includes('know') || q.includes('tech stack') || q.includes('what can you do') || q.includes('technologies')) {
+            return `Bhavy's technical arsenal includes:<br>
+🔹 <strong>Frontend:</strong> JavaScript (ES6+), TypeScript, React.js, Next.js, HTML5, CSS3/Sass, Tailwind CSS<br>
+🔹 <strong>Backend:</strong> Node.js, Express, Python, FastAPI, REST & GraphQL APIs<br>
+🔹 <strong>Databases:</strong> PostgreSQL, MongoDB, Redis<br>
+🔹 <strong>DevOps:</strong> Docker, AWS, Vercel, Git, CI/CD, Linux<br>
+🔹 <strong>UI/UX:</strong> Responsive Design, Figma, Glassmorphism, Accessibility`;
         }
-        if (q.includes('project') || q.includes('portfolio') || q.includes('apps')) {
-            return 'Bhavy built the <strong>Windows 10 Portfolio OS</strong>, an <strong>AI Workspace Suite</strong>, a <strong>Real-Time Analytics Dashboard</strong>, and an <strong>Arcade Engine</strong>! Opening Projects Explorer...';
+        if (q.includes('project') || q.includes('portfolio') || q.includes('apps') || q.includes('what did you build') || q.includes('showcase')) {
+            openWindow('projects');
+            return `Bhavy's standout projects include:<br>
+🚀 <strong>Windows 10 Portfolio OS</strong> — This interactive desktop experience you're using right now!<br>
+🤖 <strong>AI Workspace Assistant</strong> — LLM-powered code generation & document automation<br>
+📊 <strong>Real-Time Analytics Dashboard</strong> — WebSocket-powered live data visualization<br>
+🎮 <strong>Retro Arcade Engine</strong> — Custom physics, leaderboard API, pixel audio`;
         }
-        if (q.includes('resume') || q.includes('cv')) {
+        if (q.includes('resume') || q.includes('cv') || q.includes('download resume')) {
             openWindow('resume');
-            return 'Opening Bhavy\'s official <strong>Resume.pdf</strong> for you!';
+            return 'Opening Bhavy\'s official <strong>Resume.pdf</strong> for you! You can also download it from the viewer.';
         }
-        if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('reach')) {
+        if (q.includes('contact') || q.includes('hire') || q.includes('email') || q.includes('reach') || q.includes('available') || q.includes('freelance')) {
             openWindow('contact');
-            return 'Bhavy is <strong style="color:#10b981;">available for hire</strong>! You can send an email via Windows Mail or connect on GitHub/LinkedIn.';
+            return `Bhavy is <strong style="color:#10b981;">✅ Available for Hire</strong>!<br>
+📧 <strong>Email:</strong> bhavy@example.com<br>
+🔗 <strong>GitHub:</strong> github.com/BhavyaBothera<br>
+💼 <strong>LinkedIn:</strong> Connect on LinkedIn<br>
+You can also use the Contact Mail app I just opened!`;
         }
-        if (q.includes('experience') || q.includes('job') || q.includes('work history')) {
+        if (q.includes('experience') || q.includes('job') || q.includes('work history') || q.includes('career') || q.includes('company')) {
             openWindow('experience');
-            return 'Bhavy has worked as a <strong>Senior Full-Stack Developer</strong> at Tech Innovations Lab and <strong>Frontend Web Developer</strong> at Digital Solutions Inc.';
+            return `Bhavy's career journey:<br>
+🏢 <strong>Senior Full-Stack Developer</strong> @ Tech Innovations Lab (2024-Present)<br>
+    — Leading UI modernization, 40% rendering speed improvement, CI/CD pipelines<br>
+💻 <strong>Frontend Web Developer</strong> @ Digital Solutions Inc. (2022-2024)<br>
+    — Responsive interfaces, reusable component libraries, Figma → code workflows`;
         }
-        if (q.includes('education') || q.includes('degree') || q.includes('college') || q.includes('university')) {
-            return 'Bhavy holds a <strong>B.S. in Computer Science</strong> with Honors from University of Technology, specializing in Software Engineering and HCI.';
+        if (q.includes('education') || q.includes('degree') || q.includes('college') || q.includes('university') || q.includes('study') || q.includes('academic')) {
+            return `🎓 <strong>B.S. in Computer Science</strong> — Graduated with Honors<br>
+📍 University of Technology (2019-2023)<br>
+📚 Specialized in Software Engineering, Data Structures & Algorithms, and Human-Computer Interaction (HCI)`;
         }
-        if (q.includes('how are you') || q.includes('how\'s it going') || q.includes('whats up')) {
-            return 'I\'m running at 100% efficiency! Thanks for asking. How can I help you explore Bhavy\'s portfolio today?';
+        if (q.includes('what is this') || q.includes('how did you make') || q.includes('how was this built') || q.includes('tech behind')) {
+            return `This portfolio is a full <strong>Windows 10 Desktop OS Simulator</strong> built from scratch using:<br>
+🔹 <strong>HTML5</strong> — 1200+ lines of semantic markup<br>
+🔹 <strong>CSS3</strong> — 3300+ lines with Fluent Design glassmorphism<br>
+🔹 <strong>Vanilla JavaScript</strong> — 2600+ lines with Web Audio API, speech synthesis, and canvas rendering<br>
+No frameworks. No libraries. Pure web craftsmanship! 🎨`;
         }
-        if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('greetings')) {
-            return 'Hello! 👋 I\'m Cortana, Bhavy\'s virtual assistant. Feel free to ask about skills, projects, experience, or tell me to open any app!';
+        if (q.includes('hobby') || q.includes('free time') || q.includes('fun') || q.includes('interest') || q.includes('passion')) {
+            return `When Bhavy isn't coding, you'll find him:<br>
+🎮 Gaming & exploring game design<br>
+🤖 Experimenting with AI/ML tools<br>
+🛠️ Customizing developer productivity workflows<br>
+📖 Contributing to open-source projects`;
         }
-        if (q.includes('who are you') || q.includes('what are you') || q.includes('name')) {
-            return 'I am <strong>Cortana</strong>, your AI guide inside Bhavy\'s Windows 10 Portfolio OS!';
+        if (q.includes('strength') || q.includes('best at') || q.includes('superpower')) {
+            return `Bhavy's superpowers:<br>
+⚡ Translating complex requirements into pixel-perfect UIs<br>
+🧩 Building modular, scalable system architectures<br>
+🎨 Bridging the gap between engineering and design<br>
+🚀 Rapid prototyping with obsessive attention to detail`;
         }
-        if (q.includes('who is bhavy') || q.includes('about bhavy') || q.includes('creator') || q.includes('developer')) {
-            return 'Bhavy is a passionate Full-Stack Software Engineer who crafts high-performance web applications and interactive digital experiences!';
+        if (q.includes('how are you') || q.includes('how\'s it going') || q.includes('whats up') || q.includes('how do you do')) {
+            return 'I\'m running at 100% efficiency on this beautiful Windows 10 Portfolio OS! 💪 How can I help you explore today?';
         }
-        if (q.includes('joke') || q.includes('funny')) {
-            return 'Why do programmers prefer dark mode? Because light attracts bugs! 🐛';
+        if (q.includes('hello') || q.includes('hi') || q.includes('hey') || q.includes('greetings') || q.includes('good morning') || q.includes('good evening')) {
+            return 'Hello! 👋 I\'m Cortana, Bhavy\'s virtual portfolio assistant. Ask me about skills, projects, experience, or tell me to open any app!';
         }
-        if (q.includes('thanks') || q.includes('thank you')) {
-            return 'You\'re very welcome! Let me know if you need anything else.';
+        if (q.includes('who are you') || q.includes('what are you') || q.includes('your name')) {
+            return 'I am <strong>Cortana</strong> 🤖, the AI assistant inside Bhavy\'s Windows 10 Portfolio OS! I can answer questions, open apps, and help you navigate this digital workspace.';
         }
-        if (q.includes('bye') || q.includes('goodbye')) {
-            return 'Goodbye! Have a great time exploring the portfolio desktop.';
+        if (q.includes('who is bhavy') || q.includes('about bhavy') || q.includes('creator') || q.includes('developer') || q.includes('tell me about')) {
+            return `<strong>Bhavy</strong> is a passionate Full-Stack Software Engineer who specializes in building modern frontend web applications, responsive APIs, and interactive desktop-grade experiences like the one you're exploring right now! 🚀`;
+        }
+        if (q.includes('joke') || q.includes('funny') || q.includes('make me laugh')) {
+            const jokes = [
+                'Why do programmers prefer dark mode? Because light attracts bugs! 🐛',
+                'A SQL query walks into a bar, sees two tables and asks... "Can I JOIN you?" 🍻',
+                'Why did the developer go broke? Because he used up all his cache! 💸',
+                '!false — It\'s funny because it\'s true. 😄',
+                'There are only 10 types of people: those who understand binary and those who don\'t. 🤓'
+            ];
+            return jokes[Math.floor(Math.random() * jokes.length)];
+        }
+        if (q.includes('thanks') || q.includes('thank you') || q.includes('appreciate')) {
+            return 'You\'re very welcome! 😊 Let me know if there\'s anything else you\'d like to explore!';
+        }
+        if (q.includes('bye') || q.includes('goodbye') || q.includes('see you') || q.includes('later')) {
+            return 'Goodbye! 👋 Have a wonderful time exploring the portfolio. Come back anytime!';
+        }
+        if (q.includes('time') || q.includes('what time') || q.includes('clock')) {
+            return `🕐 The current time is <strong>${new Date().toLocaleTimeString()}</strong> on ${new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}.`;
+        }
+        if (q.includes('weather')) {
+            return '☀️ I can\'t check real weather, but inside this Portfolio OS, it\'s always sunny with a 100% chance of awesome code! 🌟';
         }
 
         // Default Fallback
-        return 'I can help you explore Bhavy\'s portfolio! Try asking me to open <strong>projects</strong>, <strong>skills</strong>, <strong>resume</strong>, or <strong>contact info</strong>.';
+        return `I can help you explore Bhavy's portfolio! Try asking about:<br>
+🔹 <strong>Skills & technologies</strong><br>
+🔹 <strong>Projects & portfolio</strong><br>
+🔹 <strong>Work experience</strong><br>
+🔹 <strong>Education</strong><br>
+🔹 <strong>Contact & hiring info</strong><br>
+Or say <em>"open [app name]"</em> to launch any app!`;
     };
 
     const sendCortanaMessage = (queryText) => {
@@ -2302,35 +2550,61 @@ EDUCATION:
     let liveWpAnimId = null;
 
     // ==========================================================================
-    // 28. PHYSICAL FILE DRAG-AND-DROP IMPORT TO DESKTOP
+    // 28. PHYSICAL FILE DRAG-AND-DROP IMPORT TO DESKTOP + WALLPAPER
     // ==========================================================================
     const desktopEl = document.getElementById('desktop-shell');
+    const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.svg'];
+
     if (desktopEl) {
         desktopEl.addEventListener('dragover', (e) => {
             e.preventDefault();
             desktopEl.style.outline = '2px dashed var(--win-accent)';
+            desktopEl.style.outlineOffset = '-4px';
         });
         desktopEl.addEventListener('dragleave', () => {
             desktopEl.style.outline = 'none';
+            desktopEl.style.outlineOffset = '';
         });
         desktopEl.addEventListener('drop', (e) => {
             e.preventDefault();
             desktopEl.style.outline = 'none';
+            desktopEl.style.outlineOffset = '';
+
             if (e.dataTransfer && e.dataTransfer.files.length > 0) {
                 Array.from(e.dataTransfer.files).forEach(file => {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        const content = event.target.result;
-                        if (window.VFS) {
-                            window.VFS.createFile('C:\\Users\\Bhavy\\Desktop', file.name, content);
-                            showToast('File Imported', `Imported ${file.name} to Desktop VFS.`, 'fa-solid fa-file-import', 'Explorer');
-                            playSound('click');
-                        }
-                    };
-                    if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.json') || file.name.endsWith('.md')) {
-                        reader.readAsText(file);
-                    } else {
+                    const fileName = file.name.toLowerCase();
+                    const isImage = file.type.startsWith('image/') || imageExtensions.some(ext => fileName.endsWith(ext));
+
+                    if (isImage) {
+                        // Image file → Set as desktop wallpaper
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const dataUrl = event.target.result;
+                            const wp = document.getElementById('desktop-wallpaper');
+                            if (wp) {
+                                wp.style.backgroundImage = `url('${dataUrl}')`;
+                                localStorage.setItem('win10-wallpaper', dataUrl);
+                                showToast('🖼️ Wallpaper Changed!', `"${file.name}" is now your desktop wallpaper.`, 'fa-solid fa-image', 'Personalization');
+                                playSound('notify');
+                            }
+                        };
                         reader.readAsDataURL(file);
+                    } else {
+                        // Non-image file → Import to VFS
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            const content = event.target.result;
+                            if (window.VFS) {
+                                window.VFS.createFile('C:\\Users\\Bhavy\\Desktop', file.name, content);
+                                showToast('File Imported', `Imported ${file.name} to Desktop VFS.`, 'fa-solid fa-file-import', 'Explorer');
+                                playSound('click');
+                            }
+                        };
+                        if (file.type.startsWith('text/') || fileName.endsWith('.txt') || fileName.endsWith('.json') || fileName.endsWith('.md')) {
+                            reader.readAsText(file);
+                        } else {
+                            reader.readAsDataURL(file);
+                        }
                     }
                 });
             }
@@ -2466,6 +2740,7 @@ EDUCATION:
             const totalInF = Object.values(foundations).reduce((acc, arr) => acc + arr.length, 0);
             if (totalInF === 52) {
                 clearInterval(timerInterval);
+                playSound('solitaire-victory');
                 showToast('🎉 Solitaire Victory!', `You cleared Solitaire with a score of ${score}!`, 'fa-solid fa-trophy', 'Solitaire');
             }
         }
@@ -2675,7 +2950,7 @@ EDUCATION:
     // ==========================================================================
     // INITIALIZATION COMPLETE
     // ==========================================================================
-    console.log('%c Windows 10 Portfolio OS v5.0 — Module 1 AAA Upgrades Active ', 'background:#0078d7;color:#fff;padding:8px;border-radius:4px;font-size:1rem;font-weight:bold;');
+    console.log('%c Windows 10 Portfolio OS v6.0 — All 6 Feature Enhancements Active ', 'background:#0078d7;color:#fff;padding:8px;border-radius:4px;font-size:1rem;font-weight:bold;');
 
 })();
 
