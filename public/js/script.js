@@ -281,6 +281,8 @@
             if (windowId === 'vscode') loadVsCodeContent('index.html');
             if (windowId === 'taskmgr') startTaskManagerUpdates();
             if (windowId === 'calculator') initCalculator();
+            if (windowId === 'mediaplayer') initGrooveMusic();
+            if (windowId === 'solitaire') initSolitaireGame();
 
             // Mobile auto-fullscreen
             if (window.innerWidth <= 768) {
@@ -3280,6 +3282,7 @@ EDUCATION:
     window.loadVsCodeContent = loadVsCodeContent;
     window.initCalculator = initCalculator;
     window.initMinesweeper = initMinesweeper;
+    window.initSolitaireGame = initSolitaireGame;
 
     // ==========================================================================
     // INITIALIZATION COMPLETE
