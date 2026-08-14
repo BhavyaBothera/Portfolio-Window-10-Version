@@ -214,96 +214,220 @@
         <div id="windows-container" class="windows-container">
 
             <!-- WINDOW 1: THIS PC / ABOUT ME -->
-            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width:780px;height:520px;top:60px;left:120px;">
+            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width:840px;height:560px;top:50px;left:100px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-solid fa-desktop"></i> This PC — System Properties & About Bhavy</div>
+                    <div class="win-title"><i class="fa-solid fa-desktop text-blue"></i> This PC — System Properties & About Bhavy</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn" title="Minimize"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn" title="Maximize"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn" title="Close"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="win-body scrollable">
-                    <div class="about-container">
-                        <div class="about-header">
-                            <div class="about-avatar-box">
-                                <img src="assets/avatar.png" alt="Bhavy Avatar" class="about-avatar">
-                                <div class="online-badge" title="Status: Online & Ready to Code"></div>
+                <div class="win-body thispc-container">
+                    <!-- Top Navigation & Address Bar -->
+                    <div class="explorer-address-bar">
+                        <div class="explorer-nav-buttons">
+                            <button class="nav-btn" disabled title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button class="nav-btn" disabled title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="nav-btn" title="Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button class="nav-btn" id="thispc-refresh-btn" title="Refresh"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                        <div class="explorer-path-box">
+                            <i class="fa-solid fa-desktop text-blue"></i>
+                            <span>This PC</span>
+                            <i class="fa-solid fa-chevron-right path-sep"></i>
+                            <span class="path-current">System Properties & About Bhavy</span>
+                        </div>
+                        <div class="explorer-search-box">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="thispc-search-input" placeholder="Search This PC...">
+                        </div>
+                    </div>
+
+                    <!-- Split Explorer View -->
+                    <div class="explorer-split-container">
+                        <!-- Left Navigation Sidebar -->
+                        <div class="explorer-nav-tree">
+                            <div class="tree-group">
+                                <div class="tree-group-title"><i class="fa-solid fa-star text-gold"></i> Quick Access</div>
+                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open text-gold"></i> Projects</div>
+                                <div class="tree-item" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> Control Panel</div>
+                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Resume</div>
                             </div>
-                            <div class="about-intro">
-                                <h1>Bhavy <span class="accent-text">Software Engineer</span></h1>
-                                <p class="tagline">Crafting pixel-perfect web applications, intelligent software solutions, and immersive interactive digital experiences.</p>
-                                <div class="about-quick-badges">
-                                    <span class="badge"><i class="fa-solid fa-location-dot"></i> Tech World</span>
-                                    <span class="badge"><i class="fa-solid fa-code"></i> Full-Stack Dev</span>
-                                    <span class="badge green"><i class="fa-solid fa-circle-check"></i> Available for Hire</span>
-                                </div>
+                            <div class="tree-group">
+                                <div class="tree-group-title"><i class="fa-solid fa-desktop text-blue"></i> This PC</div>
+                                <div class="tree-item active"><i class="fa-solid fa-desktop text-blue"></i> Overview</div>
+                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder text-yellow"></i> 3D Objects</div>
+                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-display text-cyan"></i> Desktop</div>
+                                <div class="tree-item" onclick="openWindow('notepad')"><i class="fa-solid fa-file-lines text-blue"></i> Documents</div>
+                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-circle-down text-green"></i> Downloads</div>
+                                <div class="tree-item" onclick="openWindow('mediaplayer')"><i class="fa-solid fa-music text-purple"></i> Music</div>
+                                <div class="tree-item" onclick="openWindow('paint')"><i class="fa-solid fa-image text-pink"></i> Pictures</div>
+                            </div>
+                            <div class="tree-group">
+                                <div class="tree-group-title"><i class="fa-solid fa-hard-drive text-blue"></i> Storage</div>
+                                <div class="tree-item"><i class="fa-solid fa-hard-drive text-blue"></i> Local Disk (C:)</div>
+                                <div class="tree-item"><i class="fa-solid fa-hard-drive text-purple"></i> Data Volume (D:)</div>
+                                <div class="tree-item"><i class="fa-solid fa-cloud text-cyan"></i> Cloud Storage (E:)</div>
                             </div>
                         </div>
 
-                        <div class="sys-specs-grid">
-                            <div class="spec-card">
-                                <div class="spec-icon"><i class="fa-solid fa-microchip"></i></div>
-                                <div class="spec-info">
-                                    <span class="spec-label">Processor</span>
-                                    <span class="spec-value">High-Speed Analytical & Creative Mind</span>
+                        <!-- Right Main Explorer View -->
+                        <div class="explorer-main-view scrollable">
+                            <!-- Developer Profile Hero Card -->
+                            <div class="developer-hero-card">
+                                <div class="dev-avatar-container">
+                                    <img src="assets/avatar.png" alt="Bhavy Profile" class="dev-avatar">
+                                    <div class="dev-online-dot" title="Status: Online & Ready to Code"></div>
                                 </div>
-                            </div>
-                            <div class="spec-card">
-                                <div class="spec-icon"><i class="fa-solid fa-memory"></i></div>
-                                <div class="spec-info">
-                                    <span class="spec-label">Installed Memory (RAM)</span>
-                                    <span class="spec-value">Infinite Capacity for Learning</span>
-                                </div>
-                            </div>
-                            <div class="spec-card">
-                                <div class="spec-icon"><i class="fa-solid fa-hard-drive"></i></div>
-                                <div class="spec-info">
-                                    <span class="spec-label">System Architecture</span>
-                                    <span class="spec-value">React, Next.js, Node.js, Python & Cloud</span>
-                                </div>
-                            </div>
-                            <div class="spec-card">
-                                <div class="spec-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                                <div class="spec-info">
-                                    <span class="spec-label">Core Philosophy</span>
-                                    <span class="spec-value">Clean Code, Modern Design & User Delight</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="about-section-box">
-                            <h2><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives</h2>
-                            <div class="drives-grid">
-                                <div class="drive-card">
-                                    <i class="fa-solid fa-hard-drive text-blue drive-icon"></i>
-                                    <div class="drive-info">
-                                        <div class="drive-name">Local Disk (C:)</div>
-                                        <div class="drive-bar"><div class="drive-bar-fill" style="width:70%;background:var(--win-accent);"></div></div>
-                                        <div class="drive-space">350 GB free of 500 GB</div>
+                                <div class="dev-info-box">
+                                    <div class="dev-name">Bhavy <span style="font-weight:400;font-size:1rem;color:#94a3b8;">(Bhavy Portfolio)</span></div>
+                                    <div class="dev-role">Full-Stack Software Engineer & Interactive Web Developer</div>
+                                    <div class="dev-badges">
+                                        <span class="dev-badge green"><i class="fa-solid fa-circle-check"></i> Available for Hire</span>
+                                        <span class="dev-badge"><i class="fa-solid fa-globe"></i> Remote / Worldwide</span>
+                                        <span class="dev-badge"><i class="fa-solid fa-code"></i> Full-Stack Dev</span>
+                                        <span class="dev-badge"><i class="fa-solid fa-bolt"></i> High Performance</span>
+                                    </div>
+                                    <div class="dev-actions">
+                                        <button class="dev-action-btn primary" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open"></i> View Projects</button>
+                                        <button class="dev-action-btn" onclick="openWindow('skills')"><i class="fa-solid fa-sliders"></i> System Skills</button>
+                                        <button class="dev-action-btn" onclick="openWindow('contact')"><i class="fa-solid fa-paper-plane"></i> Contact Me</button>
                                     </div>
                                 </div>
-                                <div class="drive-card">
-                                    <i class="fa-solid fa-hard-drive text-purple drive-icon"></i>
-                                    <div class="drive-info">
-                                        <div class="drive-name">Data Volume (D:)</div>
-                                        <div class="drive-bar"><div class="drive-bar-fill" style="width:45%;background:#8b5cf6;"></div></div>
-                                        <div class="drive-space">55 GB free of 100 GB</div>
+                            </div>
+
+                            <!-- System Folders Section -->
+                            <div>
+                                <div class="thispc-section-header">
+                                    <span><i class="fa-solid fa-folder text-gold"></i> System Folders (6)</span>
+                                </div>
+                                <div class="folders-grid-v2">
+                                    <div class="folder-card-v2" onclick="openWindow('projects')">
+                                        <i class="fa-solid fa-cube text-purple"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">3D Objects</div>
+                                            <div class="folder-sub">Interactive Demos</div>
+                                        </div>
+                                    </div>
+                                    <div class="folder-card-v2" onclick="openWindow('projects')">
+                                        <i class="fa-solid fa-display text-blue"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">Desktop</div>
+                                            <div class="folder-sub">18 App Shortcuts</div>
+                                        </div>
+                                    </div>
+                                    <div class="folder-card-v2" onclick="openWindow('notepad')">
+                                        <i class="fa-solid fa-file-lines text-yellow"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">Documents</div>
+                                            <div class="folder-sub">Resume & Specs</div>
+                                        </div>
+                                    </div>
+                                    <div class="folder-card-v2" onclick="openWindow('resume')">
+                                        <i class="fa-solid fa-circle-down text-green"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">Downloads</div>
+                                            <div class="folder-sub">Resume.pdf & Text</div>
+                                        </div>
+                                    </div>
+                                    <div class="folder-card-v2" onclick="openWindow('mediaplayer')">
+                                        <i class="fa-solid fa-music text-pink"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">Music</div>
+                                            <div class="folder-sub">Synthwave Tracks</div>
+                                        </div>
+                                    </div>
+                                    <div class="folder-card-v2" onclick="openWindow('paint')">
+                                        <i class="fa-solid fa-image text-orange"></i>
+                                        <div class="folder-card-info">
+                                            <div class="folder-name">Pictures</div>
+                                            <div class="folder-sub">Paint & Mockups</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="about-section-box">
-                            <h2><i class="fa-solid fa-user-astronaut"></i> Biography & Background</h2>
-                            <p>Hello! I'm <strong>Bhavy</strong>, a passionate software developer who loves bridging the gap between technical engineering and aesthetic design. I specialize in building modern frontend web applications, responsive APIs, and interactive desktop-grade experiences like the one you are interacting with right now!</p>
-                            <p>When I'm not writing code, you can find me exploring open-source software, diving into AI/ML tools, customizing developer productivity workflows, or gaming.</p>
-                        </div>
+                            <!-- Devices & Drives Section -->
+                            <div>
+                                <div class="thispc-section-header">
+                                    <span><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives (3)</span>
+                                </div>
+                                <div class="drives-grid-v2">
+                                    <div class="drive-card-v2">
+                                        <i class="fa-solid fa-hard-drive text-blue"></i>
+                                        <div class="drive-details">
+                                            <div class="drive-title">Local Disk (C:)</div>
+                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:70%;background:var(--win-accent, #0078d7);"></div></div>
+                                            <div class="drive-capacity-text">350 GB free of 500 GB (React, Next.js, TS)</div>
+                                        </div>
+                                    </div>
+                                    <div class="drive-card-v2">
+                                        <i class="fa-solid fa-hard-drive text-purple"></i>
+                                        <div class="drive-details">
+                                            <div class="drive-title">Data Volume (D:)</div>
+                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:45%;background:#8b5cf6;"></div></div>
+                                            <div class="drive-capacity-text">55 GB free of 100 GB (Python, AI Tools)</div>
+                                        </div>
+                                    </div>
+                                    <div class="drive-card-v2">
+                                        <i class="fa-solid fa-cloud text-cyan"></i>
+                                        <div class="drive-details">
+                                            <div class="drive-title">Cloud Storage (E:)</div>
+                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:28%;background:#06b6d4;"></div></div>
+                                            <div class="drive-capacity-text">180 GB free of 250 GB (AWS, Docker, CI/CD)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <div class="about-action-bar">
-                            <button class="win-btn primary-btn" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open"></i> Explore My Projects</button>
-                            <button class="win-btn" onclick="openWindow('contact')"><i class="fa-solid fa-paper-plane"></i> Get In Touch</button>
-                            <a href="assets/avatar.png" download="Bhavy_Profile.png" class="win-btn"><i class="fa-solid fa-download"></i> Save Profile Card</a>
+                            <!-- System Properties Specifications -->
+                            <div>
+                                <div class="thispc-section-header">
+                                    <span><i class="fa-solid fa-sliders text-cyan"></i> System Properties Specifications</span>
+                                </div>
+                                <div class="specs-grid-v2">
+                                    <div class="spec-card-v2">
+                                        <i class="fa-solid fa-microchip"></i>
+                                        <div class="spec-details-v2">
+                                            <span class="spec-label-v2">Device Processor</span>
+                                            <span class="spec-val-v2">High-Speed Analytical & Creative Mind @ 4.80GHz</span>
+                                        </div>
+                                    </div>
+                                    <div class="spec-card-v2">
+                                        <i class="fa-solid fa-memory"></i>
+                                        <div class="spec-details-v2">
+                                            <span class="spec-label-v2">Installed Memory (RAM)</span>
+                                            <span class="spec-val-v2">32.0 GB (Infinite Capacity for Adaptation)</span>
+                                        </div>
+                                    </div>
+                                    <div class="spec-card-v2">
+                                        <i class="fa-solid fa-layer-group"></i>
+                                        <div class="spec-details-v2">
+                                            <span class="spec-label-v2">System Stack</span>
+                                            <span class="spec-val-v2">React, Next.js, Node.js, Python, PostgreSQL & Cloud</span>
+                                        </div>
+                                    </div>
+                                    <div class="spec-card-v2">
+                                        <i class="fa-solid fa-shield-halved"></i>
+                                        <div class="spec-details-v2">
+                                            <span class="spec-label-v2">Core Philosophy</span>
+                                            <span class="spec-val-v2">Clean Code, Modern Design & User Delight</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Biography & Background Section -->
+                            <div>
+                                <div class="thispc-section-header">
+                                    <span><i class="fa-solid fa-user-astronaut text-purple"></i> Biography & Engineering Approach</span>
+                                </div>
+                                <div class="bio-card-v2">
+                                    <p>Hello! I'm <strong>Bhavy</strong>, a passionate software engineer dedicated to building high-performance web applications, scalable backend services, and pixel-perfect interactive digital experiences.</p>
+                                    <p>I specialize in bridging technical architecture with modern UI craftsmanship. Whether it's building complex state-managed interfaces, developing real-time APIs, or designing desktop-grade web applications like this <strong>Windows 10 Portfolio OS</strong>, I prioritize clean code, performance, and memorable user experiences.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

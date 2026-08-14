@@ -906,6 +906,36 @@
     });
 
     // ==========================================================================
+    // THIS PC EXPLORER SEARCH & INTERACTION ENGINE
+    // ==========================================================================
+    document.getElementById('thispc-search-input')?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const mainView = document.querySelector('#win-this-pc .explorer-main-view');
+        if (!mainView) return;
+
+        const folderCards = mainView.querySelectorAll('.folder-card-v2');
+        const driveCards = mainView.querySelectorAll('.drive-card-v2');
+        const specCards = mainView.querySelectorAll('.spec-card-v2');
+
+        [...folderCards, ...driveCards, ...specCards].forEach(card => {
+            const text = card.textContent.toLowerCase();
+            card.style.display = text.includes(query) ? '' : 'none';
+        });
+    });
+
+    document.getElementById('thispc-refresh-btn')?.addEventListener('click', () => {
+        const mainView = document.querySelector('#win-this-pc .explorer-main-view');
+        if (mainView) {
+            mainView.style.opacity = '0';
+            setTimeout(() => {
+                mainView.style.transition = 'opacity 0.3s ease';
+                mainView.style.opacity = '1';
+            }, 100);
+        }
+        playSound('click');
+    });
+
+    // ==========================================================================
     // 9. TASK VIEW OVERLAY
     // ==========================================================================
     const taskViewOverlay = document.getElementById('task-view-overlay');
