@@ -27,6 +27,7 @@
                 <div class="spinner-dot"></div>
                 <div class="spinner-dot"></div>
             </div>
+            <p class="boot-status-text" id="boot-status-text" style="color:rgba(255,255,255,0.7);font-size:0.9rem;margin-top:15px;letter-spacing:0.5px;font-weight:300;">Getting things ready...</p>
         </div>
     </div>
 
@@ -623,6 +624,7 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                     </div>
                 </div>
                 <div class="win-body calc-body">
+                    <div class="calc-history-tape" id="calc-history-tape"></div>
                     <div class="calc-display" id="calc-display">0</div>
                     <div class="calc-keypad">
                         <button class="calc-btn op" data-action="clear">C</button>
@@ -972,9 +974,21 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="win-body mediaplayer-body">
+                <div class="win-body mediaplayer-body scrollable">
+                    <div class="mp-track-info" id="mp-track-info">
+                        <div class="mp-album-art" id="mp-album-art"><i class="fa-solid fa-music"></i></div>
+                        <div>
+                            <h4 id="mp-track-title" style="font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:4px;">1. Synthwave Horizon</h4>
+                            <p id="mp-track-artist" style="font-size:0.82rem;color:var(--win-text-muted);">Bhavy Synthwave Records</p>
+                        </div>
+                    </div>
                     <canvas id="mediaplayer-visualizer" class="mediaplayer-visualizer"></canvas>
-                    <div class="mediaplayer-controls">
+                    <div class="mp-seekbar-container">
+                        <span id="mp-current-time">00:00</span>
+                        <div class="mp-seekbar" id="mp-seekbar"><div class="mp-seekbar-fill" id="mp-seekbar-fill"></div></div>
+                        <span id="mp-total-time">02:45</span>
+                    </div>
+                    <div class="mediaplayer-controls" style="margin-top:12px;">
                         <button class="mediaplayer-btn" id="mp-prev-btn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
                         <button class="mediaplayer-btn" id="mp-play-btn" title="Play / Pause"><i class="fa-solid fa-play" id="mp-play-icon"></i></button>
                         <button class="mediaplayer-btn" id="mp-next-btn" title="Next"><i class="fa-solid fa-forward-step"></i></button>

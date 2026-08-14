@@ -297,13 +297,43 @@
     // Make openWindow globally accessible (used in inline handlers)
     window.openWindow = openWindow;
 
+    function animateSkillsBars() {
+        const bars = document.querySelectorAll('#win-skills .skill-bar-fill');
+        bars.forEach((bar, idx) => {
+            const targetWidth = bar.getAttribute('style')?.match(/width:\s*([\d.]+%)/)?.[1] || '80%';
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.transition = 'width 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                bar.style.width = targetWidth;
+            }, idx * 60 + 100);
+        });
+    }
+
+    function animateExperienceTimeline() {
+        const items = document.querySelectorAll('#win-experience .timeline-item');
+        items.forEach((item, idx) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+            item.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, idx * 120 + 100);
+        });
+    }
+
     function openWindow(windowId) {
         const winEl = document.getElementById(`win-${windowId}`);
         if (!winEl) return;
 
+        winEl.classList.remove('win-closing');
+
         if (winEl.classList.contains('hidden')) {
             winEl.classList.remove('hidden');
             winEl.classList.remove('minimized');
+            winEl.classList.add('win-opening');
+            winEl.addEventListener('animationend', () => winEl.classList.remove('win-opening'), { once: true });
+
             state.zIndexCounter++;
             winEl.style.zIndex = state.zIndexCounter;
             playSound('open');
@@ -320,6 +350,8 @@
             if (windowId === 'calculator') initCalculator();
             if (windowId === 'mediaplayer') initGrooveMusic();
             if (windowId === 'solitaire') initSolitaireGame();
+            if (windowId === 'skills') animateSkillsBars();
+            if (windowId === 'experience') animateExperienceTimeline();
 
             // Mobile auto-fullscreen
             if (window.innerWidth <= 768) {
@@ -327,9 +359,14 @@
             }
         } else if (winEl.classList.contains('minimized')) {
             winEl.classList.remove('minimized');
+            winEl.classList.add('win-opening');
+            winEl.addEventListener('animationend', () => winEl.classList.remove('win-opening'), { once: true });
+
             state.zIndexCounter++;
             winEl.style.zIndex = state.zIndexCounter;
             playSound('open');
+            if (windowId === 'skills') animateSkillsBars();
+            if (windowId === 'experience') animateExperienceTimeline();
         } else {
             // Already open, just focus
             state.zIndexCounter++;
@@ -356,16 +393,22 @@
         const winEl = document.getElementById(`win-${windowId}`);
         if (!winEl) return;
 
-        winEl.classList.add('hidden');
-        winEl.classList.remove('active', 'maximized', 'minimized');
-        state.openWindows = state.openWindows.filter(id => id !== windowId);
+        winEl.classList.remove('win-opening');
+        winEl.classList.add('win-closing');
 
-        if (state.activeWindow === windowId) state.activeWindow = null;
+        const onCloseEnd = () => {
+            winEl.classList.add('hidden');
+            winEl.classList.remove('win-closing', 'active', 'maximized', 'minimized');
+            state.openWindows = state.openWindows.filter(id => id !== windowId);
+
+            if (state.activeWindow === windowId) state.activeWindow = null;
+
+            if (windowId === 'taskmgr') stopTaskManagerUpdates();
+            updateTaskbarPills();
+        };
+
+        winEl.addEventListener('animationend', onCloseEnd, { once: true });
         playSound('close');
-
-        if (windowId === 'taskmgr') stopTaskManagerUpdates();
-
-        updateTaskbarPills();
     }
 
     function minimizeWindow(windowId) {
@@ -675,11 +718,34 @@
     }
 
     // ==========================================================================
-    // 8. DESKTOP ICONS (click to select, dblclick to open)
+    // 8. DESKTOP ICONS (click to select, dblclick to open, rich tooltips)
     // ==========================================================================
-    // --- DRAGGABLE & GRID-SNAPPED DESKTOP ICONS ---
+    const desktopIcons = document.querySelectorAll('.desktop-icon');
     let draggedIcon = null, iconOffsetX = 0, iconOffsetY = 0;
     const savedIconPositions = JSON.parse(localStorage.getItem('win10-icon-pos') || '{}');
+
+    const iconMeta = {
+        'this-pc': { name: 'This PC', type: 'System Properties', desc: 'System specs, portfolio biography, drives, and developer philosophy.' },
+        'projects': { name: 'Projects Explorer', type: 'File Folder', desc: 'Browse full-stack web applications, AI tools, and repos.' },
+        'skills': { name: 'Control Panel', type: 'System Tool', desc: 'Inspect technical competencies, frameworks, and developer stack.' },
+        'vscode': { name: 'VS Code Editor', type: 'Development IDE', desc: 'Examine live source code files of this portfolio application.' },
+        'edge': { name: 'Microsoft Edge', type: 'Web Browser', desc: 'Navigate external links, project demos, and documentation.' },
+        'settings': { name: 'Windows Settings', type: 'System Control', desc: 'Personalize themes, accent colors, wallpaper, and audio.' },
+        'notepad': { name: 'Notepad', type: 'Text Document', desc: 'Read portfolio overview notes, feature guides, or write notes.' },
+        'calculator': { name: 'Calculator', type: 'Utility App', desc: 'Perform basic and expression arithmetic with history log.' },
+        'paint': { name: 'MS Paint', type: 'Graphic Editor', desc: 'Draw artwork with brush, eraser, shapes, fill, and export PNG.' },
+        'experience': { name: 'Experience', type: 'Timeline Folder', desc: 'View professional work history, education, and achievements.' },
+        'contact': { name: 'Contact Me', type: 'Mail Client', desc: 'Send direct messages, job inquiries, or connect on social media.' },
+        'resume': { name: 'Resume.pdf', type: 'PDF Document', desc: 'Read and export printable PDF software engineer resume.' },
+        'cmd': { name: 'Command Prompt', type: 'Terminal Emulator', desc: 'Execute interactive CLI commands, matrix mode, and easter eggs.' },
+        'minesweeper': { name: 'Minesweeper', type: 'Classic Game', desc: 'Classic 9x9 retro puzzle game with timer and mine counter.' },
+        'stickynotes': { name: 'Sticky Notes', type: 'Desktop Notes', desc: 'Keep quick persisted desktop notes with color palette options.' },
+        'mediaplayer': { name: 'Groove Music', type: 'Audio Player', desc: 'Listen to synthwave audio tracks with dynamic visualizer.' },
+        'solitaire': { name: 'Solitaire', type: 'Card Game', desc: 'Classic Microsoft Klondike Solitaire card collection game.' },
+        'recycle-bin': { name: 'Recycle Bin', type: 'System Trash', desc: 'View deleted bugs, cups of coffee, and draft files.' }
+    };
+
+    let activeTooltip = null;
 
     desktopIcons.forEach(icon => {
         const winId = icon.dataset.window;
@@ -688,6 +754,33 @@
             icon.style.left = `${savedIconPositions[winId].left}px`;
             icon.style.top = `${savedIconPositions[winId].top}px`;
         }
+
+        // Rich Tooltip on Hover
+        icon.addEventListener('mouseenter', (e) => {
+            const meta = iconMeta[winId];
+            if (!meta) return;
+            if (activeTooltip) activeTooltip.remove();
+
+            const rect = icon.getBoundingClientRect();
+            const tt = document.createElement('div');
+            tt.className = 'desktop-icon-tooltip';
+            tt.innerHTML = `
+                <div class="tt-title">${meta.name}</div>
+                <div class="tt-type">Type: ${meta.type}</div>
+                <div class="tt-desc">${meta.desc}</div>
+            `;
+            tt.style.left = `${Math.min(rect.right + 10, window.innerWidth - 230)}px`;
+            tt.style.top = `${Math.max(10, rect.top)}px`;
+            document.body.appendChild(tt);
+            activeTooltip = tt;
+        });
+
+        icon.addEventListener('mouseleave', () => {
+            if (activeTooltip) {
+                activeTooltip.remove();
+                activeTooltip = null;
+            }
+        });
 
         // Single click to select
         icon.addEventListener('click', (e) => {
@@ -700,6 +793,7 @@
         // Double click to open
         icon.addEventListener('dblclick', (e) => {
             e.stopPropagation();
+            if (activeTooltip) { activeTooltip.remove(); activeTooltip = null; }
             if (winId) openWindow(winId);
         });
 
@@ -725,6 +819,7 @@
         // Icon dragging start
         icon.addEventListener('mousedown', (e) => {
             if (e.button !== 0) return;
+            if (activeTooltip) { activeTooltip.remove(); activeTooltip = null; }
             draggedIcon = icon;
             icon.classList.add('dragging');
             const rect = icon.getBoundingClientRect();
@@ -1210,21 +1305,50 @@
     });
 
     // ==========================================================================
-    // 15. CONTEXT MENU (RIGHT CLICK)
+    // 15. CONTEXT MENU (RIGHT CLICK & MOBILE LONG PRESS)
     // ==========================================================================
     const contextMenu = document.getElementById('context-menu');
 
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
+    const showContextMenuAt = (x, y) => {
         closeAllPopovers();
         if (contextMenu) {
-            const x = Math.min(e.clientX, window.innerWidth - 230);
-            const y = Math.min(e.clientY, window.innerHeight - 250);
-            contextMenu.style.left = `${x}px`;
-            contextMenu.style.top = `${y}px`;
+            const posX = Math.min(x, window.innerWidth - 230);
+            const posY = Math.min(y, window.innerHeight - 250);
+            contextMenu.style.left = `${posX}px`;
+            contextMenu.style.top = `${posY}px`;
             contextMenu.classList.remove('hidden');
         }
+    };
+
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showContextMenuAt(e.clientX, e.clientY);
     });
+
+    // Touch Long-Press Context Menu Support
+    let touchTimer = null;
+    document.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1 && !e.target.closest('.win-window')) {
+            const touch = e.touches[0];
+            touchTimer = setTimeout(() => {
+                showContextMenuAt(touch.clientX, touch.clientY);
+                playSound('click');
+            }, 500);
+        }
+    });
+
+    document.addEventListener('touchend', () => clearTimeout(touchTimer));
+    document.addEventListener('touchmove', () => clearTimeout(touchTimer));
+
+    // Simulated Battery Drain Telemetry
+    let batteryLevel = 100;
+    setInterval(() => {
+        if (batteryLevel > 15) {
+            batteryLevel -= 1;
+            const trayBat = document.getElementById('tray-battery');
+            if (trayBat) trayBat.title = `Battery: ${batteryLevel}%`;
+        }
+    }, 90000);
 
     document.getElementById('ctx-refresh')?.addEventListener('click', () => {
         desktopIcons.forEach(icon => { icon.style.animation = 'none'; setTimeout(() => icon.style.animation = 'fadeInUp 0.3s ease', 10); });
@@ -1537,6 +1661,14 @@ const showToast = (title, body) => { /* ... */ };`,
                         if (calcDisplay) calcDisplay.textContent = '0';
                         calcExpression = '';
                     } else {
+                        const historyTape = document.getElementById('calc-history-tape');
+                        if (historyTape) {
+                            const item = document.createElement('div');
+                            item.className = 'calc-history-item';
+                            item.textContent = `${calcExpression} = ${result}`;
+                            historyTape.appendChild(item);
+                            historyTape.scrollTop = historyTape.scrollHeight;
+                        }
                         if (calcDisplay) calcDisplay.textContent = result;
                         calcExpression = String(result);
                     }
@@ -1555,157 +1687,6 @@ const showToast = (title, body) => { /* ... */ };`,
 
             playSound('click');
         });
-    });
-
-    // ==========================================================================
-    // 21. PAINT ENGINE
-    // ==========================================================================
-    let paintCanvas, paintCtx, isDrawing = false;
-    let strokeHistory = [];
-    let currentPaintTool = 'pencil';
-    let startX, startY;
-
-    function initPaintCanvas() {
-        paintCanvas = document.getElementById('paint-canvas');
-        if (!paintCanvas) return;
-        paintCtx = paintCanvas.getContext('2d');
-
-        const parentW = paintCanvas.parentElement.clientWidth || 740;
-        const parentH = paintCanvas.parentElement.clientHeight || 440;
-
-        if (paintCanvas.width !== parentW || paintCanvas.height !== parentH) {
-            paintCanvas.width = parentW;
-            paintCanvas.height = parentH;
-            paintCtx.fillStyle = '#ffffff';
-            paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
-            savePaintState();
-        }
-
-        // Remove old listeners to avoid duplicates
-        paintCanvas.onmousedown = (e) => {
-            isDrawing = true;
-            startX = e.offsetX;
-            startY = e.offsetY;
-            if (currentPaintTool === 'pencil' || currentPaintTool === 'eraser') {
-                paintCtx.beginPath();
-                paintCtx.moveTo(startX, startY);
-            }
-        };
-
-        paintCanvas.onmousemove = (e) => {
-            if (!isDrawing) return;
-            const currentX = e.offsetX;
-            const currentY = e.offsetY;
-            const color = document.getElementById('paint-color')?.value || '#0078d7';
-            const size = document.getElementById('paint-size')?.value || 5;
-
-            if (currentPaintTool === 'pencil' || currentPaintTool === 'eraser') {
-                paintCtx.lineTo(currentX, currentY);
-                paintCtx.strokeStyle = currentPaintTool === 'eraser' ? '#ffffff' : color;
-                paintCtx.lineWidth = size;
-                paintCtx.lineCap = 'round';
-                paintCtx.stroke();
-            } else if (['line', 'rect', 'circle'].includes(currentPaintTool)) {
-                if (strokeHistory.length > 0) {
-                    paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
-                }
-                paintCtx.strokeStyle = color;
-                paintCtx.fillStyle = color;
-                paintCtx.lineWidth = size;
-
-                if (currentPaintTool === 'line') {
-                    paintCtx.beginPath();
-                    paintCtx.moveTo(startX, startY);
-                    paintCtx.lineTo(currentX, currentY);
-                    paintCtx.stroke();
-                } else if (currentPaintTool === 'rect') {
-                    paintCtx.strokeRect(startX, startY, currentX - startX, currentY - startY);
-                } else if (currentPaintTool === 'circle') {
-                    paintCtx.beginPath();
-                    const radius = Math.sqrt(Math.pow(currentX - startX, 2) + Math.pow(currentY - startY, 2));
-                    paintCtx.arc(startX, startY, radius, 0, 2 * Math.PI);
-                    paintCtx.stroke();
-                }
-            }
-        };
-
-        paintCanvas.onmouseup = (e) => {
-            if (!isDrawing) return;
-            isDrawing = false;
-            const endX = e.offsetX;
-            const endY = e.offsetY;
-            const color = document.getElementById('paint-color')?.value || '#0078d7';
-            const size = document.getElementById('paint-size')?.value || 5;
-
-            paintCtx.strokeStyle = color;
-            paintCtx.fillStyle = color;
-            paintCtx.lineWidth = size;
-
-            if (currentPaintTool === 'fill') {
-                paintCtx.fillStyle = color;
-                paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
-            } else if (currentPaintTool === 'line') {
-                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
-                paintCtx.beginPath();
-                paintCtx.moveTo(startX, startY);
-                paintCtx.lineTo(endX, endY);
-                paintCtx.stroke();
-            } else if (currentPaintTool === 'rect') {
-                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
-                paintCtx.strokeRect(startX, startY, endX - startX, endY - startY);
-            } else if (currentPaintTool === 'circle') {
-                if (strokeHistory.length > 0) paintCtx.putImageData(strokeHistory[strokeHistory.length - 1], 0, 0);
-                paintCtx.beginPath();
-                const radius = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
-                paintCtx.arc(startX, startY, radius, 0, 2 * Math.PI);
-                paintCtx.stroke();
-            }
-            savePaintState();
-        };
-
-        paintCanvas.onmouseleave = () => isDrawing = false;
-    }
-
-    function savePaintState() {
-        if (!paintCtx || !paintCanvas) return;
-        if (strokeHistory.length > 15) strokeHistory.shift();
-        strokeHistory.push(paintCtx.getImageData(0, 0, paintCanvas.width, paintCanvas.height));
-    }
-
-    ['pencil', 'eraser', 'fill', 'line', 'rect', 'circle'].forEach(tool => {
-        document.getElementById(`paint-tool-${tool}`)?.addEventListener('click', (e) => {
-            document.querySelectorAll('.paint-tool-btn').forEach(b => b.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-            currentPaintTool = tool;
-            playSound('click');
-        });
-    });
-
-    document.getElementById('paint-undo')?.addEventListener('click', () => {
-        if (strokeHistory.length > 1 && paintCtx && paintCanvas) {
-            strokeHistory.pop();
-            const prevState = strokeHistory[strokeHistory.length - 1];
-            paintCtx.putImageData(prevState, 0, 0);
-            playSound('click');
-        }
-    });
-
-    document.getElementById('paint-clear')?.addEventListener('click', () => {
-        if (paintCtx && paintCanvas) {
-            paintCtx.fillStyle = '#ffffff';
-            paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
-            savePaintState();
-            playSound('click');
-        }
-    });
-
-    document.getElementById('paint-save-png')?.addEventListener('click', () => {
-        if (!paintCanvas) return;
-        const link = document.createElement('a');
-        link.download = 'bhavy_portfolio_artwork.png';
-        link.href = paintCanvas.toDataURL('image/png');
-        link.click();
-        showToast('Artwork Saved!', 'Downloaded drawing as PNG', 'fa-solid fa-download', 'Paint');
     });
 
     // ==========================================================================
@@ -2257,8 +2238,16 @@ Or say <em>"open [app name]"</em> to launch any app!`;
 
         if (cortanaInput) cortanaInput.value = '';
 
-        // Assistant response (with typing delay)
+        // Render typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'cortana-typing-indicator';
+        typingIndicator.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+        cortanaChatList.appendChild(typingIndicator);
+        cortanaChatList.scrollTop = cortanaChatList.scrollHeight;
+
+        const delay = Math.floor(Math.random() * 400) + 700;
         setTimeout(() => {
+            typingIndicator.remove();
             const botMsg = document.createElement('div');
             botMsg.className = 'cortana-msg assistant';
             const replyHtml = getCortanaResponse(query);
@@ -2270,7 +2259,7 @@ Or say <em>"open [app name]"</em> to launch any app!`;
             if (typeof speakCortanaText === 'function') {
                 speakCortanaText(replyHtml);
             }
-        }, 500);
+        }, delay);
 
         cortanaChatList.scrollTop = cortanaChatList.scrollHeight;
         playSound('click');
@@ -2425,32 +2414,8 @@ Or say <em>"open [app name]"</em> to launch any app!`;
         if (doc) doc.style.transform = `scale(${pdfZoom})`;
     });
     document.getElementById('download-resume-btn')?.addEventListener('click', () => {
-        const resumeText = `BHAVY — Full-Stack Software Engineer
-Email: bhavy@example.com | Portfolio: Windows 10 OS
-
-SUMMARY:
-Versatile Software Engineer with strong background in frontend & full-stack development, modern web standards, and UI/UX craftsmanship. Skilled at transforming complex requirements into clean, performant codebases.
-
-TECHNICAL SKILLS:
-- Languages: JavaScript (ES6+), TypeScript, Python, HTML5, CSS3/Sass, SQL
-- Frameworks & Libraries: React.js, Next.js, Node.js, Express, FastAPI, Tailwind CSS
-- Tools & Platforms: Git, Docker, Webpack/Vite, Vercel, AWS, Linux, VS Code
-
-EXPERIENCE & PROJECTS:
-- Windows 10 Portfolio OS: Web-based operating system shell mimicking Windows 10 with window management, desktop icons, and interactive apps.
-- Senior Full-Stack Developer @ Tech Innovations Lab (2024-Present)
-- Frontend Web Developer @ Digital Solutions Inc. (2022-2024)
-
-EDUCATION:
-- B.S. in Computer Science — Graduated with Honors`;
-
-        const blob = new Blob([resumeText], { type: 'text/plain;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'Bhavy_Resume.txt';
-        a.click();
-        URL.revokeObjectURL(a.href);
-        showToast('Resume Downloaded', 'Saved Bhavy_Resume.txt to your device.', 'fa-solid fa-download', 'Resume');
+        window.print();
+        showToast('PDF Export', 'Opening print preview to save PDF...', 'fa-solid fa-file-pdf', 'Resume');
     });
 
     // ==========================================================================
@@ -2578,19 +2543,47 @@ EDUCATION:
     let mpPlaying = false;
     let mpCurrentTrack = 0;
     let mpAnimId = null;
+    let mpElapsedSeconds = 0;
+    let mpTimerInterval = null;
 
     const mpTracks = [
-        { name: '1. Synthwave Horizon', freq: 440 },
-        { name: '2. Chill Lo-Fi Chillbeats', freq: 330 },
-        { name: '3. Cyberpunk Retrowave', freq: 554 }
+        { name: '1. Synthwave Horizon', artist: 'Bhavy Synthwave Records', duration: 165, color: 'linear-gradient(135deg, #a855f7, #0078d7)', icon: 'fa-solid fa-compact-disc' },
+        { name: '2. Chill Lo-Fi Chillbeats', artist: 'Lo-Fi Chill Lounge', duration: 190, color: 'linear-gradient(135deg, #10b981, #06b6d4)', icon: 'fa-solid fa-headphones' },
+        { name: '3. Cyberpunk Retrowave', artist: 'Nightcity Audio Engine', duration: 135, color: 'linear-gradient(135deg, #ef4444, #f97316)', icon: 'fa-solid fa-bolt' }
     ];
+
+    const formatTrackTime = (sec) => {
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60);
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    const updateTrackDisplay = () => {
+        const track = mpTracks[mpCurrentTrack];
+        const titleEl = document.getElementById('mp-track-title');
+        const artistEl = document.getElementById('mp-track-artist');
+        const totalEl = document.getElementById('mp-total-time');
+        const artEl = document.getElementById('mp-album-art');
+        const currentEl = document.getElementById('mp-current-time');
+        const fillEl = document.getElementById('mp-seekbar-fill');
+
+        if (titleEl) titleEl.textContent = track.name;
+        if (artistEl) artistEl.textContent = track.artist;
+        if (totalEl) totalEl.textContent = formatTrackTime(track.duration);
+        if (artEl) {
+            artEl.style.background = track.color;
+            artEl.innerHTML = `<i class="${track.icon}"></i>`;
+        }
+        if (currentEl) currentEl.textContent = formatTrackTime(mpElapsedSeconds);
+        if (fillEl) fillEl.style.width = `${(mpElapsedSeconds / track.duration) * 100}%`;
+    };
 
     const drawMediaPlayerSpectrum = () => {
         const canvas = document.getElementById('mediaplayer-visualizer');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         const w = canvas.width = canvas.parentElement.clientWidth || 480;
-        const h = canvas.height = 140;
+        const h = canvas.height = 120;
 
         ctx.clearRect(0, 0, w, h);
         const bars = 32;
@@ -2622,35 +2615,63 @@ EDUCATION:
             playSound('open');
             drawMediaPlayerSpectrum();
             showToast('Now Playing 🎵', mpTracks[mpCurrentTrack].name, 'fa-solid fa-compact-disc', 'Groove Music');
+
+            clearInterval(mpTimerInterval);
+            mpTimerInterval = setInterval(() => {
+                const track = mpTracks[mpCurrentTrack];
+                mpElapsedSeconds++;
+                if (mpElapsedSeconds >= track.duration) {
+                    mpCurrentTrack = (mpCurrentTrack + 1) % mpTracks.length;
+                    mpElapsedSeconds = 0;
+                }
+                updateTrackDisplay();
+            }, 1000);
         } else {
             if (mpAnimId) cancelAnimationFrame(mpAnimId);
+            clearInterval(mpTimerInterval);
             drawMediaPlayerSpectrum();
         }
+        updateTrackDisplay();
     };
 
+    document.getElementById('mp-seekbar')?.addEventListener('click', (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        const track = mpTracks[mpCurrentTrack];
+        mpElapsedSeconds = Math.floor(pct * track.duration);
+        updateTrackDisplay();
+    });
+
     document.getElementById('mp-play-btn')?.addEventListener('click', toggleMusicPlay);
+
     document.getElementById('mp-next-btn')?.addEventListener('click', () => {
         mpCurrentTrack = (mpCurrentTrack + 1) % mpTracks.length;
+        mpElapsedSeconds = 0;
         document.querySelectorAll('.track-list-item').forEach((item, idx) => {
             item.classList.toggle('active', idx === mpCurrentTrack);
         });
+        updateTrackDisplay();
         if (mpPlaying) playSound('click');
     });
 
     document.getElementById('mp-prev-btn')?.addEventListener('click', () => {
         mpCurrentTrack = (mpCurrentTrack - 1 + mpTracks.length) % mpTracks.length;
+        mpElapsedSeconds = 0;
         document.querySelectorAll('.track-list-item').forEach((item, idx) => {
             item.classList.toggle('active', idx === mpCurrentTrack);
         });
+        updateTrackDisplay();
         if (mpPlaying) playSound('click');
     });
 
     document.querySelectorAll('.track-list-item').forEach((item, idx) => {
         item.addEventListener('click', () => {
             mpCurrentTrack = idx;
+            mpElapsedSeconds = 0;
             document.querySelectorAll('.track-list-item').forEach((t, i) => {
                 t.classList.toggle('active', i === mpCurrentTrack);
             });
+            updateTrackDisplay();
             if (!mpPlaying) {
                 toggleMusicPlay();
             } else {
