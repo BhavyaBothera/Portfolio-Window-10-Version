@@ -4646,7 +4646,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
 }
 
 /* ==========================================================================
-   APP: THIS PC — REDESIGNED FILE EXPLORER & SYSTEM PROPERTIES
+   APP: THIS PC — ULTRA-PREMIUM WINDOWS 11 FLUENT FILE EXPLORER
    ========================================================================== */
 
 .thispc-container {
@@ -4654,21 +4654,22 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background: #19191d;
-    color: #e2e8f0;
+    background: #141418;
+    color: #f1f5f9;
     font-family: var(--win-font, 'Plus Jakarta Sans', sans-serif);
     overflow: hidden;
 }
 
-/* Top Address & Navigation Bar */
+/* 1. Top Navigation & Address Bar */
 .explorer-address-bar {
-    height: 42px;
-    background: #141417;
+    height: 44px;
+    background: rgba(18, 18, 22, 0.95);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    gap: 8px;
+    padding: 0 12px;
+    gap: 10px;
     user-select: none;
     flex-shrink: 0;
 }
@@ -4682,60 +4683,74 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
 .explorer-nav-buttons .nav-btn {
     background: transparent;
     border: none;
-    color: #aaa;
-    width: 28px;
-    height: 28px;
-    border-radius: 4px;
+    color: #94a3b8;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
-    transition: all 0.15s ease;
+    font-size: 0.85rem;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .explorer-nav-buttons .nav-btn:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
     color: #fff;
+    transform: scale(1.05);
 }
 
 .explorer-nav-buttons .nav-btn:disabled {
-    opacity: 0.35;
+    opacity: 0.3;
     cursor: default;
 }
 
 .explorer-path-box {
     flex: 1;
-    height: 28px;
-    background: #0f0f12;
+    height: 30px;
+    background: rgba(10, 10, 14, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 12px;
     gap: 8px;
     font-size: 0.8rem;
-    color: #ccc;
+    color: #cbd5e1;
     overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.explorer-path-box i { font-size: 0.85rem; }
-.explorer-path-box .path-sep { font-size: 0.65rem; color: #666; }
-.explorer-path-box .path-current { color: #fff; font-weight: 600; }
+.explorer-path-box:focus-within, .explorer-path-box:hover {
+    border-color: var(--win-accent, #0078d7);
+    box-shadow: 0 0 10px rgba(0, 120, 215, 0.3);
+}
+
+.explorer-path-box i { font-size: 0.88rem; }
+.explorer-path-box .path-sep { font-size: 0.65rem; color: #64748b; }
+.explorer-path-box .path-current { color: #fff; font-weight: 700; }
 
 .explorer-search-box {
-    width: 180px;
-    height: 28px;
-    background: #0f0f12;
+    width: 200px;
+    height: 30px;
+    background: rgba(10, 10, 14, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 4px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     padding: 0 10px;
     gap: 8px;
+    transition: all 0.2s ease;
 }
 
-.explorer-search-box i { font-size: 0.75rem; color: #888; }
+.explorer-search-box:focus-within {
+    border-color: var(--win-accent, #0078d7);
+    box-shadow: 0 0 12px rgba(0, 120, 215, 0.4);
+    width: 230px;
+}
+
+.explorer-search-box i { font-size: 0.78rem; color: #94a3b8; }
 .explorer-search-box input {
     background: transparent;
     border: none;
@@ -4746,35 +4761,135 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     font-family: inherit;
 }
 
-/* Explorer Split View (Sidebar + Main) */
+/* 2. Windows 11 Command Ribbon Toolbar */
+.explorer-command-ribbon {
+    height: 38px;
+    background: #111114;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 6px;
+    user-select: none;
+    flex-shrink: 0;
+    overflow-x: auto;
+}
+
+.ribbon-cmd-btn {
+    background: transparent;
+    border: none;
+    color: #cbd5e1;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.76rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    font-weight: 500;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.ribbon-cmd-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.ribbon-cmd-btn i {
+    font-size: 0.85rem;
+}
+
+.ribbon-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 4px;
+}
+
+/* 3. Navigation View Tabs Bar */
+.explorer-view-tabs {
+    height: 36px;
+    background: #16161b;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: flex-end;
+    padding: 0 16px;
+    gap: 6px;
+    user-select: none;
+    flex-shrink: 0;
+}
+
+.explorer-view-tab {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    position: relative;
+}
+
+.explorer-view-tab:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.explorer-view-tab.active {
+    background: #19191e;
+    color: #fff;
+    font-weight: 700;
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+.explorer-view-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--win-accent, #0078d7);
+    box-shadow: 0 0 8px var(--win-accent, #0078d7);
+}
+
+/* 4. Explorer Split Layout */
 .explorer-split-container {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-/* Sidebar Navigation Tree */
+/* Sidebar Tree Navigation (Mica Translucent) */
 .explorer-nav-tree {
-    width: 200px;
-    background: #141417;
+    width: 210px;
+    background: #121216;
     border-right: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 12px 8px;
+    padding: 14px 10px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
     overflow-y: auto;
     user-select: none;
     flex-shrink: 0;
 }
 
 .tree-group-title {
-    font-size: 0.72rem;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    color: #777;
+    letter-spacing: 0.8px;
+    color: #64748b;
     margin-bottom: 6px;
-    padding-left: 6px;
+    padding-left: 8px;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -4784,230 +4899,280 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 6px 10px;
-    border-radius: 4px;
+    padding: 7px 10px;
+    border-radius: 6px;
     font-size: 0.82rem;
-    color: #bbb;
+    color: #cbd5e1;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tree-item:hover {
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.07);
     color: #fff;
+    transform: translateX(2px);
 }
 
 .tree-item.active {
-    background: rgba(0, 120, 215, 0.22);
+    background: linear-gradient(90deg, rgba(0, 120, 215, 0.28) 0%, rgba(0, 120, 215, 0.08) 100%);
     color: #fff;
-    font-weight: 600;
+    font-weight: 700;
     border-left: 3px solid var(--win-accent, #0078d7);
 }
 
 .tree-item i {
-    font-size: 0.9rem;
-    width: 16px;
+    font-size: 0.95rem;
+    width: 18px;
     text-align: center;
 }
 
-/* Main View Panel */
+/* Main Content Panel */
 .explorer-main-view {
     flex: 1;
-    padding: 18px 24px;
+    padding: 22px 28px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 22px;
-    background: #19191d;
+    gap: 26px;
+    background: #19191e;
 }
 
-/* Developer Hero Card */
-.developer-hero-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-left: 4px solid var(--win-accent, #0078d7);
-    border-radius: 10px;
-    padding: 18px 22px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+.thispc-tab-pane.hidden {
+    display: none !important;
+}
+
+/* 5. Ultra Hero Developer Banner (Version 3) */
+.developer-hero-card-v3 {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 50%, rgba(15, 23, 42, 0.95) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-left: 5px solid var(--win-accent, #0078d7);
+    border-radius: 14px;
+    padding: 22px 26px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
-.developer-hero-card::before {
+.developer-hero-card-v3::after {
     content: '';
     position: absolute;
-    top: -50px;
-    right: -50px;
-    width: 160px;
-    height: 160px;
-    background: radial-gradient(circle, var(--win-accent-glow, rgba(0, 120, 215, 0.2)) 0%, transparent 70%);
+    top: -80px;
+    right: -80px;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, var(--win-accent-glow, rgba(0, 120, 215, 0.35)) 0%, transparent 70%);
     pointer-events: none;
+    animation: meshGlow 6s ease-in-out infinite alternate;
 }
 
-.dev-avatar-container {
+@keyframes meshGlow {
+    0% { transform: scale(1) translate(0, 0); }
+    100% { transform: scale(1.2) translate(-20px, 20px); }
+}
+
+.hero-main-row {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.hero-avatar-wrapper {
     position: relative;
     flex-shrink: 0;
 }
 
-.dev-avatar {
-    width: 72px;
-    height: 72px;
+.hero-avatar-img {
+    width: 82px;
+    height: 82px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--win-accent, #0078d7);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    border: 3px solid var(--win-accent, #0078d7);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease;
 }
 
-.dev-online-dot {
-    width: 14px;
-    height: 14px;
-    background: #10b981;
-    border: 2px solid #1e293b;
-    border-radius: 50%;
+.hero-avatar-wrapper:hover .hero-avatar-img {
+    transform: scale(1.05) rotate(2deg);
+}
+
+.hero-status-pulse {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
-    box-shadow: 0 0 8px #10b981;
+    bottom: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    background: #10b981;
+    border: 3px solid #0f172a;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #10b981;
 }
 
-.dev-info-box {
+.hero-info-column {
     flex: 1;
 }
 
-.dev-name {
-    font-size: 1.4rem;
+.hero-dev-name {
+    font-size: 1.6rem;
     font-weight: 800;
     color: #fff;
+    letter-spacing: -0.5px;
     margin-bottom: 2px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-.dev-role {
-    font-size: 0.88rem;
+.hero-dev-role {
+    font-size: 0.94rem;
     color: #60a5fa;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.dev-badges {
+.hero-pills-row {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
 }
 
-.dev-badge {
+.hero-pill {
     background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 0.74rem;
-    color: #cbd5e1;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.dev-badge.green {
-    background: rgba(16, 185, 129, 0.15);
-    border-color: rgba(16, 185, 129, 0.3);
-    color: #34d399;
-}
-
-.dev-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.dev-action-btn {
-    background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    color: #fff;
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-size: 0.78rem;
-    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 14px;
+    font-size: 0.76rem;
+    color: #e2e8f0;
     display: flex;
     align-items: center;
     gap: 6px;
-    transition: all 0.2s ease;
-    font-family: inherit;
+    backdrop-filter: blur(10px);
 }
 
-.dev-action-btn.primary {
-    background: var(--win-accent, #0078d7);
-    border-color: transparent;
+.hero-pill.green {
+    background: rgba(16, 185, 129, 0.18);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #34d399;
+    font-weight: 600;
 }
 
-.dev-action-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    filter: brightness(1.1);
+/* Stat Counters Row inside Hero */
+.hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Section Headings */
-.thispc-section-header {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #e2e8f0;
-    margin-bottom: 12px;
+.stat-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.stat-item i {
+    font-size: 1.4rem;
+    color: var(--win-accent, #0078d7);
+}
+
+.stat-number {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* 6. Section Titles */
+.thispc-section-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    letter-spacing: -0.2px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 8px;
 }
 
-.thispc-section-header span {
+.thispc-section-title span {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
-/* System Folders Grid */
-.folders-grid-v2 {
+/* 7. System Folders Grid (Version 3 3D Tiles) */
+.folders-grid-v3 {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 14px;
 }
 
-.folder-card-v2 {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    padding: 12px;
+.folder-card-v3 {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
     user-select: none;
 }
 
-.folder-card-v2:hover {
-    background: rgba(0, 120, 215, 0.15);
-    border-color: rgba(0, 120, 215, 0.4);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+.folder-card-v3::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.6s ease;
 }
 
-.folder-card-v2 i {
-    font-size: 1.6rem;
+.folder-card-v3:hover::before {
+    left: 100%;
+}
+
+.folder-card-v3:hover {
+    background: rgba(0, 120, 215, 0.18);
+    border-color: rgba(0, 120, 215, 0.5);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 120, 215, 0.3);
+}
+
+.folder-card-v3 i {
+    font-size: 1.8rem;
     flex-shrink: 0;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
 }
 
-.folder-card-info {
+.folder-info-v3 {
     overflow: hidden;
 }
 
-.folder-name {
-    font-size: 0.85rem;
-    font-weight: 600;
+.folder-title-v3 {
+    font-size: 0.88rem;
+    font-weight: 700;
     color: #fff;
     margin-bottom: 2px;
     white-space: nowrap;
@@ -5015,134 +5180,162 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     text-overflow: ellipsis;
 }
 
-.folder-sub {
-    font-size: 0.72rem;
-    color: #888;
+.folder-count-v3 {
+    font-size: 0.73rem;
+    color: #94a3b8;
 }
 
-/* Devices and Drives Grid */
-.drives-grid-v2 {
+/* 8. Devices and Drives (Version 3 Fluent Cards) */
+.drives-grid-v3 {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 16px;
 }
 
-.drive-card-v2 {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 14px;
+.drive-card-v3 {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+    padding: 16px;
     display: flex;
+    gap: 16px;
     align-items: flex-start;
-    gap: 14px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
 }
 
-.drive-card-v2:hover {
+.drive-card-v3:hover {
     background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
 }
 
-.drive-card-v2 i {
-    font-size: 2.2rem;
+.drive-card-v3 i {
+    font-size: 2.4rem;
     flex-shrink: 0;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
 }
 
-.drive-details {
+.drive-content-v3 {
     flex: 1;
     overflow: hidden;
 }
 
-.drive-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 6px;
-}
-
-.drive-progress-track {
-    height: 6px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-bottom: 6px;
-}
-
-.drive-progress-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.4s ease;
-}
-
-.drive-capacity-text {
-    font-size: 0.72rem;
-    color: #aaa;
-}
-
-/* System Specifications Grid (System Properties) */
-.specs-grid-v2 {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 12px;
-}
-
-.spec-card-v2 {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    padding: 14px;
+.drive-header-v3 {
     display: flex;
-    gap: 12px;
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
 }
 
-.spec-card-v2 i {
-    font-size: 1.3rem;
+.drive-name-v3 {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.drive-badge-v3 {
+    font-size: 0.65rem;
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.drive-track-v3 {
+    height: 7px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.drive-fill-v3 {
+    height: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 10px currentColor;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drive-text-v3 {
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 9. System Specifications Dashboard Cards (Version 3) */
+.specs-grid-v3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+.spec-tile-v3 {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.2s ease;
+}
+
+.spec-tile-v3:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.spec-tile-v3 i {
+    font-size: 1.5rem;
     color: #60a5fa;
     margin-top: 2px;
 }
 
-.spec-details-v2 {
+.spec-info-v3 {
     display: flex;
     flex-direction: column;
 }
 
-.spec-label-v2 {
+.spec-title-v3 {
     font-size: 0.72rem;
-    color: #888;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-    margin-bottom: 3px;
+    letter-spacing: 0.6px;
+    color: #94a3b8;
+    margin-bottom: 4px;
 }
 
-.spec-val-v2 {
-    font-size: 0.83rem;
-    color: #eee;
-    font-weight: 600;
-    line-height: 1.3;
-}
-
-/* Biography & Values Box */
-.bio-card-v2 {
-    background: rgba(255, 255, 255, 0.025);
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 8px;
-    padding: 16px 20px;
+.spec-value-v3 {
     font-size: 0.86rem;
+    color: #f1f5f9;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+/* 10. Developer Biography & Philosophy Box (Version 3) */
+.bio-box-v3 {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-size: 0.88rem;
     color: #cbd5e1;
-    line-height: 1.6;
+    line-height: 1.75;
 }
 
-.bio-card-v2 p {
-    margin-bottom: 10px;
+.bio-box-v3 p {
+    margin-bottom: 12px;
 }
 
-.bio-card-v2 p:last-child {
+.bio-box-v3 p:last-child {
     margin-bottom: 0;
 }
+
 
 
 

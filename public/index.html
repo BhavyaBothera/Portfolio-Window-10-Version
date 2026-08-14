@@ -214,9 +214,9 @@
         <div id="windows-container" class="windows-container">
 
             <!-- WINDOW 1: THIS PC / ABOUT ME -->
-            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width:840px;height:560px;top:50px;left:100px;">
+            <div class="win-window hidden" id="win-this-pc" data-id="this-pc" style="width:880px;height:590px;top:40px;left:80px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-solid fa-desktop text-blue"></i> This PC — System Properties & About Bhavy</div>
+                    <div class="win-title"><i class="fa-solid fa-desktop text-blue"></i> This PC — System Properties & Developer Overview</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn" title="Minimize"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn" title="Maximize"><i class="fa-regular fa-square"></i></button>
@@ -224,19 +224,19 @@
                     </div>
                 </div>
                 <div class="win-body thispc-container">
-                    <!-- Top Navigation & Address Bar -->
+                    <!-- 1. Top Navigation & Address Bar -->
                     <div class="explorer-address-bar">
                         <div class="explorer-nav-buttons">
-                            <button class="nav-btn" disabled title="Back"><i class="fa-solid fa-arrow-left"></i></button>
-                            <button class="nav-btn" disabled title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
-                            <button class="nav-btn" title="Up"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button class="nav-btn" id="thispc-nav-back" disabled title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+                            <button class="nav-btn" id="thispc-nav-forward" disabled title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+                            <button class="nav-btn" id="thispc-nav-up" title="Up"><i class="fa-solid fa-arrow-up"></i></button>
                             <button class="nav-btn" id="thispc-refresh-btn" title="Refresh"><i class="fa-solid fa-rotate-right"></i></button>
                         </div>
                         <div class="explorer-path-box">
                             <i class="fa-solid fa-desktop text-blue"></i>
                             <span>This PC</span>
                             <i class="fa-solid fa-chevron-right path-sep"></i>
-                            <span class="path-current">System Properties & About Bhavy</span>
+                            <span class="path-current" id="thispc-breadcrumb-path">System Overview & About Bhavy</span>
                         </div>
                         <div class="explorer-search-box">
                             <i class="fa-solid fa-magnifying-glass"></i>
@@ -244,190 +244,329 @@
                         </div>
                     </div>
 
-                    <!-- Split Explorer View -->
+                    <!-- 2. Windows 11 Command Ribbon Toolbar -->
+                    <div class="explorer-command-ribbon">
+                        <button class="ribbon-cmd-btn" onclick="openWindow('projects')"><i class="fa-solid fa-square-plus text-blue"></i> New Project</button>
+                        <button class="ribbon-cmd-btn" onclick="openWindow('vscode')"><i class="fa-solid fa-code text-purple"></i> Inspect Source</button>
+                        <button class="ribbon-cmd-btn" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Export Resume</button>
+                        <div class="ribbon-divider"></div>
+                        <button class="ribbon-cmd-btn" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> Control Panel</button>
+                        <button class="ribbon-cmd-btn" onclick="openWindow('contact')"><i class="fa-solid fa-envelope text-yellow"></i> Contact</button>
+                        <div class="ribbon-divider"></div>
+                        <button class="ribbon-cmd-btn" id="thispc-cmd-refresh"><i class="fa-solid fa-rotate text-green"></i> Refresh View</button>
+                    </div>
+
+                    <!-- 3. Navigation View Tabs Bar -->
+                    <div class="explorer-view-tabs">
+                        <div class="explorer-view-tab active" data-tab="overview"><i class="fa-solid fa-chart-pie text-blue"></i> System Overview</div>
+                        <div class="explorer-view-tab" data-tab="storage"><i class="fa-solid fa-hard-drive text-gold"></i> Folders & Drives</div>
+                        <div class="explorer-view-tab" data-tab="specs"><i class="fa-solid fa-microchip text-cyan"></i> System Specifications</div>
+                        <div class="explorer-view-tab" data-tab="bio"><i class="fa-solid fa-user-astronaut text-purple"></i> Developer Bio</div>
+                    </div>
+
+                    <!-- 4. Split Explorer View (Tree + Content) -->
                     <div class="explorer-split-container">
-                        <!-- Left Navigation Sidebar -->
+                        <!-- Left Navigation Sidebar Tree -->
                         <div class="explorer-nav-tree">
                             <div class="tree-group">
                                 <div class="tree-group-title"><i class="fa-solid fa-star text-gold"></i> Quick Access</div>
-                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open text-gold"></i> Projects</div>
-                                <div class="tree-item" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> Control Panel</div>
-                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Resume</div>
+                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open text-gold"></i> Projects Explorer</div>
+                                <div class="tree-item" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> System Skills</div>
+                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Resume PDF</div>
                             </div>
                             <div class="tree-group">
                                 <div class="tree-group-title"><i class="fa-solid fa-desktop text-blue"></i> This PC</div>
-                                <div class="tree-item active"><i class="fa-solid fa-desktop text-blue"></i> Overview</div>
-                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder text-yellow"></i> 3D Objects</div>
-                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-display text-cyan"></i> Desktop</div>
-                                <div class="tree-item" onclick="openWindow('notepad')"><i class="fa-solid fa-file-lines text-blue"></i> Documents</div>
-                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-circle-down text-green"></i> Downloads</div>
-                                <div class="tree-item" onclick="openWindow('mediaplayer')"><i class="fa-solid fa-music text-purple"></i> Music</div>
-                                <div class="tree-item" onclick="openWindow('paint')"><i class="fa-solid fa-image text-pink"></i> Pictures</div>
+                                <div class="tree-item active" data-tab-nav="overview"><i class="fa-solid fa-gauge-high text-blue"></i> System Overview</div>
+                                <div class="tree-item" data-tab-nav="storage"><i class="fa-solid fa-hard-drive text-gold"></i> Folders & Drives</div>
+                                <div class="tree-item" data-tab-nav="specs"><i class="fa-solid fa-microchip text-cyan"></i> System Specs</div>
+                                <div class="tree-item" data-tab-nav="bio"><i class="fa-solid fa-user-astronaut text-purple"></i> Developer Bio</div>
                             </div>
                             <div class="tree-group">
-                                <div class="tree-group-title"><i class="fa-solid fa-hard-drive text-blue"></i> Storage</div>
-                                <div class="tree-item"><i class="fa-solid fa-hard-drive text-blue"></i> Local Disk (C:)</div>
-                                <div class="tree-item"><i class="fa-solid fa-hard-drive text-purple"></i> Data Volume (D:)</div>
-                                <div class="tree-item"><i class="fa-solid fa-cloud text-cyan"></i> Cloud Storage (E:)</div>
+                                <div class="tree-group-title"><i class="fa-solid fa-link text-blue"></i> App Links</div>
+                                <div class="tree-item" onclick="openWindow('vscode')"><i class="fa-solid fa-code text-purple"></i> VS Code Editor</div>
+                                <div class="tree-item" onclick="openWindow('cmd')"><i class="fa-solid fa-terminal text-green"></i> Command Prompt</div>
+                                <div class="tree-item" onclick="openWindow('mediaplayer')"><i class="fa-solid fa-compact-disc text-pink"></i> Groove Music</div>
+                                <div class="tree-item" onclick="openWindow('paint')"><i class="fa-solid fa-palette text-orange"></i> MS Paint</div>
                             </div>
                         </div>
 
-                        <!-- Right Main Explorer View -->
+                        <!-- Right Main Content Panel (Tabbed Panes) -->
                         <div class="explorer-main-view scrollable">
-                            <!-- Developer Profile Hero Card -->
-                            <div class="developer-hero-card">
-                                <div class="dev-avatar-container">
-                                    <img src="assets/avatar.png" alt="Bhavy Profile" class="dev-avatar">
-                                    <div class="dev-online-dot" title="Status: Online & Ready to Code"></div>
-                                </div>
-                                <div class="dev-info-box">
-                                    <div class="dev-name">Bhavy <span style="font-weight:400;font-size:1rem;color:#94a3b8;">(Bhavy Portfolio)</span></div>
-                                    <div class="dev-role">Full-Stack Software Engineer & Interactive Web Developer</div>
-                                    <div class="dev-badges">
-                                        <span class="dev-badge green"><i class="fa-solid fa-circle-check"></i> Available for Hire</span>
-                                        <span class="dev-badge"><i class="fa-solid fa-globe"></i> Remote / Worldwide</span>
-                                        <span class="dev-badge"><i class="fa-solid fa-code"></i> Full-Stack Dev</span>
-                                        <span class="dev-badge"><i class="fa-solid fa-bolt"></i> High Performance</span>
+                            
+                            <!-- TAB PANE 1: SYSTEM OVERVIEW (Default) -->
+                            <div class="thispc-tab-pane" id="thispc-pane-overview">
+                                <!-- Ultra Hero Banner v3 -->
+                                <div class="developer-hero-card-v3">
+                                    <div class="hero-main-row">
+                                        <div class="hero-avatar-wrapper">
+                                            <img src="assets/avatar.png" alt="Bhavy Profile" class="hero-avatar-img">
+                                            <div class="hero-status-pulse" title="Status: Online & Ready to Build"></div>
+                                        </div>
+                                        <div class="hero-info-column">
+                                            <div class="hero-dev-name">Bhavy <span style="font-weight:400;font-size:1.05rem;color:#94a3b8;">(Bhavy Portfolio OS)</span></div>
+                                            <div class="hero-dev-role">Full-Stack Software Engineer & Web Systems Architect</div>
+                                            <div class="hero-pills-row">
+                                                <span class="hero-pill green"><i class="fa-solid fa-circle-check"></i> Available for Hire / Freelance</span>
+                                                <span class="hero-pill"><i class="fa-solid fa-location-dot"></i> Worldwide / Remote</span>
+                                                <span class="hero-pill"><i class="fa-solid fa-bolt"></i> High Performance Systems</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="dev-actions">
-                                        <button class="dev-action-btn primary" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open"></i> View Projects</button>
-                                        <button class="dev-action-btn" onclick="openWindow('skills')"><i class="fa-solid fa-sliders"></i> System Skills</button>
-                                        <button class="dev-action-btn" onclick="openWindow('contact')"><i class="fa-solid fa-paper-plane"></i> Contact Me</button>
+                                    <div class="hero-stats-grid">
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-cubes text-blue"></i>
+                                            <div>
+                                                <div class="stat-number">25+</div>
+                                                <div class="stat-label">Web Apps Built</div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-star text-gold"></i>
+                                            <div>
+                                                <div class="stat-number">100%</div>
+                                                <div class="stat-label">Client Satisfaction</div>
+                                            </div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <i class="fa-solid fa-clock text-green"></i>
+                                            <div>
+                                                <div class="stat-number">3+ Yrs</div>
+                                                <div class="stat-label">Engineering Exp</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- System Folders Section (6 3D Cards) -->
+                                <div style="margin-top:22px;">
+                                    <div class="thispc-section-title">
+                                        <span><i class="fa-solid fa-folder-tree text-gold"></i> System Folders (6)</span>
+                                        <span style="font-size:0.75rem;color:#94a3b8;font-weight:500;">Click any folder to launch app</span>
+                                    </div>
+                                    <div class="folders-grid-v3">
+                                        <div class="folder-card-v3" onclick="openWindow('projects')">
+                                            <i class="fa-solid fa-display text-blue"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">Desktop</div>
+                                                <div class="folder-count-v3">18 App Shortcuts</div>
+                                            </div>
+                                        </div>
+                                        <div class="folder-card-v3" onclick="openWindow('notepad')">
+                                            <i class="fa-solid fa-file-lines text-yellow"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">Documents</div>
+                                                <div class="folder-count-v3">Architecture Specs</div>
+                                            </div>
+                                        </div>
+                                        <div class="folder-card-v3" onclick="openWindow('resume')">
+                                            <i class="fa-solid fa-circle-down text-green"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">Downloads</div>
+                                                <div class="folder-count-v3">Resume PDF & Text</div>
+                                            </div>
+                                        </div>
+                                        <div class="folder-card-v3" onclick="openWindow('mediaplayer')">
+                                            <i class="fa-solid fa-music text-purple"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">Music</div>
+                                                <div class="folder-count-v3">Synthwave Tracks</div>
+                                            </div>
+                                        </div>
+                                        <div class="folder-card-v3" onclick="openWindow('paint')">
+                                            <i class="fa-solid fa-image text-orange"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">Pictures</div>
+                                                <div class="folder-count-v3">Paint & Artwork</div>
+                                            </div>
+                                        </div>
+                                        <div class="folder-card-v3" onclick="openWindow('projects')">
+                                            <i class="fa-solid fa-cube text-pink"></i>
+                                            <div class="folder-info-v3">
+                                                <div class="folder-title-v3">3D Objects</div>
+                                                <div class="folder-count-v3">Interactive Demos</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Devices & Drives Section -->
+                                <div style="margin-top:24px;">
+                                    <div class="thispc-section-title">
+                                        <span><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives (3)</span>
+                                    </div>
+                                    <div class="drives-grid-v3">
+                                        <div class="drive-card-v3" onclick="openWindow('projects')">
+                                            <i class="fa-solid fa-hard-drive text-blue"></i>
+                                            <div class="drive-content-v3">
+                                                <div class="drive-header-v3">
+                                                    <span class="drive-name-v3">Local Disk (C:)</span>
+                                                    <span class="drive-badge-v3">🟢 Healthy</span>
+                                                </div>
+                                                <div class="drive-track-v3">
+                                                    <div class="drive-fill-v3" style="width:70%;background:#0078d7;color:#0078d7;"></div>
+                                                </div>
+                                                <div class="drive-text-v3">
+                                                    <span>350 GB free of 500 GB</span>
+                                                    <span>React / Next.js / TS</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="drive-card-v3" onclick="openWindow('skills')">
+                                            <i class="fa-solid fa-hard-drive text-purple"></i>
+                                            <div class="drive-content-v3">
+                                                <div class="drive-header-v3">
+                                                    <span class="drive-name-v3">Data Volume (D:)</span>
+                                                    <span class="drive-badge-v3">🟢 Healthy</span>
+                                                </div>
+                                                <div class="drive-track-v3">
+                                                    <div class="drive-fill-v3" style="width:45%;background:#8b5cf6;color:#8b5cf6;"></div>
+                                                </div>
+                                                <div class="drive-text-v3">
+                                                    <span>55 GB free of 100 GB</span>
+                                                    <span>Python / AI / Postgres</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="drive-card-v3" onclick="openWindow('vscode')">
+                                            <i class="fa-solid fa-cloud text-cyan"></i>
+                                            <div class="drive-content-v3">
+                                                <div class="drive-header-v3">
+                                                    <span class="drive-name-v3">Cloud Storage (E:)</span>
+                                                    <span class="drive-badge-v3">🟢 Healthy</span>
+                                                </div>
+                                                <div class="drive-track-v3">
+                                                    <div class="drive-fill-v3" style="width:28%;background:#06b6d4;color:#06b6d4;"></div>
+                                                </div>
+                                                <div class="drive-text-v3">
+                                                    <span>180 GB free of 250 GB</span>
+                                                    <span>AWS / Docker / Vercel</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- System Folders Section -->
-                            <div>
-                                <div class="thispc-section-header">
-                                    <span><i class="fa-solid fa-folder text-gold"></i> System Folders (6)</span>
+                            <!-- TAB PANE 2: FOLDERS & STORAGE -->
+                            <div class="thispc-tab-pane hidden" id="thispc-pane-storage">
+                                <div class="thispc-section-title">
+                                    <span><i class="fa-solid fa-hard-drive text-gold"></i> Detailed Storage & Volume Partition Overview</span>
                                 </div>
-                                <div class="folders-grid-v2">
-                                    <div class="folder-card-v2" onclick="openWindow('projects')">
-                                        <i class="fa-solid fa-cube text-purple"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">3D Objects</div>
-                                            <div class="folder-sub">Interactive Demos</div>
+                                <div class="drives-grid-v3" style="grid-template-columns:1fr;">
+                                    <div class="drive-card-v3">
+                                        <i class="fa-solid fa-hard-drive text-blue" style="font-size:3rem;"></i>
+                                        <div class="drive-content-v3">
+                                            <div class="drive-header-v3">
+                                                <span class="drive-name-v3" style="font-size:1.1rem;">Local Disk (C:) — Primary Web Application Core</span>
+                                                <span class="drive-badge-v3">🟢 Primary Boot Volume</span>
+                                            </div>
+                                            <div class="drive-track-v3" style="height:10px;margin:10px 0;">
+                                                <div class="drive-fill-v3" style="width:70%;background:#0078d7;color:#0078d7;"></div>
+                                            </div>
+                                            <div class="drive-text-v3" style="font-size:0.82rem;">
+                                                <span>350 GB free of 500 GB (70% Allocated)</span>
+                                                <span>FileSystem: NTFS / React.js Engine</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="folder-card-v2" onclick="openWindow('projects')">
-                                        <i class="fa-solid fa-display text-blue"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">Desktop</div>
-                                            <div class="folder-sub">18 App Shortcuts</div>
+                                    <div class="drive-card-v3">
+                                        <i class="fa-solid fa-hard-drive text-purple" style="font-size:3rem;"></i>
+                                        <div class="drive-content-v3">
+                                            <div class="drive-header-v3">
+                                                <span class="drive-name-v3" style="font-size:1.1rem;">Data Volume (D:) — Backend Microservices & AI Pipeline</span>
+                                                <span class="drive-badge-v3">🟢 High-Speed SSD</span>
+                                            </div>
+                                            <div class="drive-track-v3" style="height:10px;margin:10px 0;">
+                                                <div class="drive-fill-v3" style="width:45%;background:#8b5cf6;color:#8b5cf6;"></div>
+                                            </div>
+                                            <div class="drive-text-v3" style="font-size:0.82rem;">
+                                                <span>55 GB free of 100 GB (45% Allocated)</span>
+                                                <span>FileSystem: ReFS / Python & Node API</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="folder-card-v2" onclick="openWindow('notepad')">
-                                        <i class="fa-solid fa-file-lines text-yellow"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">Documents</div>
-                                            <div class="folder-sub">Resume & Specs</div>
-                                        </div>
-                                    </div>
-                                    <div class="folder-card-v2" onclick="openWindow('resume')">
-                                        <i class="fa-solid fa-circle-down text-green"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">Downloads</div>
-                                            <div class="folder-sub">Resume.pdf & Text</div>
-                                        </div>
-                                    </div>
-                                    <div class="folder-card-v2" onclick="openWindow('mediaplayer')">
-                                        <i class="fa-solid fa-music text-pink"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">Music</div>
-                                            <div class="folder-sub">Synthwave Tracks</div>
-                                        </div>
-                                    </div>
-                                    <div class="folder-card-v2" onclick="openWindow('paint')">
-                                        <i class="fa-solid fa-image text-orange"></i>
-                                        <div class="folder-card-info">
-                                            <div class="folder-name">Pictures</div>
-                                            <div class="folder-sub">Paint & Mockups</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Devices & Drives Section -->
-                            <div>
-                                <div class="thispc-section-header">
-                                    <span><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives (3)</span>
-                                </div>
-                                <div class="drives-grid-v2">
-                                    <div class="drive-card-v2">
-                                        <i class="fa-solid fa-hard-drive text-blue"></i>
-                                        <div class="drive-details">
-                                            <div class="drive-title">Local Disk (C:)</div>
-                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:70%;background:var(--win-accent, #0078d7);"></div></div>
-                                            <div class="drive-capacity-text">350 GB free of 500 GB (React, Next.js, TS)</div>
-                                        </div>
-                                    </div>
-                                    <div class="drive-card-v2">
-                                        <i class="fa-solid fa-hard-drive text-purple"></i>
-                                        <div class="drive-details">
-                                            <div class="drive-title">Data Volume (D:)</div>
-                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:45%;background:#8b5cf6;"></div></div>
-                                            <div class="drive-capacity-text">55 GB free of 100 GB (Python, AI Tools)</div>
-                                        </div>
-                                    </div>
-                                    <div class="drive-card-v2">
-                                        <i class="fa-solid fa-cloud text-cyan"></i>
-                                        <div class="drive-details">
-                                            <div class="drive-title">Cloud Storage (E:)</div>
-                                            <div class="drive-progress-track"><div class="drive-progress-fill" style="width:28%;background:#06b6d4;"></div></div>
-                                            <div class="drive-capacity-text">180 GB free of 250 GB (AWS, Docker, CI/CD)</div>
+                                    <div class="drive-card-v3">
+                                        <i class="fa-solid fa-cloud text-cyan" style="font-size:3rem;"></i>
+                                        <div class="drive-content-v3">
+                                            <div class="drive-header-v3">
+                                                <span class="drive-name-v3" style="font-size:1.1rem;">Cloud Volume (E:) — DevOps, Containerization & Deployments</span>
+                                                <span class="drive-badge-v3">🟢 Cloud Synced</span>
+                                            </div>
+                                            <div class="drive-track-v3" style="height:10px;margin:10px 0;">
+                                                <div class="drive-fill-v3" style="width:28%;background:#06b6d4;color:#06b6d4;"></div>
+                                            </div>
+                                            <div class="drive-text-v3" style="font-size:0.82rem;">
+                                                <span>180 GB free of 250 GB (28% Allocated)</span>
+                                                <span>FileSystem: AWS S3 / Docker Containers</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- System Properties Specifications -->
-                            <div>
-                                <div class="thispc-section-header">
-                                    <span><i class="fa-solid fa-sliders text-cyan"></i> System Properties Specifications</span>
+                            <!-- TAB PANE 3: SYSTEM SPECIFICATIONS -->
+                            <div class="thispc-tab-pane hidden" id="thispc-pane-specs">
+                                <div class="thispc-section-title">
+                                    <span><i class="fa-solid fa-microchip text-cyan"></i> System Specifications & Hardware Architecture</span>
                                 </div>
-                                <div class="specs-grid-v2">
-                                    <div class="spec-card-v2">
+                                <div class="specs-grid-v3">
+                                    <div class="spec-tile-v3">
                                         <i class="fa-solid fa-microchip"></i>
-                                        <div class="spec-details-v2">
-                                            <span class="spec-label-v2">Device Processor</span>
-                                            <span class="spec-val-v2">High-Speed Analytical & Creative Mind @ 4.80GHz</span>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">Device Processor</div>
+                                            <div class="spec-value-v3">High-Speed Analytical & Creative Mind @ 5.0 GHz</div>
                                         </div>
                                     </div>
-                                    <div class="spec-card-v2">
+                                    <div class="spec-tile-v3">
                                         <i class="fa-solid fa-memory"></i>
-                                        <div class="spec-details-v2">
-                                            <span class="spec-label-v2">Installed Memory (RAM)</span>
-                                            <span class="spec-val-v2">32.0 GB (Infinite Capacity for Adaptation)</span>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">Installed RAM</div>
+                                            <div class="spec-value-v3">32.0 GB (Infinite Capacity for Learning & Adaptation)</div>
                                         </div>
                                     </div>
-                                    <div class="spec-card-v2">
-                                        <i class="fa-solid fa-layer-group"></i>
-                                        <div class="spec-details-v2">
-                                            <span class="spec-label-v2">System Stack</span>
-                                            <span class="spec-val-v2">React, Next.js, Node.js, Python, PostgreSQL & Cloud</span>
+                                    <div class="spec-tile-v3">
+                                        <i class="fa-solid fa-code-branch"></i>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">Software Architecture</div>
+                                            <div class="spec-value-v3">React, Next.js, TypeScript, Node.js, Python, PostgreSQL</div>
                                         </div>
                                     </div>
-                                    <div class="spec-card-v2">
+                                    <div class="spec-tile-v3">
                                         <i class="fa-solid fa-shield-halved"></i>
-                                        <div class="spec-details-v2">
-                                            <span class="spec-label-v2">Core Philosophy</span>
-                                            <span class="spec-val-v2">Clean Code, Modern Design & User Delight</span>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">Security & Quality</div>
+                                            <div class="spec-value-v3">Clean Code Standards, Modular Architecture, Zero Bloat</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-tile-v3">
+                                        <i class="fa-solid fa-palette"></i>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">UI/UX Engine</div>
+                                            <div class="spec-value-v3">Windows Fluent Design System, Glassmorphic Materials</div>
+                                        </div>
+                                    </div>
+                                    <div class="spec-tile-v3">
+                                        <i class="fa-solid fa-bolt"></i>
+                                        <div class="spec-info-v3">
+                                            <div class="spec-title-v3">Execution Speed</div>
+                                            <div class="spec-value-v3">Sub-100ms Load Times, 60fps Smooth Micro-animations</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Biography & Background Section -->
-                            <div>
-                                <div class="thispc-section-header">
-                                    <span><i class="fa-solid fa-user-astronaut text-purple"></i> Biography & Engineering Approach</span>
+                            <!-- TAB PANE 4: DEVELOPER BIO & PHILOSOPHY -->
+                            <div class="thispc-tab-pane hidden" id="thispc-pane-bio">
+                                <div class="thispc-section-title">
+                                    <span><i class="fa-solid fa-user-astronaut text-purple"></i> Biography & Engineering Philosophy</span>
                                 </div>
-                                <div class="bio-card-v2">
+                                <div class="bio-box-v3">
                                     <p>Hello! I'm <strong>Bhavy</strong>, a passionate software engineer dedicated to building high-performance web applications, scalable backend services, and pixel-perfect interactive digital experiences.</p>
                                     <p>I specialize in bridging technical architecture with modern UI craftsmanship. Whether it's building complex state-managed interfaces, developing real-time APIs, or designing desktop-grade web applications like this <strong>Windows 10 Portfolio OS</strong>, I prioritize clean code, performance, and memorable user experiences.</p>
+                                    <p>When I'm not writing code, you can find me exploring open-source software, diving into AI/ML tools, customizing developer productivity workflows, or gaming.</p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

@@ -908,22 +908,65 @@
     // ==========================================================================
     // THIS PC EXPLORER SEARCH & INTERACTION ENGINE
     // ==========================================================================
+    // ==========================================================================
+    // THIS PC EXPLORER INTERACTION & TABBED NAVIGATION ENGINE
+    // ==========================================================================
+    const tabLabels = {
+        'overview': 'System Overview & About Bhavy',
+        'storage': 'System Folders & Storage Volumes',
+        'specs': 'System Specifications & Hardware Architecture',
+        'bio': 'Developer Biography & Engineering Philosophy'
+    };
+
+    function switchThisPcTab(tabId) {
+        if (!tabId || !tabLabels[tabId]) return;
+
+        // Active tab button
+        document.querySelectorAll('.explorer-view-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.tab === tabId);
+        });
+
+        // Active tree nav item
+        document.querySelectorAll('.tree-item[data-tab-nav]').forEach(item => {
+            item.classList.toggle('active', item.dataset.tabNav === tabId);
+        });
+
+        // Show pane
+        document.querySelectorAll('.thispc-tab-pane').forEach(pane => {
+            pane.classList.add('hidden');
+        });
+        const targetPane = document.getElementById(`thispc-pane-${tabId}`);
+        if (targetPane) targetPane.classList.remove('hidden');
+
+        // Breadcrumb
+        const breadcrumb = document.getElementById('thispc-breadcrumb-path');
+        if (breadcrumb) breadcrumb.textContent = tabLabels[tabId];
+
+        playSound('click');
+    }
+
+    document.querySelectorAll('.explorer-view-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchThisPcTab(tab.dataset.tab));
+    });
+
+    document.querySelectorAll('.tree-item[data-tab-nav]').forEach(item => {
+        item.addEventListener('click', () => switchThisPcTab(item.dataset.tabNav));
+    });
+
     document.getElementById('thispc-search-input')?.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
         const mainView = document.querySelector('#win-this-pc .explorer-main-view');
         if (!mainView) return;
 
-        const folderCards = mainView.querySelectorAll('.folder-card-v2');
-        const driveCards = mainView.querySelectorAll('.drive-card-v2');
-        const specCards = mainView.querySelectorAll('.spec-card-v2');
+        const cards = mainView.querySelectorAll('.folder-card-v3, .drive-card-v3, .spec-tile-v3, .folder-card-v2, .drive-card-v2, .spec-card-v2');
 
-        [...folderCards, ...driveCards, ...specCards].forEach(card => {
+        cards.forEach(card => {
             const text = card.textContent.toLowerCase();
             card.style.display = text.includes(query) ? '' : 'none';
         });
     });
 
-    document.getElementById('thispc-refresh-btn')?.addEventListener('click', () => {
+    const triggerThisPcRefresh = () => {
         const mainView = document.querySelector('#win-this-pc .explorer-main-view');
         if (mainView) {
             mainView.style.opacity = '0';
@@ -933,7 +976,10 @@
             }, 100);
         }
         playSound('click');
-    });
+    };
+
+    document.getElementById('thispc-refresh-btn')?.addEventListener('click', triggerThisPcRefresh);
+    document.getElementById('thispc-cmd-refresh')?.addEventListener('click', triggerThisPcRefresh);
 
     // ==========================================================================
     // 9. TASK VIEW OVERLAY
