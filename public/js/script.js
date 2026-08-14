@@ -1043,8 +1043,10 @@
 
     // Click on desktop dismisses everything
     document.addEventListener('click', (e) => {
-        // Don't close if clicking inside a popover or start menu
-        if (e.target.closest('.start-menu, .tray-popover, .action-center, .search-popover, .context-menu, .taskbar-btn, .tray-icon, .tray-clock, .taskbar-search-container')) return;
+        // Always dismiss context menu on any click
+        document.getElementById('context-menu')?.classList.add('hidden');
+        // Don't close popovers if clicking inside a popover or start menu
+        if (e.target.closest('.start-menu, .tray-popover, .action-center, .search-popover, .taskbar-btn, .tray-icon, .tray-clock, .taskbar-search-container')) return;
         closeAllPopovers();
     });
 
@@ -1350,15 +1352,37 @@
         }
     }, 90000);
 
+    document.querySelectorAll('.context-item').forEach(item => {
+        item.addEventListener('click', () => {
+            document.getElementById('context-menu')?.classList.add('hidden');
+        });
+    });
+
     document.getElementById('ctx-refresh')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
         desktopIcons.forEach(icon => { icon.style.animation = 'none'; setTimeout(() => icon.style.animation = 'fadeInUp 0.3s ease', 10); });
         playSound('click');
     });
-    document.getElementById('ctx-next-wallpaper')?.addEventListener('click', () => document.getElementById('toggle-wallpaper')?.click());
-    document.getElementById('ctx-open-terminal')?.addEventListener('click', () => openWindow('cmd'));
-    document.getElementById('ctx-open-vscode')?.addEventListener('click', () => openWindow('vscode'));
-    document.getElementById('ctx-personalize')?.addEventListener('click', () => openWindow('settings'));
-    document.getElementById('ctx-about-os')?.addEventListener('click', () => openWindow('this-pc'));
+    document.getElementById('ctx-next-wallpaper')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
+        document.getElementById('toggle-wallpaper')?.click();
+    });
+    document.getElementById('ctx-open-terminal')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
+        openWindow('cmd');
+    });
+    document.getElementById('ctx-open-vscode')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
+        openWindow('vscode');
+    });
+    document.getElementById('ctx-personalize')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
+        openWindow('settings');
+    });
+    document.getElementById('ctx-about-os')?.addEventListener('click', () => {
+        document.getElementById('context-menu')?.classList.add('hidden');
+        openWindow('this-pc');
+    });
 
     // Settings 13-category grid card clicks
     document.querySelectorAll('.settings-category-card').forEach(card => {
