@@ -1390,6 +1390,18 @@
     const showContextMenuAt = (x, y) => {
         closeAllPopovers();
         if (contextMenu) {
+            // Check if any app is open or visible on screen
+            const isAnyAppOpen = (state.openWindows && state.openWindows.length > 0) || 
+                                 document.querySelectorAll('.win-window:not(.hidden)').length > 0;
+            const ctxRefresh = document.getElementById('ctx-refresh');
+            if (ctxRefresh) {
+                if (isAnyAppOpen) {
+                    ctxRefresh.style.display = 'none';
+                } else {
+                    ctxRefresh.style.display = 'flex';
+                }
+            }
+
             const posX = Math.min(x, window.innerWidth - 230);
             const posY = Math.min(y, window.innerHeight - 250);
             contextMenu.style.left = `${posX}px`;
