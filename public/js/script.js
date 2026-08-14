@@ -1393,13 +1393,19 @@
             // Check if any app is open or visible on screen
             const isAnyAppOpen = (state.openWindows && state.openWindows.length > 0) || 
                                  document.querySelectorAll('.win-window:not(.hidden)').length > 0;
+            
             const ctxRefresh = document.getElementById('ctx-refresh');
-            if (ctxRefresh) {
-                if (isAnyAppOpen) {
-                    ctxRefresh.style.display = 'none';
-                } else {
-                    ctxRefresh.style.display = 'flex';
-                }
+            const ctxNextWallpaper = document.getElementById('ctx-next-wallpaper');
+            const ctxDividerTop = document.getElementById('ctx-divider-top');
+
+            if (isAnyAppOpen) {
+                if (ctxRefresh) ctxRefresh.style.display = 'none';
+                if (ctxNextWallpaper) ctxNextWallpaper.style.display = 'none';
+                if (ctxDividerTop) ctxDividerTop.style.display = 'none';
+            } else {
+                if (ctxRefresh) ctxRefresh.style.display = 'flex';
+                if (ctxNextWallpaper) ctxNextWallpaper.style.display = 'flex';
+                if (ctxDividerTop) ctxDividerTop.style.display = 'block';
             }
 
             const posX = Math.min(x, window.innerWidth - 230);
