@@ -742,39 +742,122 @@
                 </div>
             </div><!-- /win-vscode -->
 
-            <!-- WINDOW 5: MICROSOFT EDGE -->
-            <div class="win-window hidden" id="win-edge" data-id="edge" style="width:880px;height:560px;top:65px;left:170px;">
+            <!-- WINDOW 5: MICROSOFT EDGE BROWSER -->
+            <div class="win-window hidden" id="win-edge" data-id="edge" style="width:920px;height:600px;top:50px;left:140px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-brands fa-edge text-blue"></i> Microsoft Edge — Web Browser</div>
+                    <div class="win-title"><i class="fa-brands fa-edge text-blue"></i> <span id="edge-title-text">New Tab</span> — Microsoft Edge</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="edge-browser-bar">
-                    <button class="edge-nav-btn" id="edge-back"><i class="fa-solid fa-arrow-left"></i></button>
-                    <button class="edge-nav-btn" id="edge-forward"><i class="fa-solid fa-arrow-right"></i></button>
-                    <button class="edge-nav-btn" id="edge-refresh"><i class="fa-solid fa-rotate-right"></i></button>
-                    <div class="edge-url-box">
-                        <i class="fa-solid fa-lock text-green"></i>
-                        <input type="text" id="edge-url-input" value="https://bhavy-portfolio.dev/welcome">
+
+                <!-- Edge Tab Bar -->
+                <div class="edge-tab-bar">
+                    <div class="edge-tabs-container" id="edge-tabs-container">
+                        <div class="edge-tab active" data-edge-tab="newtab">
+                            <i class="fa-brands fa-edge"></i>
+                            <span class="edge-tab-label">New Tab</span>
+                            <button class="edge-tab-close" data-close-tab="newtab"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
                     </div>
-                    <button class="edge-go-btn" id="edge-go">Go</button>
+                    <button class="edge-new-tab-btn" id="edge-new-tab-btn" title="New Tab"><i class="fa-solid fa-plus"></i></button>
                 </div>
-                <div class="win-body edge-viewport scrollable" id="edge-viewport-content">
-                    <div class="edge-start-page">
-                        <div class="edge-hero">
-                            <i class="fa-brands fa-edge edge-hero-logo"></i>
-                            <h1>Microsoft Edge Web Explorer</h1>
-                            <p>Explore live Web Applications, GitHub Repositories, and Portfolio Projects directly in-browser!</p>
-                            <div class="edge-bookmarks-grid">
-                                <button class="edge-bookmark-btn" data-url="https://github.com"><i class="fa-brands fa-github"></i> GitHub Profile</button>
-                                <button class="edge-bookmark-btn" data-url="https://linkedin.com"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
-                                <button class="edge-bookmark-btn" data-url="https://react.dev"><i class="fa-brands fa-react"></i> React Docs</button>
-                                <button class="edge-bookmark-btn" data-url="https://wikipedia.org"><i class="fa-solid fa-book"></i> Wikipedia</button>
+
+                <!-- Edge Navigation / Address Bar -->
+                <div class="edge-nav-bar">
+                    <div class="edge-nav-buttons">
+                        <button class="edge-nav-btn" id="edge-back" disabled title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button class="edge-nav-btn" id="edge-forward" disabled title="Forward"><i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="edge-nav-btn" id="edge-refresh" title="Refresh"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="edge-nav-btn" id="edge-home" title="Home"><i class="fa-solid fa-house"></i></button>
+                    </div>
+                    <div class="edge-url-bar">
+                        <i class="fa-solid fa-lock edge-lock-icon" id="edge-lock-icon"></i>
+                        <input type="text" id="edge-url-input" placeholder="Search or enter web address" value="edge://newtab" spellcheck="false" autocomplete="off">
+                        <button class="edge-url-go" id="edge-go"><i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                    <div class="edge-toolbar-actions">
+                        <button class="edge-tool-btn" title="Favorites"><i class="fa-regular fa-star"></i></button>
+                        <button class="edge-tool-btn" title="Collections"><i class="fa-regular fa-bookmark"></i></button>
+                        <button class="edge-tool-btn" title="Downloads"><i class="fa-solid fa-download"></i></button>
+                        <button class="edge-tool-btn" title="Settings"><i class="fa-solid fa-ellipsis"></i></button>
+                    </div>
+                </div>
+
+                <!-- Edge Bookmarks Bar -->
+                <div class="edge-bookmarks-bar">
+                    <button class="edge-bm-chip" data-edge-url="https://github.com/BhavyaBothera" data-edge-label="GitHub Profile"><i class="fa-brands fa-github"></i> GitHub</button>
+                    <button class="edge-bm-chip" data-edge-url="https://www.linkedin.com/in/" data-edge-label="LinkedIn"><i class="fa-brands fa-linkedin"></i> LinkedIn</button>
+                    <button class="edge-bm-chip" data-edge-url="https://www.google.com/webhp?igu=1" data-edge-label="Google Search"><i class="fa-brands fa-google"></i> Google</button>
+                    <button class="edge-bm-chip" data-edge-url="https://en.wikipedia.org/wiki/Main_Page" data-edge-label="Wikipedia"><i class="fa-brands fa-wikipedia-w"></i> Wikipedia</button>
+                    <button class="edge-bm-chip" data-edge-url="https://www.youtube.com" data-edge-label="YouTube"><i class="fa-brands fa-youtube"></i> YouTube</button>
+                    <button class="edge-bm-chip" data-edge-url="https://stackoverflow.com" data-edge-label="Stack Overflow"><i class="fa-brands fa-stack-overflow"></i> Stack Overflow</button>
+                </div>
+
+                <!-- Edge Viewport (Content Area) -->
+                <div class="edge-viewport" id="edge-viewport">
+                    <!-- New Tab Start Page (default visible) -->
+                    <div class="edge-newtab-page" id="edge-newtab-page">
+                        <div class="edge-newtab-hero">
+                            <i class="fa-brands fa-edge edge-newtab-logo"></i>
+                            <h2 class="edge-newtab-heading">Welcome to Microsoft Edge</h2>
+                            <p class="edge-newtab-sub">Browse your portfolio links, open external sites, or search the web.</p>
+                        </div>
+
+                        <div class="edge-search-container">
+                            <div class="edge-search-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="edge-search-input" placeholder="Search the web or enter a URL...">
                             </div>
                         </div>
+
+                        <div class="edge-quicklinks-section">
+                            <div class="edge-quicklinks-title">Quick Links</div>
+                            <div class="edge-quicklinks-grid">
+                                <div class="edge-quicklink" data-edge-url="https://github.com/BhavyaBothera" data-edge-label="GitHub Profile">
+                                    <div class="edge-quicklink-icon" style="background:#24292e;"><i class="fa-brands fa-github"></i></div>
+                                    <span>GitHub</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://www.linkedin.com/in/" data-edge-label="LinkedIn">
+                                    <div class="edge-quicklink-icon" style="background:#0077b5;"><i class="fa-brands fa-linkedin-in"></i></div>
+                                    <span>LinkedIn</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://www.google.com/webhp?igu=1" data-edge-label="Google Search">
+                                    <div class="edge-quicklink-icon" style="background:#4285f4;"><i class="fa-brands fa-google"></i></div>
+                                    <span>Google</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://en.wikipedia.org/wiki/Main_Page" data-edge-label="Wikipedia">
+                                    <div class="edge-quicklink-icon" style="background:#636466;"><i class="fa-brands fa-wikipedia-w"></i></div>
+                                    <span>Wikipedia</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://www.youtube.com" data-edge-label="YouTube">
+                                    <div class="edge-quicklink-icon" style="background:#ff0000;"><i class="fa-brands fa-youtube"></i></div>
+                                    <span>YouTube</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://stackoverflow.com" data-edge-label="Stack Overflow">
+                                    <div class="edge-quicklink-icon" style="background:#f48024;"><i class="fa-brands fa-stack-overflow"></i></div>
+                                    <span>Stack Overflow</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://react.dev" data-edge-label="React Documentation">
+                                    <div class="edge-quicklink-icon" style="background:#20232a;"><i class="fa-brands fa-react"></i></div>
+                                    <span>React Docs</span>
+                                </div>
+                                <div class="edge-quicklink" data-edge-url="https://developer.mozilla.org" data-edge-label="MDN Web Docs">
+                                    <div class="edge-quicklink-icon" style="background:#1b1b1b;"><i class="fa-solid fa-book-open"></i></div>
+                                    <span>MDN Docs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Iframe for loading real pages -->
+                    <iframe id="edge-iframe" class="edge-iframe hidden" sandbox="allow-scripts allow-same-origin allow-forms allow-popups" allowfullscreen></iframe>
+
+                    <!-- Loading indicator -->
+                    <div class="edge-loading hidden" id="edge-loading">
+                        <div class="edge-loading-bar"></div>
                     </div>
                 </div>
             </div><!-- /win-edge -->

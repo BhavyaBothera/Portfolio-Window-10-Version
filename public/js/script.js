@@ -982,6 +982,224 @@
     document.getElementById('thispc-cmd-refresh')?.addEventListener('click', triggerThisPcRefresh);
 
     // ==========================================================================
+    // 8b. MICROSOFT EDGE BROWSER
+    // ==========================================================================
+    const edgeState = {
+        history: [],
+        historyIndex: -1,
+        currentUrl: 'edge://newtab',
+        isLoading: false
+    };
+
+    const edgeElements = {
+        iframe: document.getElementById('edge-iframe'),
+        newtabPage: document.getElementById('edge-newtab-page'),
+        urlInput: document.getElementById('edge-url-input'),
+        loading: document.getElementById('edge-loading'),
+        titleText: document.getElementById('edge-title-text'),
+        backBtn: document.getElementById('edge-back'),
+        forwardBtn: document.getElementById('edge-forward'),
+        refreshBtn: document.getElementById('edge-refresh'),
+        homeBtn: document.getElementById('edge-home'),
+        goBtn: document.getElementById('edge-go'),
+        searchInput: document.getElementById('edge-search-input'),
+        lockIcon: document.getElementById('edge-lock-icon'),
+        viewport: document.getElementById('edge-viewport')
+    };
+
+    // Sites that block iframes — open these in new real browser tabs
+    const iframeBlockedDomains = [
+        'github.com', 'linkedin.com', 'twitter.com', 'x.com',
+        'facebook.com', 'instagram.com', 'reddit.com', 'youtube.com',
+        'stackoverflow.com', 'react.dev', 'developer.mozilla.org'
+    ];
+
+    function isIframeBlocked(url) {
+        try {
+            const hostname = new URL(url).hostname.replace('www.', '');
+            return iframeBlockedDomains.some(d => hostname.includes(d));
+        } catch { return false; }
+    }
+
+    function edgeShowLoading(show) {
+        if (!edgeElements.loading) return;
+        edgeState.isLoading = show;
+        edgeElements.loading.classList.toggle('hidden', !show);
+    }
+
+    function edgeUpdateNavButtons() {
+        if (edgeElements.backBtn) edgeElements.backBtn.disabled = edgeState.historyIndex <= 0;
+        if (edgeElements.forwardBtn) edgeElements.forwardBtn.disabled = edgeState.historyIndex >= edgeState.history.length - 1;
+    }
+
+    function edgeNavigateTo(url, addToHistory = true) {
+        if (!url || !edgeElements.iframe || !edgeElements.newtabPage) return;
+
+        // Clean up the URL
+        url = url.trim();
+        if (url === 'edge://newtab' || url === '' || url === 'about:blank') {
+            edgeShowNewTab();
+            return;
+        }
+        // Auto-add https:// if no protocol
+        if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('edge://')) {
+            // If it looks like a domain, add https, otherwise treat as a search
+            if (url.includes('.') && !url.includes(' ')) {
+                url = 'https://' + url;
+            } else {
+                url = 'https://www.google.com/search?igu=1&q=' + encodeURIComponent(url);
+            }
+        }
+
+        // Check if site blocks iframes
+        if (isIframeBlocked(url)) {
+            window.open(url, '_blank');
+            return;
+        }
+
+        // Update state
+        edgeState.currentUrl = url;
+        edgeElements.urlInput.value = url;
+
+        // Update lock icon color based on https
+        if (edgeElements.lockIcon) {
+            edgeElements.lockIcon.style.color = url.startsWith('https') ? '#34d399' : '#94a3b8';
+        }
+
+        // Hide new tab, show iframe
+        edgeElements.newtabPage.classList.add('hidden');
+        edgeElements.iframe.classList.remove('hidden');
+
+        // Show loading
+        edgeShowLoading(true);
+
+        // Load in iframe
+        edgeElements.iframe.src = url;
+
+        // Update title
+        try {
+            const hostname = new URL(url).hostname;
+            if (edgeElements.titleText) edgeElements.titleText.textContent = hostname;
+        } catch {
+            if (edgeElements.titleText) edgeElements.titleText.textContent = 'Web Page';
+        }
+
+        // History management
+        if (addToHistory) {
+            // Trim any forward history
+            edgeState.history = edgeState.history.slice(0, edgeState.historyIndex + 1);
+            edgeState.history.push(url);
+            edgeState.historyIndex = edgeState.history.length - 1;
+        }
+
+        edgeUpdateNavButtons();
+        playSound('click');
+    }
+
+    function edgeShowNewTab() {
+        edgeState.currentUrl = 'edge://newtab';
+        if (edgeElements.newtabPage) edgeElements.newtabPage.classList.remove('hidden');
+        if (edgeElements.iframe) {
+            edgeElements.iframe.classList.add('hidden');
+            edgeElements.iframe.src = 'about:blank';
+        }
+        if (edgeElements.urlInput) edgeElements.urlInput.value = 'edge://newtab';
+        if (edgeElements.titleText) edgeElements.titleText.textContent = 'New Tab';
+        if (edgeElements.lockIcon) edgeElements.lockIcon.style.color = '#94a3b8';
+        edgeShowLoading(false);
+    }
+
+    // Iframe load event
+    if (edgeElements.iframe) {
+        edgeElements.iframe.addEventListener('load', () => {
+            edgeShowLoading(false);
+        });
+    }
+
+    // Go button / Enter key on URL input
+    function edgeGoFromUrlBar() {
+        const val = edgeElements.urlInput?.value;
+        if (val) edgeNavigateTo(val);
+    }
+
+    edgeElements.goBtn?.addEventListener('click', edgeGoFromUrlBar);
+    edgeElements.urlInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') edgeGoFromUrlBar();
+    });
+
+    // Search input on new tab page
+    edgeElements.searchInput?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const val = edgeElements.searchInput.value.trim();
+            if (val) {
+                edgeNavigateTo(val);
+                edgeElements.searchInput.value = '';
+            }
+        }
+    });
+
+    // Back
+    edgeElements.backBtn?.addEventListener('click', () => {
+        if (edgeState.historyIndex > 0) {
+            edgeState.historyIndex--;
+            edgeNavigateTo(edgeState.history[edgeState.historyIndex], false);
+        }
+    });
+
+    // Forward
+    edgeElements.forwardBtn?.addEventListener('click', () => {
+        if (edgeState.historyIndex < edgeState.history.length - 1) {
+            edgeState.historyIndex++;
+            edgeNavigateTo(edgeState.history[edgeState.historyIndex], false);
+        }
+    });
+
+    // Refresh
+    edgeElements.refreshBtn?.addEventListener('click', () => {
+        if (edgeState.currentUrl === 'edge://newtab') return;
+        edgeShowLoading(true);
+        if (edgeElements.iframe && edgeElements.iframe.src) {
+            edgeElements.iframe.src = edgeElements.iframe.src;
+        }
+    });
+
+    // Home
+    edgeElements.homeBtn?.addEventListener('click', () => {
+        edgeShowNewTab();
+    });
+
+    // New Tab button (in tab bar)
+    document.getElementById('edge-new-tab-btn')?.addEventListener('click', () => {
+        edgeShowNewTab();
+        // Add to history
+        edgeState.history = edgeState.history.slice(0, edgeState.historyIndex + 1);
+        edgeState.history.push('edge://newtab');
+        edgeState.historyIndex = edgeState.history.length - 1;
+        edgeUpdateNavButtons();
+    });
+
+    // Bookmark bar chips
+    document.querySelectorAll('.edge-bm-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const url = chip.dataset.edgeUrl;
+            if (url) edgeNavigateTo(url);
+        });
+    });
+
+    // Quick link tiles on new tab page
+    document.querySelectorAll('.edge-quicklink').forEach(link => {
+        link.addEventListener('click', () => {
+            const url = link.dataset.edgeUrl;
+            if (url) edgeNavigateTo(url);
+        });
+    });
+
+    // Select all text in URL bar on focus
+    edgeElements.urlInput?.addEventListener('focus', () => {
+        setTimeout(() => edgeElements.urlInput.select(), 50);
+    });
+
+    // ==========================================================================
     // 9. TASK VIEW OVERLAY
     // ==========================================================================
     const taskViewOverlay = document.getElementById('task-view-overlay');

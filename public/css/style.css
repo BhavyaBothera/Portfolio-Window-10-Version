@@ -5336,6 +5336,474 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     margin-bottom: 0;
 }
 
+/* ==========================================================================
+   APP: MICROSOFT EDGE — PREMIUM BROWSER UI
+   ========================================================================== */
 
+/* Edge Tab Bar */
+.edge-tab-bar {
+    height: 36px;
+    background: #202024;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 8px;
+    gap: 2px;
+    user-select: none;
+    flex-shrink: 0;
+}
 
+.edge-tabs-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
 
+.edge-tabs-container::-webkit-scrollbar { display: none; }
+
+.edge-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.78rem;
+    color: #aaa;
+    cursor: pointer;
+    min-width: 120px;
+    max-width: 200px;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.edge-tab:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ddd;
+}
+
+.edge-tab.active {
+    background: #2b2b30;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.edge-tab i {
+    font-size: 0.85rem;
+    color: var(--win-accent, #0078d7);
+    flex-shrink: 0;
+}
+
+.edge-tab-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.edge-tab-close {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.65rem;
+    padding: 2px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s ease;
+    flex-shrink: 0;
+}
+
+.edge-tab-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.edge-new-tab-btn {
+    background: none;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.15s ease;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+}
+
+.edge-new-tab-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Edge Navigation Bar */
+.edge-nav-bar {
+    height: 42px;
+    background: #2b2b30;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.edge-nav-buttons {
+    display: flex;
+    gap: 2px;
+}
+
+.edge-nav-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    transition: all 0.15s ease;
+}
+
+.edge-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.edge-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+/* URL Bar */
+.edge-url-bar {
+    flex: 1;
+    height: 30px;
+    background: #1a1a1e;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    padding: 0 4px 0 12px;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.edge-url-bar:focus-within {
+    border-color: var(--win-accent, #0078d7);
+    box-shadow: 0 0 12px rgba(0, 120, 215, 0.35);
+}
+
+.edge-lock-icon {
+    font-size: 0.7rem;
+    color: #34d399;
+    flex-shrink: 0;
+}
+
+.edge-url-bar input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    font-family: var(--win-font);
+}
+
+.edge-url-go {
+    background: var(--win-accent, #0078d7);
+    border: none;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.edge-url-go:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+}
+
+/* Toolbar Actions */
+.edge-toolbar-actions {
+    display: flex;
+    gap: 2px;
+}
+
+.edge-tool-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    transition: all 0.15s ease;
+}
+
+.edge-tool-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Bookmarks Bar */
+.edge-bookmarks-bar {
+    height: 30px;
+    background: #222226;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    gap: 4px;
+    overflow-x: auto;
+    flex-shrink: 0;
+    scrollbar-width: none;
+}
+
+.edge-bookmarks-bar::-webkit-scrollbar { display: none; }
+
+.edge-bm-chip {
+    background: none;
+    border: none;
+    color: #cbd5e1;
+    font-size: 0.74rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--win-font);
+    white-space: nowrap;
+    transition: all 0.15s ease;
+}
+
+.edge-bm-chip:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.edge-bm-chip i {
+    font-size: 0.78rem;
+}
+
+/* Edge Viewport (Content Area) */
+.edge-viewport {
+    flex: 1;
+    background: #1a1a1e;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#win-edge .win-body {
+    display: none;
+}
+
+.edge-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+    flex: 1;
+}
+
+.edge-iframe.hidden {
+    display: none;
+}
+
+/* Edge Loading Bar */
+.edge-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.edge-loading.hidden {
+    display: none;
+}
+
+.edge-loading-bar {
+    height: 100%;
+    background: var(--win-accent, #0078d7);
+    width: 30%;
+    border-radius: 2px;
+    animation: edgeLoadingSlide 1.2s ease-in-out infinite;
+}
+
+@keyframes edgeLoadingSlide {
+    0% { transform: translateX(-100%); width: 30%; }
+    50% { width: 60%; }
+    100% { transform: translateX(400%); width: 30%; }
+}
+
+/* Edge New Tab Page */
+.edge-newtab-page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 30px 30px;
+    overflow-y: auto;
+    background: radial-gradient(ellipse at top, rgba(0, 120, 215, 0.08) 0%, #1a1a1e 60%);
+}
+
+.edge-newtab-page.hidden {
+    display: none;
+}
+
+.edge-newtab-hero {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.edge-newtab-logo {
+    font-size: 3.5rem;
+    color: var(--win-accent, #0078d7);
+    margin-bottom: 12px;
+    filter: drop-shadow(0 4px 12px rgba(0, 120, 215, 0.5));
+}
+
+.edge-newtab-heading {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+
+.edge-newtab-sub {
+    font-size: 0.88rem;
+    color: #94a3b8;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Edge Search Box on New Tab */
+.edge-search-container {
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 32px;
+}
+
+.edge-search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 24px;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.edge-search-box:focus-within {
+    border-color: var(--win-accent, #0078d7);
+    box-shadow: 0 0 16px rgba(0, 120, 215, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.edge-search-box i {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+.edge-search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 0.9rem;
+    font-family: var(--win-font);
+}
+
+/* Quick Links Section */
+.edge-quicklinks-section {
+    width: 100%;
+    max-width: 520px;
+}
+
+.edge-quicklinks-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 14px;
+}
+
+.edge-quicklinks-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.edge-quicklink {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 14px 8px;
+    border-radius: 10px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.edge-quicklink:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+}
+
+.edge-quicklink-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.edge-quicklink:hover .edge-quicklink-icon {
+    transform: scale(1.08);
+}
+
+.edge-quicklink span {
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    font-weight: 500;
+}
