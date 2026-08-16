@@ -1883,43 +1883,321 @@ body, html {
 }
 
 /* ==========================================================================
-   APP: EXPERIENCE TIMELINE
+   APP: EXPERIENCE & CAREER HUB — FLUENT DESIGN
    ========================================================================== */
-.timeline-container { padding: 25px; }
-.timeline-header { margin-bottom: 30px; }
-.timeline-header h2 { font-size: 1.5rem; margin-bottom: 4px; }
-.timeline-header p { color: var(--win-text-muted); }
-.timeline { position: relative; padding-left: 30px; }
-.timeline::before { content: ''; position: absolute; left: 12px; top: 5px; bottom: 5px; width: 2px; background: var(--win-border); }
-.timeline-item { position: relative; margin-bottom: 30px; }
+.exp-body {
+    padding: 0;
+    background: #18181c;
+    color: var(--win-text-main);
+}
 
-.timeline-marker {
-    position: absolute;
-    left: -30px;
-    top: 0;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--win-accent);
-    color: #fff;
+.exp-hero {
+    background: linear-gradient(135deg, rgba(0, 120, 215, 0.12) 0%, rgba(18, 18, 24, 0.95) 100%);
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.exp-hero-text h2 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.exp-hero-text h2 i {
+    color: var(--win-accent);
+}
+
+.exp-hero-text p {
+    font-size: 0.88rem;
+    color: var(--win-text-muted);
+    margin-bottom: 20px;
+}
+
+.exp-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.exp-stat-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s ease;
+}
+
+.exp-stat-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-2px);
+}
+
+.exp-stat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    box-shadow: 0 0 10px rgba(0, 120, 215, 0.5);
+    font-size: 1.1rem;
+    flex-shrink: 0;
 }
 
-.timeline-content {
+.exp-stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.exp-stat-val {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.exp-stat-lbl {
+    font-size: 0.72rem;
+    color: var(--win-text-dim);
+}
+
+/* Category Filter Bar */
+.exp-filter-bar {
+    display: flex;
+    gap: 8px;
+    padding: 12px 28px;
+    background: #1d1d22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.exp-filter-bar::-webkit-scrollbar { display: none; }
+
+.exp-filter-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    color: var(--win-text-muted);
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-family: var(--win-font);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.exp-filter-btn:hover {
+    background: rgba(255, 255, 255, 0.09);
+    color: #ffffff;
+}
+
+.exp-filter-btn.active {
+    background: var(--win-accent);
+    border-color: var(--win-accent);
+    color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 120, 215, 0.35);
+}
+
+/* Timeline Area */
+.exp-timeline-container {
+    padding: 28px;
+}
+
+.exp-timeline {
+    position: relative;
+    padding-left: 36px;
+}
+
+.exp-timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    background: linear-gradient(180deg, var(--win-accent) 0%, rgba(255, 255, 255, 0.1) 100%);
+}
+
+.exp-timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+    transition: all 0.25s ease;
+}
+
+.exp-timeline-item.hidden {
+    display: none;
+}
+
+.exp-marker {
+    position: absolute;
+    left: -36px;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #2b2b32;
+    border: 2px solid var(--win-accent);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    box-shadow: 0 0 12px rgba(0, 120, 215, 0.4);
+    z-index: 2;
+}
+
+.exp-marker.work { border-color: #0078d7; color: #00d2ff; }
+.exp-marker.edu { border-color: #2ecc71; color: #2ecc71; }
+.exp-marker.ach { border-color: #f39c12; color: #ffc90e; }
+
+/* Experience Card */
+.exp-card {
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--win-border);
-    padding: 18px;
-    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 10px;
+    padding: 20px 22px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.timeline-date { font-size: 0.75rem; color: var(--win-accent); font-weight: 600; margin-bottom: 4px; }
-.timeline-content h3 { font-size: 1.2rem; margin-bottom: 2px; }
-.timeline-content h4 { font-size: 0.95rem; color: var(--win-text-dim); font-weight: 400; margin-bottom: 10px; }
-.timeline-content p { color: var(--win-text-muted); line-height: 1.5; font-size: 0.9rem; }
+.exp-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    transform: translateY(-2px);
+}
+
+.exp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.exp-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.exp-type-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.exp-type-badge.work { background: rgba(0, 120, 215, 0.2); color: #38bdf8; border: 1px solid rgba(0, 120, 215, 0.3); }
+.exp-type-badge.edu { background: rgba(46, 204, 113, 0.2); color: #4ade80; border: 1px solid rgba(46, 204, 113, 0.3); }
+.exp-type-badge.ach { background: rgba(243, 156, 18, 0.2); color: #fbbf24; border: 1px solid rgba(243, 156, 18, 0.3); }
+
+.exp-date-badge {
+    font-size: 0.72rem;
+    color: var(--win-text-dim);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.exp-role {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.exp-company {
+    font-size: 0.88rem;
+    color: var(--win-text-dim);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.exp-company-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.exp-desc {
+    font-size: 0.88rem;
+    color: var(--win-text-muted);
+    line-height: 1.55;
+    margin-bottom: 14px;
+}
+
+.exp-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.exp-bullets li {
+    font-size: 0.84rem;
+    color: #cbd5e1;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.45;
+}
+
+.exp-bullets li i {
+    font-size: 0.75rem;
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+/* Tech Stack Chips */
+.exp-tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.tech-chip {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    transition: all 0.15s ease;
+}
+
+.exp-card:hover .tech-chip {
+    background: rgba(255, 255, 255, 0.09);
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.16);
+}
 
 /* ==========================================================================
    APP: CONTACT / MAIL

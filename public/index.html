@@ -1147,44 +1147,192 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 </div>
             </div><!-- /win-paint -->
 
-            <!-- WINDOW 10: EXPERIENCE -->
-            <div class="win-window hidden" id="win-experience" data-id="experience" style="width:760px;height:520px;top:100px;left:260px;">
+            <!-- WINDOW 10: EXPERIENCE & CAREER HUB -->
+            <div class="win-window hidden" id="win-experience" data-id="experience" style="width:880px;height:620px;top:50px;left:180px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-solid fa-briefcase"></i> Experience & Career Timeline</div>
+                    <div class="win-title"><i class="fa-solid fa-briefcase text-blue"></i> Experience & Career Timeline — Professional Roadmap</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="win-body scrollable">
-                    <div class="timeline-container">
-                        <div class="timeline-header"><h2>Work History & Achievements</h2><p>A chronological record of my professional growth, software projects, and education.</p></div>
-                        <div class="timeline">
-                            <div class="timeline-item">
-                                <div class="timeline-marker"><i class="fa-solid fa-code"></i></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2024 — PRESENT</div>
-                                    <h3>Senior Full-Stack Developer</h3><h4>Tech Innovations Lab</h4>
-                                    <p>Architecting web applications with React, Next.js, and Node.js. Leading UI modernization efforts, optimizing rendering speeds by 40%, and establishing robust CI/CD pipelines.</p>
+
+                <div class="win-body exp-body scrollable">
+                    <!-- Hero Header -->
+                    <div class="exp-hero">
+                        <div class="exp-hero-text">
+                            <h2><i class="fa-solid fa-graduation-cap"></i> Professional Journey & Experience</h2>
+                            <p>Track record of software engineering, full-stack architecture, and academic excellence.</p>
+                        </div>
+
+                        <!-- Stats Row -->
+                        <div class="exp-stats-grid">
+                            <div class="exp-stat-card">
+                                <div class="exp-stat-icon" style="background: rgba(0, 120, 215, 0.2); color: #0078d7;"><i class="fa-solid fa-clock"></i></div>
+                                <div class="exp-stat-info">
+                                    <span class="exp-stat-val">3+ Years</span>
+                                    <span class="exp-stat-lbl">Development Experience</span>
                                 </div>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker"><i class="fa-solid fa-laptop-code"></i></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2022 — 2024</div>
-                                    <h3>Frontend Web Developer</h3><h4>Digital Solutions Inc.</h4>
-                                    <p>Developed responsive web interfaces, reusable component libraries, and client dashboard applications. Partnered closely with UI/UX designers to translate Figma mockups into seamless code.</p>
+                            <div class="exp-stat-card">
+                                <div class="exp-stat-icon" style="background: rgba(46, 204, 113, 0.2); color: #2ecc71;"><i class="fa-solid fa-code-commit"></i></div>
+                                <div class="exp-stat-info">
+                                    <span class="exp-stat-val">25+ Projects</span>
+                                    <span class="exp-stat-lbl">Full-Stack Apps Built</span>
                                 </div>
                             </div>
-                            <div class="timeline-item">
-                                <div class="timeline-marker"><i class="fa-solid fa-graduation-cap"></i></div>
-                                <div class="timeline-content">
-                                    <div class="timeline-date">2019 — 2023</div>
-                                    <h3>Bachelor of Science in Computer Science</h3><h4>University of Technology</h4>
-                                    <p>Graduated with Honors. Specialized in Software Engineering, Data Structures & Algorithms, and Human-Computer Interaction (HCI).</p>
+                            <div class="exp-stat-card">
+                                <div class="exp-stat-icon" style="background: rgba(155, 89, 182, 0.2); color: #9b59b6;"><i class="fa-solid fa-layer-group"></i></div>
+                                <div class="exp-stat-info">
+                                    <span class="exp-stat-val">Full Stack</span>
+                                    <span class="exp-stat-lbl">React • Node • SQL</span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Tabs -->
+                    <div class="exp-filter-bar">
+                        <button class="exp-filter-btn active" data-exp-filter="all"><i class="fa-solid fa-list-ul"></i> All Entries</button>
+                        <button class="exp-filter-btn" data-exp-filter="work"><i class="fa-solid fa-briefcase"></i> Work Experience</button>
+                        <button class="exp-filter-btn" data-exp-filter="education"><i class="fa-solid fa-user-graduate"></i> Education</button>
+                        <button class="exp-filter-btn" data-exp-filter="achievement"><i class="fa-solid fa-trophy"></i> Key Achievements</button>
+                    </div>
+
+                    <!-- Timeline Section -->
+                    <div class="exp-timeline-container">
+                        <div class="exp-timeline">
+
+                            <!-- Entry 1: Work -->
+                            <div class="exp-timeline-item" data-category="work">
+                                <div class="exp-marker work"><i class="fa-solid fa-code"></i></div>
+                                <div class="exp-card">
+                                    <div class="exp-card-header">
+                                        <div>
+                                            <div class="exp-badge-row">
+                                                <span class="exp-type-badge work"><i class="fa-solid fa-briefcase"></i> Full-Time</span>
+                                                <span class="exp-date-badge"><i class="fa-regular fa-calendar"></i> 2024 — PRESENT</span>
+                                            </div>
+                                            <h3 class="exp-role">Senior Full-Stack Developer</h3>
+                                            <h4 class="exp-company"><i class="fa-solid fa-building"></i> Tech Innovations Lab</h4>
+                                        </div>
+                                        <div class="exp-company-logo" style="background: linear-gradient(135deg, #0078d7, #00d2ff);"><i class="fa-solid fa-microchip"></i></div>
+                                    </div>
+                                    <p class="exp-desc">Architecting scalable web applications, real-time dashboards, and microservices with React, Next.js, and Node.js. Leading UI modernization initiatives across core products.</p>
+
+                                    <ul class="exp-bullets">
+                                        <li><i class="fa-solid fa-check text-green"></i> Engineered high-throughput REST & GraphQL APIs processing 100k+ daily transactions.</li>
+                                        <li><i class="fa-solid fa-check text-green"></i> Optimized frontend render cycles and state flow, cutting page load latencies by 40%.</li>
+                                        <li><i class="fa-solid fa-check text-green"></i> Mentored junior developers and instituted automated CI/CD pipeline deployments via GitHub Actions.</li>
+                                    </ul>
+
+                                    <div class="exp-tech-stack">
+                                        <span class="tech-chip">React.js</span>
+                                        <span class="tech-chip">Next.js</span>
+                                        <span class="tech-chip">Node.js</span>
+                                        <span class="tech-chip">TypeScript</span>
+                                        <span class="tech-chip">PostgreSQL</span>
+                                        <span class="tech-chip">Docker</span>
+                                        <span class="tech-chip">TailwindCSS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entry 2: Work -->
+                            <div class="exp-timeline-item" data-category="work">
+                                <div class="exp-marker work"><i class="fa-solid fa-laptop-code"></i></div>
+                                <div class="exp-card">
+                                    <div class="exp-card-header">
+                                        <div>
+                                            <div class="exp-badge-row">
+                                                <span class="exp-type-badge work"><i class="fa-solid fa-briefcase"></i> Full-Time</span>
+                                                <span class="exp-date-badge"><i class="fa-regular fa-calendar"></i> 2022 — 2024</span>
+                                            </div>
+                                            <h3 class="exp-role">Frontend Web Developer</h3>
+                                            <h4 class="exp-company"><i class="fa-solid fa-building"></i> Digital Solutions Inc.</h4>
+                                        </div>
+                                        <div class="exp-company-logo" style="background: linear-gradient(135deg, #9b59b6, #e74c3c);"><i class="fa-solid fa-globe"></i></div>
+                                    </div>
+                                    <p class="exp-desc">Developed responsive web interfaces, reusable component libraries, and client dashboard applications. Partnered closely with UI/UX designers to translate Figma mockups into seamless code.</p>
+
+                                    <ul class="exp-bullets">
+                                        <li><i class="fa-solid fa-check text-purple"></i> Built 15+ responsive client websites and interactive Web OS component widgets.</li>
+                                        <li><i class="fa-solid fa-check text-purple"></i> Implemented full dark mode design systems and accessibility (WCAG 2.1) compliance.</li>
+                                        <li><i class="fa-solid fa-check text-purple"></i> Reduced JavaScript bundle sizes by 35% through tree-shaking and lazy loading.</li>
+                                    </ul>
+
+                                    <div class="exp-tech-stack">
+                                        <span class="tech-chip">JavaScript (ES6+)</span>
+                                        <span class="tech-chip">React</span>
+                                        <span class="tech-chip">HTML5 / CSS3</span>
+                                        <span class="tech-chip">REST APIs</span>
+                                        <span class="tech-chip">Webpack</span>
+                                        <span class="tech-chip">Git</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entry 3: Education -->
+                            <div class="exp-timeline-item" data-category="education">
+                                <div class="exp-marker edu"><i class="fa-solid fa-graduation-cap"></i></div>
+                                <div class="exp-card">
+                                    <div class="exp-card-header">
+                                        <div>
+                                            <div class="exp-badge-row">
+                                                <span class="exp-type-badge edu"><i class="fa-solid fa-graduation-cap"></i> Degree</span>
+                                                <span class="exp-date-badge"><i class="fa-regular fa-calendar"></i> 2019 — 2023</span>
+                                            </div>
+                                            <h3 class="exp-role">Bachelor of Science in Computer Science</h3>
+                                            <h4 class="exp-company"><i class="fa-solid fa-university"></i> University of Technology</h4>
+                                        </div>
+                                        <div class="exp-company-logo" style="background: linear-gradient(135deg, #2ecc71, #27ae60);"><i class="fa-solid fa-award"></i></div>
+                                    </div>
+                                    <p class="exp-desc">Graduated with First-Class Honors. Specialized in Software Engineering, Data Structures & Algorithms, Systems Architecture, and Human-Computer Interaction (HCI).</p>
+
+                                    <ul class="exp-bullets">
+                                        <li><i class="fa-solid fa-check text-green"></i> Dean's Honor Roll for 6 consecutive semesters.</li>
+                                        <li><i class="fa-solid fa-check text-green"></i> Capstone Project: Real-time collaborative Web OS desktop interface.</li>
+                                        <li><i class="fa-solid fa-check text-green"></i> President of the Computer Science Student Developer Club.</li>
+                                    </ul>
+
+                                    <div class="exp-tech-stack">
+                                        <span class="tech-chip">Data Structures</span>
+                                        <span class="tech-chip">Algorithms</span>
+                                        <span class="tech-chip">System Design</span>
+                                        <span class="tech-chip">C++</span>
+                                        <span class="tech-chip">Python</span>
+                                        <span class="tech-chip">Database Management</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Entry 4: Achievements -->
+                            <div class="exp-timeline-item" data-category="achievement">
+                                <div class="exp-marker ach"><i class="fa-solid fa-trophy"></i></div>
+                                <div class="exp-card">
+                                    <div class="exp-card-header">
+                                        <div>
+                                            <div class="exp-badge-row">
+                                                <span class="exp-type-badge ach"><i class="fa-solid fa-trophy"></i> Award</span>
+                                                <span class="exp-date-badge"><i class="fa-regular fa-calendar"></i> 2023</span>
+                                            </div>
+                                            <h3 class="exp-role">1st Place — National Web Innovation Hackathon</h3>
+                                            <h4 class="exp-company"><i class="fa-solid fa-award"></i> Tech Hackathon Organization</h4>
+                                        </div>
+                                        <div class="exp-company-logo" style="background: linear-gradient(135deg, #f39c12, #f1c40f);"><i class="fa-solid fa-star"></i></div>
+                                    </div>
+                                    <p class="exp-desc">Awarded First Place out of 120+ competing teams for engineering an AI-powered accessibility platform in under 48 hours.</p>
+
+                                    <div class="exp-tech-stack">
+                                        <span class="tech-chip">Hackathon Champion</span>
+                                        <span class="tech-chip">AI Integration</span>
+                                        <span class="tech-chip">Web Accessibility</span>
+                                        <span class="tech-chip">Rapid Prototyping</span>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
