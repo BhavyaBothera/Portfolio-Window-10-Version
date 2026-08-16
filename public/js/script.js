@@ -1007,17 +1007,17 @@
         viewport: document.getElementById('edge-viewport')
     };
 
-    // Sites that block iframes — open these in new real browser tabs
-    const iframeBlockedDomains = [
+    // Sites that block iframes — route through server proxy to strip X-Frame-Options
+    const proxyNeededDomains = [
         'github.com', 'linkedin.com', 'twitter.com', 'x.com',
         'facebook.com', 'instagram.com', 'reddit.com', 'youtube.com',
         'stackoverflow.com', 'react.dev', 'developer.mozilla.org'
     ];
 
-    function isIframeBlocked(url) {
+    function needsProxy(url) {
         try {
             const hostname = new URL(url).hostname.replace('www.', '');
-            return iframeBlockedDomains.some(d => hostname.includes(d));
+            return proxyNeededDomains.some(d => hostname.includes(d));
         } catch { return false; }
     }
 
@@ -1051,13 +1051,7 @@
             }
         }
 
-        // Check if site blocks iframes
-        if (isIframeBlocked(url)) {
-            window.open(url, '_blank');
-            return;
-        }
-
-        // Update state
+        // Update state — store the original URL for display
         edgeState.currentUrl = url;
         edgeElements.urlInput.value = url;
 
@@ -1073,8 +1067,11 @@
         // Show loading
         edgeShowLoading(true);
 
-        // Load in iframe
-        edgeElements.iframe.src = url;
+        // Load in iframe — use proxy for sites that block iframes
+        const iframeSrc = needsProxy(url)
+            ? '/api/proxy?url=' + encodeURIComponent(url)
+            : url;
+        edgeElements.iframe.src = iframeSrc;
 
         // Update title
         try {
