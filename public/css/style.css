@@ -1531,41 +1531,356 @@ body, html {
 .calc-btn.op { background: rgba(255, 255, 255, 0.1); color: var(--win-accent); }
 .calc-btn.equals { background: var(--win-accent); border-color: var(--win-accent); color: #fff; }
 .calc-btn.equals:hover { background: var(--win-accent-hover); }
-
 /* ==========================================================================
-   APP: PAINT
+   APP: MS PAINT — REALISTIC WINDOWS 11 RIBBON UI
    ========================================================================== */
-.paint-toolbar {
-    height: 42px;
-    background: #232328;
-    border-bottom: 1px solid var(--win-border);
+
+/* Paint Menu Bar (File / Home / View tabs) */
+.paint-menu-bar {
+    height: 26px;
+    background: #2b2b30;
     display: flex;
-    align-items: center;
-    padding: 0 15px;
-    gap: 20px;
+    align-items: stretch;
+    padding: 0 4px;
+    gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
 }
 
-.paint-tool-group { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; }
+.paint-menu-item {
+    background: none;
+    border: none;
+    color: #b0b0b8;
+    font-size: 0.76rem;
+    font-family: var(--win-font);
+    padding: 0 14px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.12s ease;
+}
+
+.paint-menu-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.paint-menu-item.active { color: #fff; border-bottom-color: var(--win-accent); background: rgba(0,120,215,0.1); }
+
+/* Paint Ribbon */
+.paint-ribbon {
+    background: #232328;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: stretch;
+    padding: 6px 8px 2px;
+    gap: 0;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.paint-ribbon::-webkit-scrollbar { display: none; }
+
+.paint-ribbon-section {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    min-width: fit-content;
+}
+
+.paint-ribbon-section-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.paint-ribbon-label {
+    text-align: center;
+    font-size: 0.68rem;
+    color: #777;
+    padding: 3px 0 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 3px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+.paint-ribbon-divider {
+    width: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 4px 2px;
+    flex-shrink: 0;
+}
+
+/* Ribbon Big Button (Paste) */
+.paint-ribbon-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: #c8c8d0;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-family: var(--win-font);
+    transition: all 0.12s ease;
+}
+.paint-ribbon-btn i { font-size: 1.2rem; }
+.paint-ribbon-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); color:#fff; }
+
+/* Ribbon Small Stacked Buttons */
+.paint-ribbon-btn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.paint-ribbon-btn-sm {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    color: #b0b0b8;
+    cursor: pointer;
+    font-size: 0.72rem;
+    font-family: var(--win-font);
+    padding: 3px 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.12s ease;
+    white-space: nowrap;
+}
+.paint-ribbon-btn-sm:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* Tools Grid */
+.paint-tools-grid, .paint-shapes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+}
+
+.paint-shapes-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
 
 .paint-tool-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--win-border);
-    color: #ccc;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 28px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #b0b0b8;
     border-radius: 4px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s ease;
+    font-size: 0.85rem;
+    transition: all 0.12s ease;
+}
+.paint-tool-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.12); color: #fff; }
+.paint-tool-btn.active { background: var(--win-accent); color: #fff; border-color: var(--win-accent); box-shadow: 0 2px 8px rgba(0,120,215,0.35); }
+
+/* Shape Options */
+.paint-shape-options {
+    margin-top: 2px;
 }
 
-.paint-tool-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
-.paint-tool-btn.active { background: var(--win-accent); border-color: var(--win-accent); color: #fff; }
+.paint-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: #aaa;
+    cursor: pointer;
+}
+.paint-checkbox input { accent-color: var(--win-accent); width: 13px; height: 13px; }
 
-.paint-body { height: calc(100% - 42px); background: #fff; cursor: crosshair; }
-#paint-canvas { width: 100%; height: 100%; display: block; }
+/* Size Section */
+.paint-size-section {
+    flex-direction: column;
+    gap: 4px;
+}
+
+.paint-size-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.paint-size-control label {
+    font-size: 0.72rem;
+    color: #999;
+}
+
+#paint-size {
+    width: 80px;
+    accent-color: var(--win-accent);
+    cursor: pointer;
+    height: 4px;
+}
+
+.paint-size-preview {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.paint-size-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #fff;
+    transition: width 0.15s ease, height 0.15s ease;
+}
+
+/* Color Selectors (Color 1 / Color 2) */
+.paint-color-selectors {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-right: 8px;
+}
+
+.paint-color-selector {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.paint-color-selector span {
+    font-size: 0.68rem;
+    color: #999;
+    white-space: nowrap;
+}
+
+.paint-color-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 3px;
+    border: 2px solid var(--win-accent);
+    box-shadow: 0 0 4px rgba(0,120,215,0.3);
+    cursor: pointer;
+    transition: transform 0.12s ease;
+}
+
+.paint-color-swatch.paint-color2 {
+    border-color: #666;
+    box-shadow: none;
+}
+
+.paint-color-swatch:hover { transform: scale(1.1); }
+
+/* Color Palette Grid */
+.paint-palette-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+}
+
+.paint-palette-cell {
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.3);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.paint-palette-cell:hover { transform: scale(1.2); box-shadow: 0 0 6px rgba(255,255,255,0.3); z-index: 2; position: relative; }
+
+.paint-custom-color-input {
+    width: 26px;
+    height: 26px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: transparent;
+    margin-left: 6px;
+}
+
+/* Canvas Area */
+.paint-canvas-area {
+    flex: 1;
+    background: #e8e8ec;
+    overflow: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 16px;
+    position: relative;
+    /* checkerboard pattern for transparent areas */
+    background-image:
+        linear-gradient(45deg, #ddd 25%, transparent 25%),
+        linear-gradient(-45deg, #ddd 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ddd 75%),
+        linear-gradient(-45deg, transparent 75%, #ddd 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+    background-color: #f0f0f0;
+}
+
+.paint-canvas-wrapper {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25), 0 0 0 1px rgba(0,0,0,0.1);
+    display: inline-block;
+    line-height: 0;
+    position: relative;
+}
+
+#paint-canvas {
+    display: block;
+    cursor: crosshair;
+    background: #ffffff;
+    image-rendering: auto;
+}
+
+/* Paint Status Bar */
+.paint-status-bar {
+    height: 24px;
+    background: #2b2b30;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: #999;
+}
+
+.paint-status-left, .paint-status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.paint-status-sep { color: #555; }
+
+.paint-zoom-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    transition: all 0.1s ease;
+}
+.paint-zoom-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+.paint-zoom-range {
+    width: 80px;
+    accent-color: var(--win-accent);
+    cursor: pointer;
+    height: 3px;
+}
 
 /* ==========================================================================
    APP: EXPERIENCE TIMELINE
@@ -1838,93 +2153,7 @@ body, html {
     box-shadow: 0 6px 20px var(--win-accent-glow);
 }
 
-/* ==========================================================================
-   APP: MS PAINT
-   ========================================================================== */
-.paint-toolbar {
-    height: 48px;
-    background: #23232a;
-    border-bottom: 1px solid var(--win-border);
-    display: flex;
-    align-items: center;
-    padding: 0 12px;
-    gap: 12px;
-    flex-wrap: wrap;
-}
 
-.paint-tool-group {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 4px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.paint-tool-group label {
-    font-size: 0.78rem;
-    color: var(--win-text-dim);
-    margin: 0 4px;
-}
-
-.paint-tool-btn {
-    width: 32px;
-    height: 32px;
-    background: transparent;
-    border: none;
-    color: var(--win-text-muted);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.95rem;
-    transition: all 0.15s ease;
-}
-
-.paint-tool-btn:hover {
-    background: rgba(255, 255, 255, 0.12);
-    color: #ffffff;
-}
-
-.paint-tool-btn.active {
-    background: var(--win-accent);
-    color: #ffffff;
-    box-shadow: 0 2px 8px var(--win-accent-glow);
-}
-
-#paint-color {
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    background: transparent;
-}
-
-#paint-size {
-    width: 80px;
-    accent-color: var(--win-accent);
-    cursor: pointer;
-}
-
-.paint-body {
-    background: #141418;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    height: calc(100% - 84px);
-    overflow: auto;
-}
-
-#paint-canvas {
-    background: #ffffff;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-    border-radius: 2px;
-    cursor: crosshair;
-}
 
 /* ==========================================================================
    APP: VS CODE SOURCE CODE VIEWER

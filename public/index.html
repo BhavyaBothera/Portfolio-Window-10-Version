@@ -996,33 +996,154 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                 </div>
             </div><!-- /win-calculator -->
 
-            <!-- WINDOW 9: PAINT -->
-            <div class="win-window hidden" id="win-paint" data-id="paint" style="width:760px;height:520px;top:90px;left:240px;">
+            <!-- WINDOW 9: MS PAINT -->
+            <div class="win-window hidden" id="win-paint" data-id="paint" style="width:900px;height:600px;top:60px;left:160px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-solid fa-palette text-pink"></i> Paint — Untitled Drawing</div>
+                    <div class="win-title"><i class="fa-solid fa-palette text-pink"></i> <span id="paint-title-text">Untitled</span> — Paint</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="paint-toolbar">
-                    <div class="paint-tool-group">
-                        <button class="paint-tool-btn active" id="paint-tool-pencil" title="Freehand Brush"><i class="fa-solid fa-paintbrush"></i></button>
-                        <button class="paint-tool-btn" id="paint-tool-eraser" title="Eraser Tool"><i class="fa-solid fa-eraser"></i></button>
-                        <button class="paint-tool-btn" id="paint-tool-fill" title="Fill Bucket Tool"><i class="fa-solid fa-fill-drip"></i></button>
-                        <button class="paint-tool-btn" id="paint-tool-line" title="Line Tool"><i class="fa-solid fa-slash"></i></button>
-                        <button class="paint-tool-btn" id="paint-tool-rect" title="Rectangle Tool"><i class="fa-regular fa-square"></i></button>
-                        <button class="paint-tool-btn" id="paint-tool-circle" title="Circle Tool"><i class="fa-regular fa-circle"></i></button>
-                    </div>
-                    <div class="paint-tool-group"><label>Color:</label><input type="color" id="paint-color" value="#0078d7"></div>
-                    <div class="paint-tool-group"><label>Size:</label><input type="range" id="paint-size" min="2" max="30" value="5"></div>
-                    <button class="win-btn" id="paint-undo" title="Undo"><i class="fa-solid fa-rotate-left"></i> Undo</button>
-                    <button class="win-btn" id="paint-clear"><i class="fa-solid fa-eraser"></i> Clear</button>
-                    <button class="win-btn primary-btn" id="paint-save-png"><i class="fa-solid fa-download"></i> Save PNG</button>
+
+                <!-- Paint Ribbon Menu Bar -->
+                <div class="paint-menu-bar">
+                    <button class="paint-menu-item active">Home</button>
+                    <button class="paint-menu-item">View</button>
                 </div>
-                <div class="win-body paint-body">
-                    <canvas id="paint-canvas"></canvas>
+
+                <!-- Paint Ribbon Toolbar -->
+                <div class="paint-ribbon">
+                    <!-- Clipboard Section -->
+                    <div class="paint-ribbon-section">
+                        <div class="paint-ribbon-section-content">
+                            <button class="paint-ribbon-btn" id="paint-paste" title="Paste"><i class="fa-solid fa-paste"></i><span>Paste</span></button>
+                            <div class="paint-ribbon-btn-stack">
+                                <button class="paint-ribbon-btn-sm" id="paint-cut" title="Cut"><i class="fa-solid fa-scissors"></i> Cut</button>
+                                <button class="paint-ribbon-btn-sm" id="paint-copy" title="Copy"><i class="fa-regular fa-copy"></i> Copy</button>
+                            </div>
+                        </div>
+                        <div class="paint-ribbon-label">Clipboard</div>
+                    </div>
+
+                    <div class="paint-ribbon-divider"></div>
+
+                    <!-- Tools Section -->
+                    <div class="paint-ribbon-section">
+                        <div class="paint-ribbon-section-content">
+                            <div class="paint-tools-grid">
+                                <button class="paint-tool-btn active" id="paint-tool-pencil" title="Pencil"><i class="fa-solid fa-pencil"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-brush" title="Brushes"><i class="fa-solid fa-paintbrush"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-eraser" title="Eraser"><i class="fa-solid fa-eraser"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-fill" title="Fill with color"><i class="fa-solid fa-fill-drip"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-text" title="Text"><i class="fa-solid fa-font"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-picker" title="Color picker"><i class="fa-solid fa-eye-dropper"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-magnifier" title="Magnifier"><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                        </div>
+                        <div class="paint-ribbon-label">Tools</div>
+                    </div>
+
+                    <div class="paint-ribbon-divider"></div>
+
+                    <!-- Brushes / Size Section -->
+                    <div class="paint-ribbon-section">
+                        <div class="paint-ribbon-section-content paint-size-section">
+                            <div class="paint-size-control">
+                                <label>Size</label>
+                                <input type="range" id="paint-size" min="1" max="40" value="3">
+                                <div class="paint-size-preview" id="paint-size-preview">
+                                    <div class="paint-size-dot" id="paint-size-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="paint-ribbon-label">Size</div>
+                    </div>
+
+                    <div class="paint-ribbon-divider"></div>
+
+                    <!-- Shapes Section -->
+                    <div class="paint-ribbon-section">
+                        <div class="paint-ribbon-section-content">
+                            <div class="paint-shapes-grid">
+                                <button class="paint-tool-btn" id="paint-tool-line" title="Line"><i class="fa-solid fa-minus"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-rect" title="Rectangle"><i class="fa-regular fa-square"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-circle" title="Ellipse"><i class="fa-regular fa-circle"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-triangle" title="Triangle"><i class="fa-solid fa-play fa-rotate-270"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-arrow" title="Arrow"><i class="fa-solid fa-arrow-right"></i></button>
+                                <button class="paint-tool-btn" id="paint-tool-star" title="Star"><i class="fa-regular fa-star"></i></button>
+                            </div>
+                            <div class="paint-shape-options">
+                                <label class="paint-checkbox"><input type="checkbox" id="paint-fill-shape"><span>Fill</span></label>
+                            </div>
+                        </div>
+                        <div class="paint-ribbon-label">Shapes</div>
+                    </div>
+
+                    <div class="paint-ribbon-divider"></div>
+
+                    <!-- Colors Section -->
+                    <div class="paint-ribbon-section paint-ribbon-colors-section">
+                        <div class="paint-ribbon-section-content">
+                            <div class="paint-color-selectors">
+                                <div class="paint-color-selector">
+                                    <div class="paint-color-swatch" id="paint-color1-swatch" style="background:#000000;" title="Color 1 (Foreground)"></div>
+                                    <span>Color 1</span>
+                                </div>
+                                <div class="paint-color-selector">
+                                    <div class="paint-color-swatch paint-color2" id="paint-color2-swatch" style="background:#ffffff;" title="Color 2 (Background)"></div>
+                                    <span>Color 2</span>
+                                </div>
+                            </div>
+                            <div class="paint-palette-grid" id="paint-palette-grid">
+                                <div class="paint-palette-cell" data-color="#000000" style="background:#000000;" title="Black"></div>
+                                <div class="paint-palette-cell" data-color="#7f7f7f" style="background:#7f7f7f;" title="Gray-50%"></div>
+                                <div class="paint-palette-cell" data-color="#880015" style="background:#880015;" title="Dark Red"></div>
+                                <div class="paint-palette-cell" data-color="#ed1c24" style="background:#ed1c24;" title="Red"></div>
+                                <div class="paint-palette-cell" data-color="#ff7f27" style="background:#ff7f27;" title="Orange"></div>
+                                <div class="paint-palette-cell" data-color="#fff200" style="background:#fff200;" title="Yellow"></div>
+                                <div class="paint-palette-cell" data-color="#22b14c" style="background:#22b14c;" title="Green"></div>
+                                <div class="paint-palette-cell" data-color="#00a2e8" style="background:#00a2e8;" title="Turquoise"></div>
+                                <div class="paint-palette-cell" data-color="#3f48cc" style="background:#3f48cc;" title="Indigo"></div>
+                                <div class="paint-palette-cell" data-color="#a349a4" style="background:#a349a4;" title="Purple"></div>
+                                <div class="paint-palette-cell" data-color="#ffffff" style="background:#ffffff;" title="White"></div>
+                                <div class="paint-palette-cell" data-color="#c3c3c3" style="background:#c3c3c3;" title="Gray-25%"></div>
+                                <div class="paint-palette-cell" data-color="#b97a57" style="background:#b97a57;" title="Brown"></div>
+                                <div class="paint-palette-cell" data-color="#ffaec9" style="background:#ffaec9;" title="Rose"></div>
+                                <div class="paint-palette-cell" data-color="#ffc90e" style="background:#ffc90e;" title="Gold"></div>
+                                <div class="paint-palette-cell" data-color="#efe4b0" style="background:#efe4b0;" title="Light Yellow"></div>
+                                <div class="paint-palette-cell" data-color="#b5e61d" style="background:#b5e61d;" title="Lime"></div>
+                                <div class="paint-palette-cell" data-color="#99d9ea" style="background:#99d9ea;" title="Light Turquoise"></div>
+                                <div class="paint-palette-cell" data-color="#7092be" style="background:#7092be;" title="Blue-Gray"></div>
+                                <div class="paint-palette-cell" data-color="#c8bfe7" style="background:#c8bfe7;" title="Lavender"></div>
+                            </div>
+                            <input type="color" id="paint-color-custom" value="#000000" title="Edit Colors" class="paint-custom-color-input">
+                        </div>
+                        <div class="paint-ribbon-label">Colors</div>
+                    </div>
+                </div>
+
+                <!-- Paint Canvas Area -->
+                <div class="paint-canvas-area" id="paint-canvas-area">
+                    <div class="paint-canvas-wrapper" id="paint-canvas-wrapper">
+                        <canvas id="paint-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Paint Status Bar -->
+                <div class="paint-status-bar">
+                    <div class="paint-status-left">
+                        <span id="paint-status-coords"><i class="fa-solid fa-crosshairs"></i> 0, 0 px</span>
+                        <span class="paint-status-sep">|</span>
+                        <span id="paint-status-canvas-size"><i class="fa-regular fa-image"></i> 700 × 400 px</span>
+                    </div>
+                    <div class="paint-status-right">
+                        <button class="paint-zoom-btn" id="paint-zoom-out" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+                        <span id="paint-zoom-level">100%</span>
+                        <button class="paint-zoom-btn" id="paint-zoom-in" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+                        <input type="range" id="paint-zoom-slider" min="25" max="400" value="100" class="paint-zoom-range">
+                    </div>
                 </div>
             </div><!-- /win-paint -->
 

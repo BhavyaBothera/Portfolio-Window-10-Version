@@ -3497,152 +3497,436 @@ Or say <em>"open [app name]"</em> to launch any app!`;
         }
     };
     // ==========================================================================
-    // 30. MS PAINT CANVAS DRAWING ENGINE
+    // 30. MS PAINT CANVAS DRAWING ENGINE — REALISTIC VERSION
     // ==========================================================================
     let paintCanvasInited = false;
     function initPaintCanvas() {
         const canvas = document.getElementById('paint-canvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
-        const container = canvas.parentElement;
+        const wrapper = document.getElementById('paint-canvas-wrapper');
+        const area = document.getElementById('paint-canvas-area');
 
+        // State
+        let color1 = '#000000';
+        let color2 = '#ffffff';
+        let currentTool = 'pencil';
+        let brushSize = 3;
+        let isDrawing = false;
+        let startX = 0, startY = 0;
+        let undoStack = [];
+        let redoStack = [];
+        let zoomLevel = 100;
+        let fillShapes = false;
+
+        // Init canvas size (only once)
         if (!paintCanvasInited) {
-            canvas.width = Math.min(container.clientWidth - 24 || 700, 700);
-            canvas.height = 360;
+            canvas.width = 700;
+            canvas.height = 400;
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             paintCanvasInited = true;
         }
 
-        let isDrawing = false;
-        let startX = 0, startY = 0;
-        let currentTool = 'pencil';
-        let undoStack = [];
+        // Update canvas size display
+        const canvasSizeEl = document.getElementById('paint-status-canvas-size');
+        if (canvasSizeEl) canvasSizeEl.innerHTML = `<i class="fa-regular fa-image"></i> ${canvas.width} × ${canvas.height} px`;
 
+        // Save initial undo state
         function saveUndoState() {
-            if (undoStack.length > 15) undoStack.shift();
+            if (undoStack.length > 30) undoStack.shift();
             undoStack.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+            redoStack = []; // clear redo on new action
         }
-
         saveUndoState();
 
-        document.querySelectorAll('.paint-tool-btn').forEach(btn => {
+        // ---- Tool Selection ----
+        document.querySelectorAll('#win-paint .paint-tool-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.paint-tool-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('#win-paint .paint-tool-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const id = btn.id;
-                if (id.includes('pencil')) currentTool = 'pencil';
-                else if (id.includes('eraser')) currentTool = 'eraser';
-                else if (id.includes('fill')) currentTool = 'fill';
-                else if (id.includes('line')) currentTool = 'line';
-                else if (id.includes('rect')) currentTool = 'rect';
-                else if (id.includes('circle')) currentTool = 'circle';
+                const id = btn.id.replace('paint-tool-', '');
+                currentTool = id;
+                // Update cursor
+                if (id === 'eraser') canvas.style.cursor = 'cell';
+                else if (id === 'fill') canvas.style.cursor = 'crosshair';
+                else if (id === 'picker') canvas.style.cursor = 'crosshair';
+                else if (id === 'text') canvas.style.cursor = 'text';
+                else if (id === 'magnifier') canvas.style.cursor = 'zoom-in';
+                else canvas.style.cursor = 'crosshair';
                 playSound('click');
             });
         });
 
+        // ---- Color Palette ----
+        const color1Swatch = document.getElementById('paint-color1-swatch');
+        const color2Swatch = document.getElementById('paint-color2-swatch');
+        const customColorInput = document.getElementById('paint-color-custom');
+
+        function updateColor1(c) {
+            color1 = c;
+            if (color1Swatch) color1Swatch.style.background = c;
+            if (customColorInput) customColorInput.value = c;
+        }
+
+        function updateColor2(c) {
+            color2 = c;
+            if (color2Swatch) color2Swatch.style.background = c;
+        }
+
+        document.querySelectorAll('.paint-palette-cell').forEach(cell => {
+            cell.addEventListener('click', (e) => {
+                updateColor1(cell.dataset.color);
+                playSound('click');
+            });
+            cell.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                updateColor2(cell.dataset.color);
+            });
+        });
+
+        if (customColorInput) {
+            customColorInput.addEventListener('input', (e) => {
+                updateColor1(e.target.value);
+            });
+        }
+
+        // Click on Color 1/Color 2 swatch to open custom color input
+        color1Swatch?.addEventListener('click', () => customColorInput?.click());
+
+        // ---- Brush Size ----
+        const sizeSlider = document.getElementById('paint-size');
+        const sizeDot = document.getElementById('paint-size-dot');
+
+        function updateSizePreview() {
+            brushSize = parseInt(sizeSlider?.value || 3);
+            if (sizeDot) {
+                const dotSize = Math.max(2, Math.min(brushSize, 24));
+                sizeDot.style.width = dotSize + 'px';
+                sizeDot.style.height = dotSize + 'px';
+            }
+        }
+
+        sizeSlider?.addEventListener('input', updateSizePreview);
+        updateSizePreview();
+
+        // ---- Fill shape checkbox ----
+        const fillShapeCheckbox = document.getElementById('paint-fill-shape');
+        if (fillShapeCheckbox) {
+            fillShapeCheckbox.addEventListener('change', () => { fillShapes = fillShapeCheckbox.checked; });
+        }
+
+        // ---- Mouse position helpers ----
         function getPos(e) {
             const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.clientX ?? (e.touches?.[0]?.clientX ?? 0);
+            const clientY = e.clientY ?? (e.touches?.[0]?.clientY ?? 0);
             return {
-                x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left,
-                y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
             };
         }
 
+        // ---- Status bar coordinate tracking ----
+        const coordsEl = document.getElementById('paint-status-coords');
+        canvas.addEventListener('mousemove', (e) => {
+            const pos = getPos(e);
+            if (coordsEl) coordsEl.innerHTML = `<i class="fa-solid fa-crosshairs"></i> ${Math.round(pos.x)}, ${Math.round(pos.y)} px`;
+        });
+
+        // ---- Flood Fill Algorithm ----
+        function floodFill(x, y, fillColor) {
+            x = Math.round(x);
+            y = Math.round(y);
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imageData.data;
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const targetIdx = (y * w + x) * 4;
+            const targetR = data[targetIdx], targetG = data[targetIdx + 1], targetB = data[targetIdx + 2], targetA = data[targetIdx + 3];
+
+            // Parse fill color
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCtx.fillStyle = fillColor;
+            tempCtx.fillRect(0, 0, 1, 1);
+            const fillData = tempCtx.getImageData(0, 0, 1, 1).data;
+            const fillR = fillData[0], fillG = fillData[1], fillB = fillData[2], fillA = fillData[3];
+
+            if (targetR === fillR && targetG === fillG && targetB === fillB && targetA === fillA) return;
+
+            const stack = [[x, y]];
+            const visited = new Uint8Array(w * h);
+
+            function matches(i) {
+                return (
+                    Math.abs(data[i] - targetR) < 3 &&
+                    Math.abs(data[i + 1] - targetG) < 3 &&
+                    Math.abs(data[i + 2] - targetB) < 3 &&
+                    Math.abs(data[i + 3] - targetA) < 30
+                );
+            }
+
+            while (stack.length > 0) {
+                const [cx, cy] = stack.pop();
+                if (cx < 0 || cx >= w || cy < 0 || cy >= h) continue;
+                const idx = cy * w + cx;
+                if (visited[idx]) continue;
+                const pIdx = idx * 4;
+                if (!matches(pIdx)) continue;
+                visited[idx] = 1;
+                data[pIdx] = fillR;
+                data[pIdx + 1] = fillG;
+                data[pIdx + 2] = fillB;
+                data[pIdx + 3] = fillA;
+                stack.push([cx + 1, cy], [cx - 1, cy], [cx, cy + 1], [cx, cy - 1]);
+            }
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        // ---- Draw Shape Helpers ----
+        function drawTriangle(x1, y1, x2, y2, fill) {
+            const midX = (x1 + x2) / 2;
+            ctx.beginPath();
+            ctx.moveTo(midX, y1);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x2, y2);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            ctx.stroke();
+        }
+
+        function drawArrow(x1, y1, x2, y2) {
+            const headLen = Math.min(20, Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2) / 3);
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+            ctx.moveTo(x2, y2);
+            ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+            ctx.stroke();
+        }
+
+        function drawStar(cx, cy, outerR, fill) {
+            const innerR = outerR * 0.4;
+            const points = 5;
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const r = i % 2 === 0 ? outerR : innerR;
+                const a = (Math.PI / 2 * 3) + (i * Math.PI / points);
+                const x = cx + Math.cos(a) * r;
+                const y = cy + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            if (fill) ctx.fill();
+            ctx.stroke();
+        }
+
+        // ---- Drawing Events ----
+        let snapShot = null;
+
         function startDraw(e) {
-            isDrawing = true;
+            e.preventDefault();
             const pos = getPos(e);
             startX = pos.x;
             startY = pos.y;
+
+            if (currentTool === 'fill') {
+                saveUndoState();
+                floodFill(pos.x, pos.y, color1);
+                return;
+            }
+
+            if (currentTool === 'picker') {
+                const pixel = ctx.getImageData(Math.round(pos.x), Math.round(pos.y), 1, 1).data;
+                const hex = '#' + [pixel[0], pixel[1], pixel[2]].map(v => v.toString(16).padStart(2, '0')).join('');
+                updateColor1(hex);
+                return;
+            }
+
+            if (currentTool === 'text') {
+                const text = prompt('Enter text:');
+                if (text) {
+                    saveUndoState();
+                    ctx.fillStyle = color1;
+                    ctx.font = `${Math.max(brushSize * 4, 14)}px ${getComputedStyle(document.body).getPropertyValue('--win-font').trim() || 'Inter, sans-serif'}`;
+                    ctx.fillText(text, pos.x, pos.y);
+                }
+                return;
+            }
+
+            isDrawing = true;
             saveUndoState();
 
-            const color = document.getElementById('paint-color')?.value || '#0078d7';
-            const size = document.getElementById('paint-size')?.value || 5;
-
-            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : color;
-            ctx.fillStyle = color;
-            ctx.lineWidth = currentTool === 'eraser' ? size * 3 : size;
+            ctx.strokeStyle = currentTool === 'eraser' ? color2 : color1;
+            ctx.fillStyle = color1;
+            ctx.lineWidth = currentTool === 'eraser' ? brushSize * 3 : brushSize;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            if (currentTool === 'pencil' || currentTool === 'eraser') {
+            if (currentTool === 'pencil' || currentTool === 'brush' || currentTool === 'eraser') {
                 ctx.beginPath();
                 ctx.moveTo(startX, startY);
-            } else if (currentTool === 'fill') {
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                if (currentTool === 'brush') ctx.lineWidth = brushSize * 2;
             }
+
+            // Save snapshot for shape preview
+            snapShot = ctx.getImageData(0, 0, canvas.width, canvas.height);
         }
 
         function draw(e) {
             if (!isDrawing) return;
+            e.preventDefault();
             const pos = getPos(e);
 
-            if (currentTool === 'pencil' || currentTool === 'eraser') {
+            if (currentTool === 'pencil' || currentTool === 'brush' || currentTool === 'eraser') {
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
+            } else if (['line', 'rect', 'circle', 'triangle', 'arrow', 'star'].includes(currentTool)) {
+                // Restore snapshot for live shape preview
+                if (snapShot) ctx.putImageData(snapShot, 0, 0);
+
+                ctx.strokeStyle = color1;
+                ctx.fillStyle = color1;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+
+                if (currentTool === 'line') {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.stroke();
+                } else if (currentTool === 'rect') {
+                    if (fillShapes) ctx.fillRect(startX, startY, pos.x - startX, pos.y - startY);
+                    ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
+                } else if (currentTool === 'circle') {
+                    const rx = Math.abs(pos.x - startX) / 2;
+                    const ry = Math.abs(pos.y - startY) / 2;
+                    const cx = startX + (pos.x - startX) / 2;
+                    const cy = startY + (pos.y - startY) / 2;
+                    ctx.beginPath();
+                    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+                    if (fillShapes) ctx.fill();
+                    ctx.stroke();
+                } else if (currentTool === 'triangle') {
+                    drawTriangle(startX, startY, pos.x, pos.y, fillShapes);
+                } else if (currentTool === 'arrow') {
+                    drawArrow(startX, startY, pos.x, pos.y);
+                } else if (currentTool === 'star') {
+                    const r = Math.sqrt((pos.x - startX) ** 2 + (pos.y - startY) ** 2);
+                    drawStar(startX, startY, r, fillShapes);
+                }
             }
         }
 
         function stopDraw(e) {
             if (!isDrawing) return;
             isDrawing = false;
-            const pos = e ? getPos(e) : { x: startX, y: startY };
-
-            if (currentTool === 'line') {
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-            } else if (currentTool === 'rect') {
-                ctx.strokeRect(startX, startY, pos.x - startX, pos.y - startY);
-            } else if (currentTool === 'circle') {
-                const radius = Math.sqrt(Math.pow(pos.x - startX, 2) + Math.pow(pos.y - startY, 2));
-                ctx.beginPath();
-                ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
-                ctx.stroke();
-            }
+            snapShot = null;
+            ctx.closePath();
         }
 
-        canvas.onmousedown = startDraw;
-        canvas.onmousemove = draw;
-        canvas.onmouseup = stopDraw;
-        canvas.ontouchstart = startDraw;
-        canvas.ontouchmove = draw;
-        canvas.ontouchend = stopDraw;
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDraw);
+        canvas.addEventListener('mouseleave', stopDraw);
+        canvas.addEventListener('touchstart', startDraw, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDraw);
 
-        const undoBtn = document.getElementById('paint-undo');
-        if (undoBtn) {
-            undoBtn.onclick = () => {
+        // ---- Undo (Ctrl+Z) ----
+        document.addEventListener('keydown', (e) => {
+            const paintWin = document.getElementById('win-paint');
+            if (!paintWin || paintWin.classList.contains('hidden')) return;
+            if (e.ctrlKey && e.key === 'z') {
+                e.preventDefault();
                 if (undoStack.length > 1) {
-                    undoStack.pop();
-                    const prevState = undoStack[undoStack.length - 1];
-                    ctx.putImageData(prevState, 0, 0);
-                    playSound('click');
+                    redoStack.push(undoStack.pop());
+                    ctx.putImageData(undoStack[undoStack.length - 1], 0, 0);
                 }
-            };
+            } else if (e.ctrlKey && e.key === 'y') {
+                e.preventDefault();
+                if (redoStack.length > 0) {
+                    const state = redoStack.pop();
+                    undoStack.push(state);
+                    ctx.putImageData(state, 0, 0);
+                }
+            }
+        });
+
+        // ---- Ribbon Clipboard Buttons ----
+        document.getElementById('paint-clear')?.addEventListener('click', () => {
+            saveUndoState();
+            ctx.fillStyle = color2;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            playSound('click');
+        });
+
+        document.getElementById('paint-save-png')?.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'My_Artwork.png';
+            link.href = canvas.toDataURL();
+            link.click();
+            showToast('🎨 Artwork Saved', 'Saved My_Artwork.png to your device.', 'fa-solid fa-download', 'MS Paint');
+            playSound('notify');
+        });
+
+        // Paste button = paste from clipboard if available
+        document.getElementById('paint-paste')?.addEventListener('click', async () => {
+            try {
+                const items = await navigator.clipboard.read();
+                for (const item of items) {
+                    for (const type of item.types) {
+                        if (type.startsWith('image/')) {
+                            const blob = await item.getType(type);
+                            const img = new Image();
+                            img.onload = () => {
+                                saveUndoState();
+                                ctx.drawImage(img, 0, 0);
+                            };
+                            img.src = URL.createObjectURL(blob);
+                        }
+                    }
+                }
+            } catch { /* clipboard not available */ }
+        });
+
+        // Copy = copy canvas to clipboard
+        document.getElementById('paint-copy')?.addEventListener('click', () => {
+            canvas.toBlob((blob) => {
+                if (blob) {
+                    navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).catch(() => {});
+                    showToast('📋 Copied', 'Canvas copied to clipboard.', 'fa-regular fa-copy', 'MS Paint');
+                }
+            });
+        });
+
+        // ---- Zoom Controls ----
+        const zoomLevelEl = document.getElementById('paint-zoom-level');
+        const zoomSlider = document.getElementById('paint-zoom-slider');
+
+        function setZoom(level) {
+            zoomLevel = Math.max(25, Math.min(400, level));
+            const scale = zoomLevel / 100;
+            canvas.style.width = (canvas.width * scale) + 'px';
+            canvas.style.height = (canvas.height * scale) + 'px';
+            if (zoomLevelEl) zoomLevelEl.textContent = zoomLevel + '%';
+            if (zoomSlider) zoomSlider.value = zoomLevel;
         }
 
-        const clearBtn = document.getElementById('paint-clear');
-        if (clearBtn) {
-            clearBtn.onclick = () => {
-                saveUndoState();
-                ctx.fillStyle = '#ffffff';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                playSound('click');
-            };
-        }
+        document.getElementById('paint-zoom-in')?.addEventListener('click', () => setZoom(zoomLevel + 25));
+        document.getElementById('paint-zoom-out')?.addEventListener('click', () => setZoom(zoomLevel - 25));
+        zoomSlider?.addEventListener('input', () => setZoom(parseInt(zoomSlider.value)));
 
-        const saveBtn = document.getElementById('paint-save-png');
-        if (saveBtn) {
-            saveBtn.onclick = () => {
-                const link = document.createElement('a');
-                link.download = 'My_Artwork.png';
-                link.href = canvas.toDataURL();
-                link.click();
-                showToast('🎨 Artwork Saved', 'Saved My_Artwork.png to your device.', 'fa-solid fa-download', 'MS Paint');
-                playSound('notify');
-            };
-        }
+        // Initial zoom
+        setZoom(100);
     }
 
     // ==========================================================================
