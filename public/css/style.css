@@ -2627,34 +2627,263 @@ body, html {
 .ms-cell.flagged::after { content: '🚩'; font-size: 0.9rem; }
 
 /* ==========================================================================
-   APP: RECYCLE BIN
+/* ==========================================================================
+   APP: RECYCLE BIN — WINDOWS 11 FILE EXPLORER UI
    ========================================================================== */
-.bin-toolbar {
-    height: 40px;
+
+/* Command Ribbon Bar */
+.bin-command-bar {
+    height: 44px;
     background: #232328;
-    border-bottom: 1px solid var(--win-border);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     align-items: center;
-    padding: 0 15px;
-    gap: 10px;
+    padding: 0 12px;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
-.bin-content { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+.bin-cmd-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
-.bin-item {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid var(--win-border);
-    padding: 12px 16px;
+.bin-cmd-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: #c8c8d0;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    font-family: var(--win-font);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.12s ease;
+}
+
+.bin-cmd-btn:hover:not(.disabled) {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.bin-cmd-btn.danger:hover:not(.disabled) {
+    background: rgba(231, 76, 60, 0.2);
+    border-color: rgba(231, 76, 60, 0.4);
+    color: #ff6b6b;
+}
+
+.bin-cmd-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.bin-cmd-divider {
+    width: 1px;
+    height: 22px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 0 4px;
+}
+
+/* Address Bar & Search */
+.bin-address-bar {
+    height: 38px;
+    background: #1e1e22;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.bin-nav-btns {
+    display: flex;
+    gap: 2px;
+}
+
+.bin-nav-btn {
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: none;
+    color: #888;
     border-radius: 4px;
     display: flex;
     align-items: center;
-    gap: 15px;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
 }
 
-.bin-item i { font-size: 1.8rem; }
-.bin-item-info { display: flex; flex-direction: column; }
-.bin-item-name { font-size: 0.95rem; font-weight: 500; }
-.bin-item-meta { font-size: 0.75rem; color: var(--win-text-dim); }
+.bin-nav-btn:hover:not([disabled]) {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+.bin-path-box {
+    flex: 1;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+    font-size: 0.78rem;
+    color: #aaa;
+}
+
+.bin-path-box .sep {
+    font-size: 0.65rem;
+    color: #555;
+}
+
+.bin-path-box .active {
+    color: #fff;
+    font-weight: 500;
+}
+
+.bin-search-box {
+    width: 200px;
+    height: 28px;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 8px;
+}
+
+.bin-search-box i {
+    font-size: 0.75rem;
+    color: #777;
+}
+
+.bin-search-box input {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 0.78rem;
+    font-family: var(--win-font);
+    outline: none;
+    width: 100%;
+}
+
+/* Main Body & Table Container */
+.bin-body {
+    background: #141418;
+    padding: 0;
+}
+
+.bin-table-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Table Headers */
+.bin-table-header {
+    display: grid;
+    grid-template-columns: 2.2fr 1.8fr 1.4fr 1fr 1.4fr;
+    padding: 8px 16px;
+    background: #1a1a1e;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.bin-th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #888;
+    user-select: none;
+}
+
+/* Table Rows */
+.bin-table-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.bin-row {
+    display: grid;
+    grid-template-columns: 2.2fr 1.8fr 1.4fr 1fr 1.4fr;
+    padding: 9px 16px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.12s ease;
+}
+
+.bin-row:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.bin-row.selected {
+    background: rgba(0, 120, 215, 0.22) !important;
+    outline: 1px solid var(--win-accent);
+}
+
+.bin-td {
+    font-size: 0.82rem;
+    color: #ccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.td-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.td-name i {
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.td-location, .td-date, .td-type {
+    color: #888;
+}
+
+.td-size {
+    font-family: var(--win-mono);
+    font-size: 0.78rem;
+    color: #aaa;
+}
+
+/* Bin Status Bar */
+.bin-status-bar {
+    height: 24px;
+    background: #1d1d22;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    color: #888;
+}
+
+.bin-status-left, .bin-status-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bin-status-sep { color: #444; }
 
 /* ==========================================================================
    APP: CORTANA

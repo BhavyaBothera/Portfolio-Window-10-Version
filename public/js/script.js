@@ -2423,18 +2423,175 @@ const showToast = (title, body) => { /* ... */ };`,
     document.getElementById('ms-reset-btn')?.addEventListener('click', initMinesweeper);
 
     // ==========================================================================
-    // 24. RECYCLE BIN
+    // 24. RECYCLE BIN ENGINE (REALISTIC EXPLORER TRASH MANAGEMENT)
     // ==========================================================================
-    document.getElementById('empty-bin-btn')?.addEventListener('click', () => {
-        const binArea = document.getElementById('bin-content-area');
-        if (binArea) binArea.innerHTML = '<div style="padding:40px;text-align:center;color:#888;"><i class="fa-regular fa-trash-can" style="font-size:3rem;margin-bottom:10px;opacity:0.4;"></i><p>Recycle Bin is empty.</p></div>';
-        playSound('trash-empty');
-        showToast('Recycle Bin Emptied', 'All deleted items have been permanently removed.', 'fa-solid fa-trash-can', 'Recycle Bin');
+    const binContentArea = document.getElementById('bin-content-area');
+    const binStatusCount = document.getElementById('bin-status-count');
+    const binStatusSize = document.getElementById('bin-status-size');
+    const binStatusSelected = document.getElementById('bin-status-selected');
+    const restoreSelBtn = document.getElementById('restore-sel-btn');
+    const deleteSelBtn = document.getElementById('delete-sel-btn');
+    const emptyBinBtn = document.getElementById('empty-bin-btn');
+    const restoreAllBtn = document.getElementById('restore-all-btn');
+    const binSearchInput = document.getElementById('bin-search-input');
+
+    let selectedBinRows = new Set();
+
+    function updateBinStatus() {
+        if (!binContentArea) return;
+        const rows = binContentArea.querySelectorAll('.bin-row');
+        const count = rows.length;
+
+        if (count === 0) {
+            binContentArea.innerHTML = `
+                <div style="padding:60px 20px;text-align:center;color:#666;">
+                    <i class="fa-regular fa-trash-can" style="font-size:3.5rem;margin-bottom:12px;opacity:0.3;color:#94a3b8;"></i>
+                    <h3 style="font-size:1.1rem;font-weight:600;color:#aaa;margin-bottom:4px;">This folder is empty.</h3>
+                    <p style="font-size:0.82rem;color:#666;">All deleted items have been restored or permanently removed.</p>
+                </div>
+            `;
+            if (binStatusCount) binStatusCount.innerHTML = `<i class="fa-solid fa-folder-open"></i> 0 items`;
+            if (binStatusSize) binStatusSize.innerHTML = `<i class="fa-solid fa-hard-drive"></i> 0 KB total`;
+            if (binStatusSelected) binStatusSelected.textContent = 'No items selected';
+            disableSelectionBtns(true);
+
+            // Update Desktop icon to empty bin
+            updateDesktopBinIcon(false);
+            return;
+        }
+
+        // Calculate approximate size
+        if (binStatusCount) binStatusCount.innerHTML = `<i class="fa-solid fa-folder-open"></i> ${count} item${count > 1 ? 's' : ''}`;
+        if (binStatusSize) binStatusSize.innerHTML = `<i class="fa-solid fa-hard-drive"></i> 1.01 GB total`;
+
+        // Selection info
+        if (selectedBinRows.size > 0) {
+            if (binStatusSelected) binStatusSelected.textContent = `${selectedBinRows.size} item${selectedBinRows.size > 1 ? 's' : ''} selected`;
+            disableSelectionBtns(false);
+        } else {
+            if (binStatusSelected) binStatusSelected.textContent = 'No items selected';
+            disableSelectionBtns(true);
+        }
+
+        // Update Desktop icon to full bin
+        updateDesktopBinIcon(true);
+    }
+
+    function disableSelectionBtns(disabled) {
+        if (restoreSelBtn) restoreSelBtn.classList.toggle('disabled', disabled);
+        if (deleteSelBtn) deleteSelBtn.classList.toggle('disabled', disabled);
+    }
+
+    function updateDesktopBinIcon(hasItems) {
+        const binIcons = document.querySelectorAll('.desktop-icon[data-window="recycle-bin"] img, .start-app-item[onclick*="recycle-bin"] img');
+        binIcons.forEach(img => {
+            if (hasItems) {
+                img.src = 'assets/icons/recyclebin.png';
+            } else {
+                img.src = 'assets/icons/recyclebin.png'; // preserve asset icon
+            }
+        });
+    }
+
+    // Row selection logic
+    binContentArea?.addEventListener('click', (e) => {
+        const row = e.target.closest('.bin-row');
+        if (!row) {
+            // Clicked empty space — clear selection
+            binContentArea.querySelectorAll('.bin-row').forEach(r => r.classList.remove('selected'));
+            selectedBinRows.clear();
+            updateBinStatus();
+            return;
+        }
+
+        if (!e.ctrlKey) {
+            binContentArea.querySelectorAll('.bin-row').forEach(r => r.classList.remove('selected'));
+            selectedBinRows.clear();
+        }
+
+        row.classList.toggle('selected');
+        if (row.classList.contains('selected')) {
+            selectedBinRows.add(row);
+        } else {
+            selectedBinRows.delete(row);
+        }
+
+        updateBinStatus();
+        playSound('click');
     });
 
-    document.getElementById('restore-bin-btn')?.addEventListener('click', () => {
-        showToast('Items Restored', 'All items have been restored to their original locations.', 'fa-solid fa-rotate-left', 'Recycle Bin');
+    // Double click to restore item
+    binContentArea?.addEventListener('dblclick', (e) => {
+        const row = e.target.closest('.bin-row');
+        if (row) {
+            const fileName = row.dataset.name || 'Item';
+            row.remove();
+            selectedBinRows.delete(row);
+            updateBinStatus();
+            playSound('notify');
+            showToast('Item Restored', `Restored ${fileName} to its original location.`, 'fa-solid fa-rotate-left', 'Recycle Bin');
+        }
     });
+
+    // Search input filter
+    binSearchInput?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const rows = binContentArea?.querySelectorAll('.bin-row');
+        rows?.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(query) ? 'grid' : 'none';
+        });
+    });
+
+    // Empty Recycle Bin
+    emptyBinBtn?.addEventListener('click', () => {
+        const rows = binContentArea?.querySelectorAll('.bin-row');
+        if (!rows || rows.length === 0) {
+            showToast('Recycle Bin', 'Recycle Bin is already empty.', 'fa-solid fa-info-circle', 'Recycle Bin');
+            return;
+        }
+        rows.forEach(r => r.remove());
+        selectedBinRows.clear();
+        updateBinStatus();
+        playSound('trash-empty');
+        showToast('Recycle Bin Emptied', 'All items have been permanently removed.', 'fa-solid fa-dumpster', 'Recycle Bin');
+    });
+
+    // Restore All
+    restoreAllBtn?.addEventListener('click', () => {
+        const rows = binContentArea?.querySelectorAll('.bin-row');
+        if (!rows || rows.length === 0) return;
+        rows.forEach(r => r.remove());
+        selectedBinRows.clear();
+        updateBinStatus();
+        playSound('notify');
+        showToast('Items Restored', 'All deleted items have been restored to their original locations.', 'fa-solid fa-rotate-left', 'Recycle Bin');
+    });
+
+    // Restore Selection
+    restoreSelBtn?.addEventListener('click', () => {
+        if (selectedBinRows.size === 0) return;
+        const count = selectedBinRows.size;
+        selectedBinRows.forEach(row => row.remove());
+        selectedBinRows.clear();
+        updateBinStatus();
+        playSound('notify');
+        showToast('Selection Restored', `Restored ${count} selected item${count > 1 ? 's' : ''}.`, 'fa-solid fa-arrow-rotate-left', 'Recycle Bin');
+    });
+
+    // Delete Selection
+    deleteSelBtn?.addEventListener('click', () => {
+        if (selectedBinRows.size === 0) return;
+        const count = selectedBinRows.size;
+        selectedBinRows.forEach(row => row.remove());
+        selectedBinRows.clear();
+        updateBinStatus();
+        playSound('click');
+        showToast('Permanently Deleted', `Deleted ${count} selected item${count > 1 ? 's' : ''}.`, 'fa-solid fa-xmark text-red', 'Recycle Bin');
+    });
+
+    // Initial Status Check
+    updateBinStatus();
 
     // ==========================================================================
     // 25. CORTANA CHATBOT (INTELLIGENT RESPONSES & SPEECH SYNTHESIS)

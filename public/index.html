@@ -1454,36 +1454,142 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
             </div><!-- /win-minesweeper -->
 
             <!-- WINDOW 15: RECYCLE BIN -->
-            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width:680px;height:440px;top:120px;left:240px;">
+            <div class="win-window hidden" id="win-recycle-bin" data-id="recycle-bin" style="width:820px;height:540px;top:80px;left:200px;">
                 <div class="win-titlebar">
-                    <div class="win-title"><i class="fa-solid fa-trash-can"></i> Recycle Bin</div>
+                    <div class="win-title"><i class="fa-solid fa-trash-can text-orange"></i> Recycle Bin — File Explorer</div>
                     <div class="win-controls">
                         <button class="win-control-btn min-btn"><i class="fa-solid fa-minus"></i></button>
                         <button class="win-control-btn max-btn"><i class="fa-regular fa-square"></i></button>
                         <button class="win-control-btn close-btn"><i class="fa-solid fa-xmark"></i></button>
                     </div>
                 </div>
-                <div class="bin-toolbar">
-                    <button class="win-btn" id="empty-bin-btn"><i class="fa-solid fa-dumpster"></i> Empty Recycle Bin</button>
-                    <button class="win-btn" id="restore-bin-btn"><i class="fa-solid fa-rotate-left"></i> Restore All Items</button>
+
+                <!-- Command Ribbon -->
+                <div class="bin-command-bar">
+                    <div class="bin-cmd-group">
+                        <button class="bin-cmd-btn danger" id="empty-bin-btn" title="Empty Recycle Bin">
+                            <i class="fa-solid fa-dumpster"></i>
+                            <span>Empty Recycle Bin</span>
+                        </button>
+                        <button class="bin-cmd-btn" id="restore-all-btn" title="Restore all items">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Restore All Items</span>
+                        </button>
+                        <button class="bin-cmd-btn disabled" id="restore-sel-btn" title="Restore selected item">
+                            <i class="fa-solid fa-arrow-rotate-left"></i>
+                            <span>Restore Selection</span>
+                        </button>
+                        <button class="bin-cmd-btn disabled" id="delete-sel-btn" title="Delete permanently">
+                            <i class="fa-solid fa-xmark text-red"></i>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+
+                    <div class="bin-cmd-divider"></div>
+
+                    <div class="bin-cmd-group">
+                        <button class="bin-cmd-btn" id="bin-view-details" title="Details View">
+                            <i class="fa-solid fa-list"></i>
+                            <span>Details</span>
+                        </button>
+                        <button class="bin-cmd-btn" id="bin-view-icons" title="Icons View">
+                            <i class="fa-solid fa-border-all"></i>
+                            <span>Tiles</span>
+                        </button>
+                    </div>
                 </div>
-                <div class="win-body scrollable">
-                    <div class="bin-content" id="bin-content-area">
-                        <div class="bin-item">
-                            <i class="fa-solid fa-bug text-red"></i>
-                            <div class="bin-item-info"><span class="bin-item-name">Undefined_Null_Pointer_Bug.exe</span><span class="bin-item-meta">Deleted: Yesterday • Size: 0 KB</span></div>
+
+                <!-- Explorer Address Bar -->
+                <div class="bin-address-bar">
+                    <div class="bin-nav-btns">
+                        <button class="bin-nav-btn" disabled><i class="fa-solid fa-arrow-left"></i></button>
+                        <button class="bin-nav-btn" disabled><i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="bin-nav-btn"><i class="fa-solid fa-arrow-up"></i></button>
+                    </div>
+                    <div class="bin-path-box">
+                        <i class="fa-solid fa-trash-can text-orange"></i>
+                        <span>This PC</span>
+                        <i class="fa-solid fa-chevron-right sep"></i>
+                        <span class="active">Recycle Bin</span>
+                    </div>
+                    <div class="bin-search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="bin-search-input" placeholder="Search Recycle Bin">
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="win-body bin-body scrollable">
+                    <div class="bin-table-container">
+                        <!-- Table Headers -->
+                        <div class="bin-table-header">
+                            <div class="bin-th th-name">Name</div>
+                            <div class="bin-th th-location">Original Location</div>
+                            <div class="bin-th th-date">Date Deleted</div>
+                            <div class="bin-th th-size">Size</div>
+                            <div class="bin-th th-type">Item Type</div>
                         </div>
-                        <div class="bin-item">
-                            <i class="fa-solid fa-file-code text-orange"></i>
-                            <div class="bin-item-info"><span class="bin-item-name">Old_Portfolio_Draft_v1.html</span><span class="bin-item-meta">Deleted: 3 days ago • Size: 14 KB</span></div>
-                        </div>
-                        <div class="bin-item">
-                            <i class="fa-solid fa-mug-hot text-brown"></i>
-                            <div class="bin-item-info"><span class="bin-item-name">Cold_Coffee_Cups.log</span><span class="bin-item-meta">Deleted: Today • Size: 999 MB</span></div>
+
+                        <!-- Table Body / Items -->
+                        <div class="bin-table-body" id="bin-content-area">
+                            <div class="bin-row" data-name="Undefined_Null_Pointer_Bug.exe" data-size="12.4 MB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-bug text-red"></i> <span>Undefined_Null_Pointer_Bug.exe</span></div>
+                                <div class="bin-td td-location">C:\Projects\Debugging</div>
+                                <div class="bin-td td-date">Yesterday, 11:42 PM</div>
+                                <div class="bin-td td-size">12.4 MB</div>
+                                <div class="bin-td td-type">Executable File</div>
+                            </div>
+                            <div class="bin-row" data-name="Old_Portfolio_Draft_v1.html" data-size="14.8 KB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-file-code text-orange"></i> <span>Old_Portfolio_Draft_v1.html</span></div>
+                                <div class="bin-td td-location">C:\Users\Bhavy\Desktop</div>
+                                <div class="bin-td td-date">3 days ago</div>
+                                <div class="bin-td td-size">14.8 KB</div>
+                                <div class="bin-td td-type">HTML Document</div>
+                            </div>
+                            <div class="bin-row" data-name="Cold_Coffee_Cups_2023.log" data-size="999.0 MB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-mug-hot text-brown"></i> <span>Cold_Coffee_Cups_2023.log</span></div>
+                                <div class="bin-td td-location">C:\DevLogs\Caffeine</div>
+                                <div class="bin-td td-date">Today, 2:15 AM</div>
+                                <div class="bin-td td-size">999.0 MB</div>
+                                <div class="bin-td td-type">Log File</div>
+                            </div>
+                            <div class="bin-row" data-name="Forgotten_TODO_List.txt" data-size="2.1 KB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-file-lines text-blue"></i> <span>Forgotten_TODO_List.txt</span></div>
+                                <div class="bin-td td-location">C:\Users\Bhavy\Documents</div>
+                                <div class="bin-td td-date">1 week ago</div>
+                                <div class="bin-td td-size">2.1 KB</div>
+                                <div class="bin-td td-type">Text Document</div>
+                            </div>
+                            <div class="bin-row" data-name="Unused_CSS_Framework_v0.css" data-size="450.2 KB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-css3-alt text-cyan"></i> <span>Unused_CSS_Framework_v0.css</span></div>
+                                <div class="bin-td td-location">C:\Projects\OldStyles</div>
+                                <div class="bin-td td-date">2 weeks ago</div>
+                                <div class="bin-td td-size">450.2 KB</div>
+                                <div class="bin-td td-type">Cascading Style Sheet</div>
+                            </div>
+                            <div class="bin-row" data-name="Infinite_Loop_Script_FINAL.js" data-size="8.0 KB">
+                                <div class="bin-td td-name"><i class="fa-solid fa-scroll text-yellow"></i> <span>Infinite_Loop_Script_FINAL.js</span></div>
+                                <div class="bin-td td-location">C:\Scripts\Tests</div>
+                                <div class="bin-td td-date">1 month ago</div>
+                                <div class="bin-td td-size">8.0 KB</div>
+                                <div class="bin-td td-type">JavaScript File</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div><!-- /win-recycle-bin — PROPERLY CLOSED -->
+
+                <!-- Bin Status Bar -->
+                <div class="bin-status-bar">
+                    <div class="bin-status-left">
+                        <span id="bin-status-count"><i class="fa-solid fa-folder-open"></i> 6 items</span>
+                        <span class="bin-status-sep">|</span>
+                        <span id="bin-status-size"><i class="fa-solid fa-hard-drive"></i> 1.01 GB total</span>
+                    </div>
+                    <div class="bin-status-right">
+                        <span id="bin-status-selected">No items selected</span>
+                    </div>
+                </div>
+            </div><!-- /win-recycle-bin -->
 
             <!-- WINDOW 16: CORTANA -->
             <div class="win-window hidden" id="win-cortana" data-id="cortana" style="width:480px;height:580px;top:80px;left:320px;">
