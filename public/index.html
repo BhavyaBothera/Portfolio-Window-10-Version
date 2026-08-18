@@ -8,7 +8,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Main CSS -->
@@ -246,12 +247,12 @@
 
                     <!-- 2. Windows 11 Command Ribbon Toolbar -->
                     <div class="explorer-command-ribbon">
-                        <button class="ribbon-cmd-btn" onclick="openWindow('projects')"><i class="fa-solid fa-square-plus text-blue"></i> New Project</button>
-                        <button class="ribbon-cmd-btn" onclick="openWindow('vscode')"><i class="fa-solid fa-code text-purple"></i> Inspect Source</button>
-                        <button class="ribbon-cmd-btn" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Export Resume</button>
+                        <button class="ribbon-cmd-btn" data-window="projects"><i class="fa-solid fa-square-plus text-blue"></i> New Project</button>
+                        <button class="ribbon-cmd-btn" data-window="vscode"><i class="fa-solid fa-code text-purple"></i> Inspect Source</button>
+                        <button class="ribbon-cmd-btn" data-window="resume"><i class="fa-solid fa-file-pdf text-red"></i> Export Resume</button>
                         <div class="ribbon-divider"></div>
-                        <button class="ribbon-cmd-btn" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> Control Panel</button>
-                        <button class="ribbon-cmd-btn" onclick="openWindow('contact')"><i class="fa-solid fa-envelope text-yellow"></i> Contact</button>
+                        <button class="ribbon-cmd-btn" data-window="skills"><i class="fa-solid fa-sliders text-cyan"></i> Control Panel</button>
+                        <button class="ribbon-cmd-btn" data-window="contact"><i class="fa-solid fa-envelope text-yellow"></i> Contact</button>
                         <div class="ribbon-divider"></div>
                         <button class="ribbon-cmd-btn" id="thispc-cmd-refresh"><i class="fa-solid fa-rotate text-green"></i> Refresh View</button>
                     </div>
@@ -270,9 +271,9 @@
                         <div class="explorer-nav-tree">
                             <div class="tree-group">
                                 <div class="tree-group-title"><i class="fa-solid fa-star text-gold"></i> Quick Access</div>
-                                <div class="tree-item" onclick="openWindow('projects')"><i class="fa-solid fa-folder-open text-gold"></i> Projects Explorer</div>
-                                <div class="tree-item" onclick="openWindow('skills')"><i class="fa-solid fa-sliders text-cyan"></i> System Skills</div>
-                                <div class="tree-item" onclick="openWindow('resume')"><i class="fa-solid fa-file-pdf text-red"></i> Resume PDF</div>
+                                <div class="tree-item" data-window="projects"><i class="fa-solid fa-folder-open text-gold"></i> Projects Explorer</div>
+                                <div class="tree-item" data-window="skills"><i class="fa-solid fa-sliders text-cyan"></i> System Skills</div>
+                                <div class="tree-item" data-window="resume"><i class="fa-solid fa-file-pdf text-red"></i> Resume PDF</div>
                             </div>
                             <div class="tree-group">
                                 <div class="tree-group-title"><i class="fa-solid fa-desktop text-blue"></i> This PC</div>
@@ -283,12 +284,13 @@
                             </div>
                             <div class="tree-group">
                                 <div class="tree-group-title"><i class="fa-solid fa-link text-blue"></i> App Links</div>
-                                <div class="tree-item" onclick="openWindow('vscode')"><i class="fa-solid fa-code text-purple"></i> VS Code Editor</div>
-                                <div class="tree-item" onclick="openWindow('cmd')"><i class="fa-solid fa-terminal text-green"></i> Command Prompt</div>
-                                <div class="tree-item" onclick="openWindow('mediaplayer')"><i class="fa-solid fa-compact-disc text-pink"></i> Groove Music</div>
-                                <div class="tree-item" onclick="openWindow('paint')"><i class="fa-solid fa-palette text-orange"></i> MS Paint</div>
+                                <div class="tree-item" data-window="vscode"><i class="fa-solid fa-code text-purple"></i> VS Code Editor</div>
+                                <div class="tree-item" data-window="cmd"><i class="fa-solid fa-terminal text-green"></i> Command Prompt</div>
+                                <div class="tree-item" data-window="mediaplayer"><i class="fa-solid fa-compact-disc text-pink"></i> Groove Music</div>
+                                <div class="tree-item" data-window="paint"><i class="fa-solid fa-palette text-orange"></i> MS Paint</div>
                             </div>
                         </div>
+
 
                         <!-- Right Main Content Panel (Tabbed Panes) -->
                         <div class="explorer-main-view scrollable">
@@ -344,42 +346,42 @@
                                         <span style="font-size:0.75rem;color:#94a3b8;font-weight:500;">Click any folder to launch app</span>
                                     </div>
                                     <div class="folders-grid-v3">
-                                        <div class="folder-card-v3" onclick="openWindow('projects')">
+                                        <div class="folder-card-v3" data-window="projects">
                                             <i class="fa-solid fa-display text-blue"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">Desktop</div>
                                                 <div class="folder-count-v3">18 App Shortcuts</div>
                                             </div>
                                         </div>
-                                        <div class="folder-card-v3" onclick="openWindow('notepad')">
+                                        <div class="folder-card-v3" data-window="notepad">
                                             <i class="fa-solid fa-file-lines text-yellow"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">Documents</div>
                                                 <div class="folder-count-v3">Architecture Specs</div>
                                             </div>
                                         </div>
-                                        <div class="folder-card-v3" onclick="openWindow('resume')">
+                                        <div class="folder-card-v3" data-window="resume">
                                             <i class="fa-solid fa-circle-down text-green"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">Downloads</div>
                                                 <div class="folder-count-v3">Resume PDF & Text</div>
                                             </div>
                                         </div>
-                                        <div class="folder-card-v3" onclick="openWindow('mediaplayer')">
+                                        <div class="folder-card-v3" data-window="mediaplayer">
                                             <i class="fa-solid fa-music text-purple"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">Music</div>
                                                 <div class="folder-count-v3">Synthwave Tracks</div>
                                             </div>
                                         </div>
-                                        <div class="folder-card-v3" onclick="openWindow('paint')">
+                                        <div class="folder-card-v3" data-window="paint">
                                             <i class="fa-solid fa-image text-orange"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">Pictures</div>
                                                 <div class="folder-count-v3">Paint & Artwork</div>
                                             </div>
                                         </div>
-                                        <div class="folder-card-v3" onclick="openWindow('projects')">
+                                        <div class="folder-card-v3" data-window="projects">
                                             <i class="fa-solid fa-cube text-pink"></i>
                                             <div class="folder-info-v3">
                                                 <div class="folder-title-v3">3D Objects</div>
@@ -395,7 +397,7 @@
                                         <span><i class="fa-solid fa-hard-drive text-blue"></i> Devices and drives (3)</span>
                                     </div>
                                     <div class="drives-grid-v3">
-                                        <div class="drive-card-v3" onclick="openWindow('projects')">
+                                        <div class="drive-card-v3" data-window="projects">
                                             <i class="fa-solid fa-hard-drive text-blue"></i>
                                             <div class="drive-content-v3">
                                                 <div class="drive-header-v3">
@@ -411,7 +413,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="drive-card-v3" onclick="openWindow('skills')">
+                                        <div class="drive-card-v3" data-window="skills">
                                             <i class="fa-solid fa-hard-drive text-purple"></i>
                                             <div class="drive-content-v3">
                                                 <div class="drive-header-v3">
@@ -427,7 +429,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="drive-card-v3" onclick="openWindow('vscode')">
+                                        <div class="drive-card-v3" data-window="vscode">
+
                                             <i class="fa-solid fa-cloud text-cyan"></i>
                                             <div class="drive-content-v3">
                                                 <div class="drive-header-v3">
