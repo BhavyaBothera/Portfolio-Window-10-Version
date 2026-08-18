@@ -2,9 +2,15 @@ import { state } from './state.js';
 import { playSound } from './audio.js';
 import { updateTaskbarPills } from '../system/taskbar.js';
 
+let lastFocusedElement = null;
+
 export function openWindow(windowId) {
     const winEl = document.getElementById(`win-${windowId}`);
     if (!winEl) return;
+
+    if (document.activeElement && document.activeElement !== document.body) {
+        lastFocusedElement = document.activeElement;
+    }
 
     winEl.classList.remove('win-closing');
 
@@ -52,6 +58,15 @@ export function focusWindow(windowId) {
         state.activeWindow = windowId;
         state.zIndexCounter++;
         winEl.style.zIndex = state.zIndexCounter;
+
+        // Focus first focusable element inside the window for accessibility
+        const focusable = winEl.querySelector('input:not([disabled]), button:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex="0"]');
+        if (focusable) {
+            focusable.focus();
+        } else {
+            winEl.setAttribute('tabindex', '-1');
+            winEl.focus();
+        }
     }
     updateTaskbarPills();
 }
@@ -78,11 +93,17 @@ export function closeWindow(windowId) {
         }
 
         updateTaskbarPills();
+
+        // Restore focus to element focused before window opened
+        if (lastFocusedElement && document.body.contains(lastFocusedElement)) {
+            try { lastFocusedElement.focus(); } catch (e) {}
+        }
     };
 
     winEl.addEventListener('animationend', onCloseEnd, { once: true });
     playSound('close');
 }
+
 
 export function minimizeWindow(windowId) {
     const winEl = document.getElementById(`win-${windowId}`);
