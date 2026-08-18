@@ -6543,3 +6543,34 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     color: #cbd5e1;
     font-weight: 500;
 }
+
+/* ==========================================================================
+   ACCESSIBILITY & SELECTION OVERRIDES
+   ========================================================================== */
+.win-body, .win-body *, input, textarea, .cmd-text, .code-line-text, p, h1, h2, h3, h4, h5, h6 {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+}
+
+/* Keep user-select: none strictly on UI drag handles, taskbar, titlebars, and icons */
+.win-titlebar, .desktop-icon, .taskbar-app-tile, #start-btn, .win-resize-handle {
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+/* Visible Focus Rings for Keyboard Navigation */
+:focus-visible {
+    outline: 2px solid #00d2ff !important;
+    outline-offset: 2px !important;
+}
+
+/* Reduced Motion Mode */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
