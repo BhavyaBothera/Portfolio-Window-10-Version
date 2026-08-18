@@ -2,16 +2,6 @@ const os = require('os');
 const path = require('path');
 const { getAsync, runAsync, allAsync } = require('../database/database');
 
-function sanitizeInput(str) {
-    if (typeof str !== 'string') return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
-}
-
 const FORBIDDEN_VFS_KEYS = ['__proto__', 'constructor', 'prototype'];
 
 // REAL CPU Utilization Calculation via os.cpus() delta sampling
@@ -52,6 +42,10 @@ exports.getSystemStats = (req, res) => {
 
     return res.json({
         success: true,
+        meta: {
+            simulation: true,
+            note: 'CPU utilization % and RAM metrics represent real server telemetry. Host identity specs (hostname, model, platform) are simulated Win10 OS environment attributes.'
+        },
         cpu: {
             percent: realCpuPercent,
             cores: os.cpus().length,
@@ -98,7 +92,7 @@ exports.saveNotes = async (req, res, next) => {
             if (text.length > 5000) {
                 return res.status(400).json({ success: false, error: 'Sticky note content must not exceed 5000 characters.' });
             }
-            updatedText = sanitizeInput(text);
+            updatedText = text;
         }
 
         if (color !== undefined) {
@@ -163,12 +157,10 @@ exports.saveVFS = async (req, res, next) => {
             return res.status(400).json({ success: false, error: 'Invalid file name: reserved object prototype key.' });
         }
 
-        const sanitizedContent = sanitizeInput(content);
-
         await runAsync(
             `INSERT INTO vfs (file_name, content, updated_at) VALUES (?, ?, ?)
              ON CONFLICT(file_name) DO UPDATE SET content = excluded.content, updated_at = excluded.updated_at`,
-            [safeFileName, sanitizedContent, new Date().toISOString()]
+            [safeFileName, content, new Date().toISOString()]
         );
 
         return res.json({ success: true, message: `File ${safeFileName} saved to SQLite VFS.` });

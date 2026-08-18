@@ -1,16 +1,6 @@
 const crypto = require('crypto');
 const { runAsync, allAsync } = require('../database/database');
 
-function sanitizeInput(str) {
-    if (typeof str !== 'string') return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
-}
-
 const ALLOWED_GAMES = ['minesweeper', 'solitaire'];
 
 exports.getLeaderboard = async (req, res, next) => {
@@ -25,7 +15,12 @@ exports.getLeaderboard = async (req, res, next) => {
             [game]
         );
 
-        return res.json({ success: true, game, data: scores });
+        return res.json({
+            success: true,
+            game,
+            meta: { description: 'Validated client-submitted scores' },
+            data: scores
+        });
     } catch (err) {
         next(err);
     }
@@ -62,18 +57,17 @@ exports.submitHighScore = async (req, res, next) => {
         }
 
         const id = crypto.randomUUID();
-        const sPlayer = sanitizeInput(player);
         const createdAt = new Date().toISOString();
 
         await runAsync(
             `INSERT INTO leaderboard (id, player, game, score, time_seconds, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
-            [id, sPlayer, game, parsedScore, parsedTime, createdAt]
+            [id, player, game, parsedScore, parsedTime, createdAt]
         );
 
         return res.status(201).json({
             success: true,
             message: 'High score recorded!',
-            data: { id, player: sPlayer, game, score: parsedScore, time_seconds: parsedTime, created_at: createdAt }
+            data: { id, player, game, score: parsedScore, time_seconds: parsedTime, created_at: createdAt }
         });
     } catch (err) {
         next(err);

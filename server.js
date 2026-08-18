@@ -8,10 +8,12 @@ const apiRoutes = require('./src/routes/api.routes');
 const errorHandler = require('./src/middleware/errorHandler');
 const notFoundHandler = require('./src/middleware/notFound');
 
-// Initialize database connection & migrations
-require('./src/database/database');
+const { initDatabase } = require('./src/database/database');
 
 const app = express();
+
+// Enable reverse proxy trust for accurate client IP rate limiting
+app.set('trust proxy', 1);
 
 // Security Headers via Helmet
 app.use(
@@ -33,7 +35,7 @@ app.use(
     })
 );
 
-// CORS
+// CORS Configuration
 app.use(cors({ origin: config.corsOrigin }));
 
 // Payload Body Limits
@@ -58,14 +60,25 @@ app.get('*', (req, res, next) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-// Start Server
-app.listen(config.port, () => {
-    console.log(`\n==================================================`);
-    console.log(`🚀 Windows 10 Full-Stack Portfolio Server Active`);
-    console.log(`🌐 Environment: ${config.env}`);
-    console.log(`🌐 Server Port: ${config.port}`);
-    console.log(`📂 Serving Public Shell: http://localhost:${config.port}`);
-    console.log(`==================================================\n`);
-});
+// Asynchronous Server Startup (Ensures SQLite schema initialization completes before listening)
+async function startServer() {
+    try {
+        await initDatabase();
+        app.listen(config.port, () => {
+            console.log(`\n==================================================`);
+            console.log(`🚀 Windows 10 Full-Stack Portfolio Server Active`);
+            console.log(`🌐 Environment: ${config.env}`);
+            console.log(`🌐 Server Port: ${config.port}`);
+            console.log(`📂 Serving Public Shell: http://localhost:${config.port}`);
+            console.log(`==================================================\n`);
+        });
+    } catch (err) {
+        console.error('Failed to initialize database and start server:', err);
+        process.exit(1);
+    }
+}
+
+startServer();
 
 module.exports = app;
+

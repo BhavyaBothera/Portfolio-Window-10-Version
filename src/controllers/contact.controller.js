@@ -1,16 +1,6 @@
 const crypto = require('crypto');
 const { runAsync, allAsync } = require('../database/database');
 
-function sanitizeInput(str) {
-    if (typeof str !== 'string') return '';
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#x27;');
-}
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 exports.submitContactMessage = async (req, res, next) => {
@@ -37,28 +27,25 @@ exports.submitContactMessage = async (req, res, next) => {
             return res.status(400).json({ success: false, error: 'Message must not exceed 2000 characters.' });
         }
 
-        // Email validation
+        // Email format validation
         if (!EMAIL_REGEX.test(email)) {
             return res.status(400).json({ success: false, error: 'Please provide a valid email address.' });
         }
 
         const id = crypto.randomUUID();
-        const sName = sanitizeInput(name);
-        const sEmail = sanitizeInput(email);
-        const sSubject = sanitizeInput(subject);
-        const sMessage = sanitizeInput(message);
         const createdAt = new Date().toISOString();
 
+        // Store clean validated raw strings in database (output rendering performs HTML escaping)
         await runAsync(
             `INSERT INTO contact_messages (id, name, email, subject, message, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
-            [id, sName, sEmail, sSubject, sMessage, createdAt]
+            [id, name, email, subject, message, createdAt]
         );
 
-        console.log(`[API Contact] Saved message from ${sName} (${sEmail}): "${sSubject}"`);
+        console.log(`[API Contact] Saved message from ${name} (${email}): "${subject}"`);
         return res.status(201).json({
             success: true,
             message: 'Message delivered and saved to portfolio database successfully!',
-            data: { id, name: sName, email: sEmail, subject: sSubject, message: sMessage, created_at: createdAt }
+            data: { id, name, email, subject, message, created_at: createdAt }
         });
     } catch (err) {
         next(err);

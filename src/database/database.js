@@ -151,12 +151,11 @@ async function initDatabase() {
     }
 }
 
-// Auto-run init
-initDatabase();
-
 module.exports = {
     db,
+    initDatabase,
     runAsync,
     getAsync,
     allAsync
 };
+

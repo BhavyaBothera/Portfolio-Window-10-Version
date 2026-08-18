@@ -1,11 +1,13 @@
 const http = require('http');
-const assert = require('assert');
+const config = require('../src/config/env');
 const { evaluateExpression } = require('../public/js/utils/math-evaluator.js');
 
 async function testEndpoint(path, method = 'GET', data = null, headers = {}) {
+
+
     return new Promise((resolve, reject) => {
         const options = {
-            hostname: 'localhost',
+            hostname: '127.0.0.1',
             port: 5000,
             path,
             method,
@@ -14,6 +16,7 @@ async function testEndpoint(path, method = 'GET', data = null, headers = {}) {
                 ...headers
             }
         };
+
 
         const req = http.request(options, (res) => {
             let body = '';
@@ -57,7 +60,8 @@ async function runTestSuite() {
     // 2. API & Security Integration Tests
     console.log('\n--- 2. REST API & SECURITY TESTS ---');
 
-    const adminHeaders = { 'x-admin-token': 'bhavy-admin-secret-key-2026' };
+    const adminHeaders = { 'x-admin-token': config.adminToken };
+
 
     // Auth Test
     const tAuthNoToken = await testEndpoint('/api/messages');

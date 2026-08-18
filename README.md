@@ -157,7 +157,8 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 | :--- | :--- | :--- |
 | `PORT` | `5000` | Application server port |
 | `NODE_ENV` | `development` | Node environment (`development` / `production`) |
-| `ADMIN_TOKEN` | `bhavy-admin-secret-key-2026` | Admin API authentication header token |
+| `ADMIN_TOKEN` | Required secret configured in `.env` | Admin API authentication header token |
+
 | `DB_PATH` | `./db/portfolio.sqlite` | SQLite database file location |
 
 ---
