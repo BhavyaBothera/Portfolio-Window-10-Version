@@ -47,13 +47,30 @@ exports.submitHighScore = async (req, res, next) => {
         const parsedScore = Number(score);
         const parsedTime = Number(time_seconds || 0);
 
-        // Strict Finite Number Validation
-        if (!Number.isFinite(parsedScore) || parsedScore < 0 || parsedScore > 100000) {
-            return res.status(400).json({ success: false, error: 'Score must be a valid finite number within allowable bounds.' });
+        // Strict Finite Number & Bounds Validation
+        if (!Number.isFinite(parsedScore) || !Number.isFinite(parsedTime)) {
+            return res.status(400).json({ success: false, error: 'Score and time must be valid numbers.' });
         }
 
-        if (!Number.isFinite(parsedTime) || parsedTime < 2 || parsedTime > 86400) {
-            return res.status(400).json({ success: false, error: 'Game time must be a valid finite number of at least 2 seconds.' });
+        // Game-Specific Server-Side Plausibility Rules
+        if (game === 'minesweeper') {
+            if (parsedScore <= 0 || parsedScore > 200) {
+                return res.status(400).json({ success: false, error: 'Minesweeper score must be between 1 and 200.' });
+            }
+            if (parsedTime < 2 || parsedTime > 3600) {
+                return res.status(400).json({ success: false, error: 'Minesweeper completion time must be between 2 and 3600 seconds.' });
+            }
+        } else if (game === 'solitaire') {
+            if (parsedScore <= 0 || parsedScore > 1000) {
+                return res.status(400).json({ success: false, error: 'Solitaire score must be between 1 and 1000.' });
+            }
+            if (parsedTime < 10 || parsedTime > 7200) {
+                return res.status(400).json({ success: false, error: 'Solitaire completion time must be between 10 and 7200 seconds.' });
+            }
+        } else {
+            if (parsedScore < 0 || parsedScore > 100000 || parsedTime < 2 || parsedTime > 86400) {
+                return res.status(400).json({ success: false, error: 'Invalid score or completion time bounds.' });
+            }
         }
 
         const id = crypto.randomUUID();

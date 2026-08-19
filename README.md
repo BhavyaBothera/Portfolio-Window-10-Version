@@ -80,10 +80,10 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | TEXT | PRIMARY KEY | Unique UUID v4 |
-| `player` | TEXT | NOT NULL | Player display name |
+| `player` | TEXT | NOT NULL | Player display name (max 50 chars) |
 | `game` | TEXT | NOT NULL | Game identifier (`minesweeper`, `solitaire`) |
-| `score` | INTEGER | NOT NULL | Validated score |
-| `time_seconds` | INTEGER | NOT NULL | Completion duration (>= 2s) |
+| `score` | INTEGER | NOT NULL | Server-validated score bounds (Minesweeper 1-200, Solitaire 1-1000) |
+| `time_seconds` | INTEGER | NOT NULL | Completion duration bounds (Minesweeper >= 2s, Solitaire >= 10s) |
 | `created_at` | TEXT | NOT NULL | ISO 8601 Timestamp |
 
 ### 4. `vfs`
@@ -97,8 +97,9 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 
 ## 🔒 Security & Performance Features
 
-- **Helmet Security Headers**: Content-Security-Policy, X-Content-Type-Options, Referrer-Policy, and Permissions-Policy enabled via Helmet.
-- **Admin Authentication**: Admin endpoints (`GET /api/messages`, `POST /api/notes`, `POST /api/vfs`) protected by `X-Admin-Token` middleware.
+- **Helmet Security Headers**: Strict Content-Security-Policy (with explicit font & CDN allowances for Google Fonts and Font Awesome), X-Content-Type-Options, Referrer-Policy, and Permissions-Policy enabled via Helmet.
+- **Admin Authentication**: Admin write endpoints (`GET /api/messages`, `POST /api/notes`, `POST /api/vfs`) protected by `X-Admin-Token` middleware. Public read routes can also be restricted by setting `RESTRICT_PUBLIC_READ=true`.
+- **Game Leaderboard Plausibility Verification**: Server-side score & time bounds enforcement preventing cheated score injections.
 - **Zero-Eval Math Calculator**: Replaced `eval()` and `Function()` with a custom Shunting-Yard arithmetic AST evaluator supporting numbers, `+`, `-`, `*`, `/`, `%`, and `()`.
 - **IP Rate Limiting**: In-memory rate limiting applied to public submission routes (`/api/contact`, `/api/leaderboard`).
 - **Input Sanitization & Validation**: HTML entity escaping on all user data inputs to eliminate Stored XSS vectors. Strict prototype pollution guards (`__proto__`, `constructor`, `prototype`).
@@ -113,10 +114,10 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 | :--- | :--- | :--- | :--- |
 | `/api/contact` | `POST` | No (Rate Limited) | Submit contact message (validated name, email, message) |
 | `/api/messages` | `GET` | **Yes** (`X-Admin-Token`) | Fetch contact messages inbox |
-| `/api/system/stats` | `GET` | No | Fetch real CPU & RAM server telemetry |
-| `/api/notes` | `GET` | No | Get sticky notes text |
+| `/api/system/stats` | `GET` | Optional (`RESTRICT_PUBLIC_READ`) | Fetch real CPU & RAM server telemetry |
+| `/api/notes` | `GET` | Optional (`RESTRICT_PUBLIC_READ`) | Get sticky notes text |
 | `/api/notes` | `POST` | **Yes** (`X-Admin-Token`) | Save sticky notes text |
-| `/api/vfs` | `GET` | No | Fetch virtual filesystem files |
+| `/api/vfs` | `GET` | Optional (`RESTRICT_PUBLIC_READ`) | Fetch virtual filesystem files |
 | `/api/vfs` | `POST` | **Yes** (`X-Admin-Token`) | Save file to virtual filesystem |
 | `/api/leaderboard/:game` | `GET` | No | Get top game leaderboard scores |
 | `/api/leaderboard` | `POST` | No (Rate Limited) | Submit validated game score |
@@ -141,12 +142,17 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
    cp .env.example .env
    ```
 
-4. **Start Server**:
+4. **Run Verification Test Suite**:
+   ```bash
+   npm test
+   ```
+
+5. **Start Server**:
    ```bash
    npm start
    ```
 
-5. **Access Application**:
+6. **Access Application**:
    Open browser at `http://localhost:5000`
 
 ---
@@ -157,9 +163,9 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 | :--- | :--- | :--- |
 | `PORT` | `5000` | Application server port |
 | `NODE_ENV` | `development` | Node environment (`development` / `production`) |
-| `ADMIN_TOKEN` | Required secret configured in `.env` | Admin API authentication header token |
-
+| `ADMIN_TOKEN` | Secret in `.env` | Admin API authentication header token |
 | `DB_PATH` | `./db/portfolio.sqlite` | SQLite database file location |
+| `RESTRICT_PUBLIC_READ` | `false` | If set to `true`, locks down read endpoints (`/notes`, `/vfs`, `/system/stats`) to admin token |
 
 ---
 

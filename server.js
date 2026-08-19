@@ -61,25 +61,47 @@ app.get('*', (req, res, next) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
+let activeServer = null;
+
 // Asynchronous Server Startup (Ensures SQLite schema initialization completes before listening)
-async function startServer() {
+async function startServer(port = config.port) {
     try {
         await initDatabase();
-        app.listen(config.port, () => {
-            console.log(`\n==================================================`);
-            console.log(`🚀 Windows 10 Full-Stack Portfolio Server Active`);
-            console.log(`🌐 Environment: ${config.env}`);
-            console.log(`🌐 Server Port: ${config.port}`);
-            console.log(`📂 Serving Public Shell: http://localhost:${config.port}`);
-            console.log(`==================================================\n`);
+        return new Promise((resolve, reject) => {
+            activeServer = app.listen(port, () => {
+                if (process.env.NODE_ENV !== 'test') {
+                    console.log(`\n==================================================`);
+                    console.log(`🚀 Windows 10 Full-Stack Portfolio Server Active`);
+                    console.log(`🌐 Environment: ${config.env}`);
+                    console.log(`🌐 Server Port: ${port}`);
+                    console.log(`📂 Serving Public Shell: http://localhost:${port}`);
+                    console.log(`==================================================\n`);
+                }
+                resolve(activeServer);
+            });
+            activeServer.on('error', reject);
         });
     } catch (err) {
         console.error('Failed to initialize database and start server:', err);
-        process.exit(1);
+        if (process.env.NODE_ENV !== 'test') {
+            process.exit(1);
+        }
+        throw err;
     }
 }
 
-startServer();
+async function stopServer() {
+    if (activeServer) {
+        return new Promise((resolve) => activeServer.close(resolve));
+    }
+}
+
+if (require.main === module) {
+    startServer();
+}
 
 module.exports = app;
+module.exports.startServer = startServer;
+module.exports.stopServer = stopServer;
+
 

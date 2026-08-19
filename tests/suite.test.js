@@ -1,14 +1,19 @@
-const { test, describe } = require('node:test');
+process.env.NODE_ENV = 'test';
+
+const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const http = require('http');
 const config = require('../src/config/env');
 const { evaluateExpression } = require('../public/js/utils/math-evaluator.js');
+const { startServer, stopServer } = require('../server.js');
+
+let testPort = config.port || 5000;
 
 function testEndpoint(path, method = 'GET', data = null, headers = {}) {
     return new Promise((resolve, reject) => {
         const options = {
             hostname: '127.0.0.1',
-            port: 5000,
+            port: testPort,
             path,
             method,
             headers: {
@@ -30,6 +35,14 @@ function testEndpoint(path, method = 'GET', data = null, headers = {}) {
 }
 
 describe('Windows 10 Portfolio OS Node:Test Suite', () => {
+
+    before(async () => {
+        await startServer(testPort);
+    });
+
+    after(async () => {
+        await stopServer();
+    });
 
     describe('1. Math Evaluator Unit Tests', () => {
         test('Basic Addition (12 + 8)', () => {
@@ -93,6 +106,16 @@ describe('Windows 10 Portfolio OS Node:Test Suite', () => {
         test('Leaderboard Validation (0s time -> 400)', async () => {
             const res = await testEndpoint('/api/leaderboard', 'POST', { player: 'Cheater', game: 'minesweeper', score: 100, time_seconds: 0 });
             assert.equal(res.status, 400);
+        });
+
+        test('Leaderboard Validation (Unplausible Minesweeper Score -> 400)', async () => {
+            const res = await testEndpoint('/api/leaderboard', 'POST', { player: 'Hacker', game: 'minesweeper', score: 9999, time_seconds: 5 });
+            assert.equal(res.status, 400);
+        });
+
+        test('Leaderboard Submission (Valid Minesweeper Score -> 201)', async () => {
+            const res = await testEndpoint('/api/leaderboard', 'POST', { player: 'Pro Gamer', game: 'minesweeper', score: 100, time_seconds: 15 });
+            assert.equal(res.status, 201);
         });
 
         test('Real CPU Telemetry & Anonymized Host (200 OK)', async () => {

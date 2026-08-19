@@ -5,7 +5,7 @@ const contactController = require('../controllers/contact.controller');
 const systemController = require('../controllers/system.controller');
 const leaderboardController = require('../controllers/leaderboard.controller');
 
-const { requireAdminAuth } = require('../middleware/auth.middleware');
+const { requireAdminAuth, optionalPublicReadAuth } = require('../middleware/auth.middleware');
 const { createRateLimiter } = require('../middleware/rateLimiter');
 
 // Rate limiters for public endpoints
@@ -19,10 +19,10 @@ router.post('/contact', contactRateLimiter, contactController.submitContactMessa
 router.get('/messages', requireAdminAuth, contactController.getContactMessages);
 
 // System Telemetry & Utilities
-router.get('/system/stats', publicReadRateLimiter, systemController.getSystemStats);
-router.get('/notes', publicReadRateLimiter, systemController.getNotes);
+router.get('/system/stats', optionalPublicReadAuth, publicReadRateLimiter, systemController.getSystemStats);
+router.get('/notes', optionalPublicReadAuth, publicReadRateLimiter, systemController.getNotes);
 router.post('/notes', requireAdminAuth, adminWriteRateLimiter, systemController.saveNotes);
-router.get('/vfs', publicReadRateLimiter, systemController.getVFS);
+router.get('/vfs', optionalPublicReadAuth, publicReadRateLimiter, systemController.getVFS);
 router.post('/vfs', requireAdminAuth, adminWriteRateLimiter, systemController.saveVFS);
 
 // Game Leaderboard API

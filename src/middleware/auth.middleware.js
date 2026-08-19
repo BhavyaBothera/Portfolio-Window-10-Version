@@ -22,6 +22,14 @@ function requireAdminAuth(req, res, next) {
     next();
 }
 
+function optionalPublicReadAuth(req, res, next) {
+    if (config.restrictPublicRead) {
+        return requireAdminAuth(req, res, next);
+    }
+    next();
+}
+
 module.exports = {
-    requireAdminAuth
+    requireAdminAuth,
+    optionalPublicReadAuth
 };

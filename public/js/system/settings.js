@@ -37,9 +37,17 @@ export function initSettings() {
             const wpUrl = card.dataset.wallpaper;
             const desktopWp = document.getElementById('desktop-wallpaper');
             if (desktopWp && wpUrl) {
-                desktopWp.style.backgroundImage = `url('${wpUrl}')`;
-                state.currentWallpaperIdx = idx;
-                setItem('win10-wallpaper', wpUrl);
+                const img = new Image();
+                img.onload = () => {
+                    desktopWp.style.backgroundImage = `url('${wpUrl}')`;
+                    state.currentWallpaperIdx = idx;
+                    setItem('win10-wallpaper', wpUrl);
+                };
+                img.onerror = () => {
+                    desktopWp.style.backgroundImage = `url('assets/wallpaper.png')`;
+                    setItem('win10-wallpaper', 'assets/wallpaper.png');
+                };
+                img.src = wpUrl;
             }
             playSound('click');
         });

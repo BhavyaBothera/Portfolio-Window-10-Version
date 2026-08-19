@@ -26,7 +26,8 @@ const config = {
     port: parseInt(process.env.PORT || '5000', 10),
     adminToken: devFallbackToken,
     dbPath: process.env.DB_PATH || path.join(__dirname, '../../db/portfolio.sqlite'),
-    corsOrigin: corsOrigin
+    corsOrigin: corsOrigin,
+    restrictPublicRead: (process.env.RESTRICT_PUBLIC_READ || 'false').toLowerCase() === 'true'
 };
 
 module.exports = config;
