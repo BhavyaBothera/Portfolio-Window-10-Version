@@ -46,6 +46,9 @@ let previewTimeout = null;
 export function updateTaskbarPills() {
     const taskbarAppsContainer = document.getElementById('taskbar-apps-container');
     if (!taskbarAppsContainer) return;
+
+    taskbarAppsContainer.setAttribute('role', 'toolbar');
+    taskbarAppsContainer.setAttribute('aria-label', 'Active Applications');
     taskbarAppsContainer.innerHTML = '';
 
     const previewPopover = document.getElementById('taskbar-preview-popover');
@@ -59,15 +62,27 @@ export function updateTaskbarPills() {
         const tile = document.createElement('div');
         tile.className = `taskbar-app-tile${isActive ? ' active' : ''}${isMinimized ? ' minimized' : ''}`;
         tile.title = meta.label;
+        tile.setAttribute('role', 'button');
+        tile.setAttribute('tabindex', '0');
+        tile.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tile.setAttribute('aria-label', `${meta.label} Window (${isActive ? 'Active' : isMinimized ? 'Minimized' : 'Open'})`);
         tile.innerHTML = `<i class="${meta.icon}"></i>`;
 
-        tile.addEventListener('click', () => {
+        const onTileClick = () => {
             if (isActive) {
                 minimizeWindow(winId);
             } else {
                 openWindow(winId);
             }
             if (previewPopover) previewPopover.classList.add('hidden');
+        };
+
+        tile.addEventListener('click', onTileClick);
+        tile.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onTileClick();
+            }
         });
 
         tile.addEventListener('mouseenter', () => {

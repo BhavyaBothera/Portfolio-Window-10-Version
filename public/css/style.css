@@ -6606,13 +6606,22 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     outline-offset: 2px !important;
 }
 
-/* Reduced Motion Mode */
+/* Reduced Motion Mode (WCAG 2.1 Success Criterion 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: 0.001ms !important;
         scroll-behavior: auto !important;
+    }
+    .boot-logo, .spinner-dot, .hero-status-pulse, .unlock-hint, .boot-spinner {
+        animation: none !important;
+    }
+    .win-opening, .win-closing {
+        animation: none !important;
+    }
+    .lock-screen, .lock-screen-bg {
+        transition: none !important;
     }
 }
 
