@@ -8,7 +8,7 @@ export const state = {
     accentColor: getItem('win10-accent', '#0078d7'),
     currentWallpaperIdx: 0,
     wallpapers: [
-        'assets/wallpaper.png',
+        'assets/wallpaper.webp',
         'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?auto=format&fit=crop&w=1920&q=80',
         'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80',
         'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=80'

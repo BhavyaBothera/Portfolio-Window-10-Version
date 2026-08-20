@@ -10,3 +10,5 @@ db/*.tmp
 *.log
 playwright-report/
 test-results/
+lighthouse*.json
+perf-audit.js

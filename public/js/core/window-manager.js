@@ -235,6 +235,7 @@ export function attachWindowEvents(winEl) {
 
     // Window Dragging & Aero Snap
     let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
+    let dragFrameId = null;
 
     titlebar?.addEventListener('mousedown', (e) => {
         if (e.target.closest('.win-controls')) return;
@@ -243,6 +244,7 @@ export function attachWindowEvents(winEl) {
         dragOffsetX = e.clientX - winEl.offsetLeft;
         dragOffsetY = e.clientY - winEl.offsetTop;
         winEl.style.transition = 'none';
+        winEl.style.willChange = 'left, top';
         focusWindow(windowId);
     });
 
@@ -250,8 +252,12 @@ export function attachWindowEvents(winEl) {
         if (!isDragging) return;
         const newX = e.clientX - dragOffsetX;
         const newY = e.clientY - dragOffsetY;
-        winEl.style.left = `${newX}px`;
-        winEl.style.top = `${Math.max(0, newY)}px`;
+
+        if (dragFrameId) cancelAnimationFrame(dragFrameId);
+        dragFrameId = requestAnimationFrame(() => {
+            winEl.style.left = `${newX}px`;
+            winEl.style.top = `${Math.max(0, newY)}px`;
+        });
 
         const snapPreview = document.getElementById('snap-preview-box');
         if (snapPreview) {
@@ -290,6 +296,7 @@ export function attachWindowEvents(winEl) {
         if (!isDragging) return;
         isDragging = false;
         winEl.style.transition = '';
+        winEl.style.willChange = 'auto';
 
         const taskbarH = 40;
         const winW = window.innerWidth;

@@ -44,8 +44,8 @@ export function initSettings() {
                     setItem('win10-wallpaper', wpUrl);
                 };
                 img.onerror = () => {
-                    desktopWp.style.backgroundImage = `url('assets/wallpaper.png')`;
-                    setItem('win10-wallpaper', 'assets/wallpaper.png');
+                    desktopWp.style.backgroundImage = `url('assets/wallpaper.webp')`;
+                    setItem('win10-wallpaper', 'assets/wallpaper.webp');
                 };
                 img.src = wpUrl;
             }
