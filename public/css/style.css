@@ -2848,6 +2848,48 @@ body, html {
     color: #ffffff;
 }
 
+/* ==========================================================================
+   MOBILE TOUCH TASK-SWITCHER BAR
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+    .mobile-task-bar {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 38px;
+        background: rgba(20, 20, 24, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 99999;
+        align-items: center;
+        padding: 0 10px;
+        gap: 8px;
+        overflow-x: auto;
+    }
+
+    .mobile-task-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 12px;
+        color: #fff;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .mobile-task-pill.active {
+        background: var(--win-accent);
+        border-color: var(--win-accent);
+    }
+}
+
 .td-name i {
     font-size: 1rem;
     flex-shrink: 0;

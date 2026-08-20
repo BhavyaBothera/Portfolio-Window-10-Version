@@ -7,7 +7,7 @@ const config = require('../src/config/env');
 const { evaluateExpression } = require('../public/js/utils/math-evaluator.js');
 const { startServer, stopServer } = require('../server.js');
 
-let testPort = config.port || 5000;
+let testPort = process.env.TEST_PORT ? parseInt(process.env.TEST_PORT, 10) : 5005;
 
 function testEndpoint(path, method = 'GET', data = null, headers = {}) {
     return new Promise((resolve, reject) => {

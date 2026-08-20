@@ -9,7 +9,7 @@ import { initTaskbar } from './system/taskbar.js';
 import { initStartMenu } from './system/start-menu.js';
 import { initSettings } from './system/settings.js';
 import { initContextMenu } from './system/context-menu.js';
-import { initWindowManager, openWindow } from './core/window-manager.js';
+import { initWindowManager, openWindow, registerAppInitializer } from './core/window-manager.js';
 import { playSound } from './core/audio.js';
 
 // Import App Initializers
@@ -41,22 +41,30 @@ document.addEventListener('DOMContentLoaded', () => {
     initContextMenu();
     initWindowManager();
 
-    // 2. Initialize App Functionality
-    initCalculator();
-    initEdgeBrowser();
-    initCmdTerminal();
-    initVsCode();
-    initNotepad();
-    initPaintCanvas();
-    initMinesweeper();
-    initSolitaireGame();
-    initCortana();
-    initThisPC();
-    initProjectsExplorer();
-    initExperienceTimeline();
-    initContactForm();
-    initStickyNotes();
-    initGrooveMusic();
+    // 2. Register App Initializers for Lazy Window Instantiation
+    registerAppInitializer('calculator', initCalculator);
+    registerAppInitializer('edge', initEdgeBrowser);
+    registerAppInitializer('cmd', initCmdTerminal);
+    registerAppInitializer('vscode', initVsCode);
+    registerAppInitializer('notepad', initNotepad);
+    registerAppInitializer('paint', initPaintCanvas);
+    registerAppInitializer('minesweeper', initMinesweeper);
+    registerAppInitializer('solitaire', initSolitaireGame);
+    registerAppInitializer('cortana', initCortana);
+    registerAppInitializer('this-pc', initThisPC);
+    registerAppInitializer('projects', initProjectsExplorer);
+    registerAppInitializer('skills', animateSkillsBars);
+    registerAppInitializer('experience', initExperienceTimeline);
+    registerAppInitializer('contact', initContactForm);
+    registerAppInitializer('stickynotes', initStickyNotes);
+    registerAppInitializer('mediaplayer', initGrooveMusic);
+    registerAppInitializer('taskmgr', startTaskManagerUpdates);
+
+    // Run initializers for any windows pre-rendered in DOM at boot
+    if (document.getElementById('win-this-pc')) initThisPC();
+    if (document.getElementById('win-projects')) initProjectsExplorer();
+    if (document.getElementById('win-calculator')) initCalculator();
+    if (document.getElementById('win-notepad')) initNotepad();
 
     // 3. Desktop Icons Interaction & Accessibility
     const desktopIcons = Array.from(document.querySelectorAll('.desktop-icon'));
