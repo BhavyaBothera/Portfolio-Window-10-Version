@@ -1,4 +1,4 @@
-import { getItem, getJSON } from './storage.js';
+import { getItem } from './storage.js';
 
 export const state = {
     openWindows: [],

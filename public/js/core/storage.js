@@ -20,21 +20,3 @@ export function setItem(key, value) {
         console.warn(`[Storage] Failed to write ${key} to localStorage:`, e.message);
     }
 }
-
-export function getJSON(key, fallback = null) {
-    try {
-        const raw = getItem(key);
-        return raw ? JSON.parse(raw) : fallback;
-    } catch (e) {
-        console.warn(`[Storage] Failed to parse JSON for ${key}:`, e.message);
-        return fallback;
-    }
-}
-
-export function setJSON(key, data) {
-    try {
-        setItem(key, JSON.stringify(data));
-    } catch (e) {
-        console.warn(`[Storage] Failed to stringify JSON for ${key}:`, e.message);
-    }
-}

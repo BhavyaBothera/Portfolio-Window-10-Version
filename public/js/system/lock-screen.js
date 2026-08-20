@@ -37,10 +37,8 @@ export function initLockScreen() {
     window.lockOS = lockOS;
     window.unlockOS = unlockOS;
 
-    lockScreen.addEventListener('click', (e) => {
-        if (e.target.closest('#unlock-btn')) {
-            unlockOS();
-        } else if (!lockScreen.classList.contains('sign-in-mode')) {
+    lockScreen.addEventListener('click', () => {
+        if (!lockScreen.classList.contains('sign-in-mode')) {
             showSignInStage();
         }
     });
