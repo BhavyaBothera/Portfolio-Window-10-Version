@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e"
   },
-
   "keywords": [
     "portfolio",
     "windows10",
@@ -25,5 +26,8 @@
     "express": "^4.19.2",
     "helmet": "^8.3.0",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1"
   }
 }

@@ -8,4 +8,5 @@ db/*.db
 db/*.bak
 db/*.tmp
 *.log
-
+playwright-report/
+test-results/
