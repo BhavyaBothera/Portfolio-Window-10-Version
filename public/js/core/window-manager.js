@@ -356,9 +356,24 @@ export const ResizeController = {
 // 7. MOBILE ADAPTATION CONTROLLER
 // ----------------------------------------------------------------------------
 export const MobileAdaptation = {
-    checkAutoMaximize(winEl) {
+    checkAutoMaximize(winEl, activeWindowId) {
         if (window.innerWidth <= 768 && winEl) {
             winEl.classList.add('maximized');
+
+            // Enforce Single-Window Focus on Mobile: Minimize other open windows
+            state.openWindows.forEach(id => {
+                if (id !== activeWindowId) {
+                    const otherWin = document.getElementById(`win-${id}`);
+                    if (otherWin) {
+                        otherWin.classList.add('minimized');
+                        otherWin.classList.remove('active');
+                    }
+                }
+            });
+
+            if (typeof window.hideMobileOverlays === 'function') {
+                window.hideMobileOverlays();
+            }
         }
     }
 };
@@ -394,7 +409,7 @@ export const LifecycleManager = {
             if (!state.openWindows.includes(windowId)) {
                 state.openWindows.push(windowId);
             }
-            MobileAdaptation.checkAutoMaximize(winEl);
+            MobileAdaptation.checkAutoMaximize(winEl, windowId);
         } else if (winEl.classList.contains('minimized')) {
             winEl.classList.remove('minimized');
             winEl.classList.add('win-opening');

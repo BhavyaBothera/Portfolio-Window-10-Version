@@ -2010,6 +2010,34 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
             </div>
         </div>
 
+        <!-- ==================== MOBILE NAVIGATION BAR ==================== -->
+        <div id="mobile-nav-bar" class="mobile-nav-bar">
+            <button id="mobile-back-btn" class="mobile-nav-btn" title="Back" aria-label="Back"><i class="fa-solid fa-chevron-left"></i></button>
+            <button id="mobile-home-btn" class="mobile-nav-btn" title="App Launcher" aria-label="App Launcher"><i class="fa-brands fa-windows"></i></button>
+            <button id="mobile-switcher-btn" class="mobile-nav-btn" title="Task Switcher" aria-label="Task Switcher"><i class="fa-solid fa-table-cells"></i></button>
+        </div>
+
+        <!-- ==================== MOBILE APP LAUNCHER OVERLAY ==================== -->
+        <div id="mobile-app-launcher" class="mobile-app-launcher hidden">
+            <div class="mobile-launcher-header">
+                <div class="mobile-launcher-title"><i class="fa-brands fa-windows text-blue mr-2"></i> Applications</div>
+                <div class="mobile-launcher-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="mobile-launcher-search-input" placeholder="Search apps (e.g. Projects, Solitaire, Calculator)..." autocomplete="off">
+                </div>
+            </div>
+            <div class="mobile-launcher-tiles-grid" id="mobile-launcher-grid"></div>
+        </div>
+
+        <!-- ==================== MOBILE TASK SWITCHER OVERLAY ==================== -->
+        <div id="mobile-task-switcher" class="mobile-task-switcher hidden">
+            <div class="mobile-switcher-header">
+                <span><i class="fa-solid fa-table-cells text-cyan mr-2"></i> Open Apps</span>
+                <button id="mobile-switcher-close-all" class="mobile-switcher-close-all-btn"><i class="fa-solid fa-trash-can mr-1"></i> Close All</button>
+            </div>
+            <div id="mobile-switcher-cards-container" class="mobile-switcher-cards-container"></div>
+        </div>
+
         <!-- ==================== CONTEXT MENU ==================== -->
         <div id="context-menu" class="context-menu hidden">
             <div class="context-item" id="ctx-refresh"><i class="fa-solid fa-rotate-right"></i> Refresh</div>
