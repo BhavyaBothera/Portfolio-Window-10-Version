@@ -30,6 +30,7 @@ import { initContactForm } from './apps/contact.js';
 import { initStickyNotes } from './apps/stickynotes.js';
 import { initGrooveMusic } from './apps/mediaplayer.js';
 import { startTaskManagerUpdates } from './apps/task-manager.js';
+import { initArchitectureApp } from './apps/architecture.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize Core Systems
@@ -59,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     registerAppInitializer('stickynotes', initStickyNotes);
     registerAppInitializer('mediaplayer', initGrooveMusic);
     registerAppInitializer('taskmgr', startTaskManagerUpdates);
+    registerAppInitializer('architecture', initArchitectureApp);
 
     // Run initializers for any windows pre-rendered in DOM at boot
     if (document.getElementById('win-this-pc')) initThisPC();
@@ -83,6 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.classList.add('selected');
             playSound('click');
         });
+    });
+
+    // Delegated dblclick handler for desktop icons
+    document.addEventListener('dblclick', (e) => {
+        const icon = e.target.closest('.desktop-icon');
+        if (icon) {
+            const winId = icon.dataset.window;
+            if (winId) openWindow(winId);
+        }
     });
 
     // Delegated click handler for non-inline data-window triggers (e.g. ribbon, tree, folder cards)

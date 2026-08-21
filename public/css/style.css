@@ -6600,6 +6600,269 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .desktop-icon
     -webkit-user-select: none !important;
 }
 
+/* ==========================================================================
+   SYSTEM ARCHITECTURE WINDOW STYLES
+   ========================================================================== */
+.arch-window-body {
+    display: flex;
+    flex-direction: column;
+    background: #0f172a;
+    color: #f8fafc;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.arch-nav-bar {
+    display: flex;
+    background: #1e293b;
+    border-bottom: 1px solid #334155;
+    padding: 0 16px;
+    gap: 8px;
+}
+
+.arch-nav-tab {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #94a3b8;
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.arch-nav-tab:hover {
+    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.arch-nav-tab.active {
+    color: #00d2ff;
+    border-bottom-color: #00d2ff;
+    background: rgba(0, 210, 255, 0.06);
+}
+
+.arch-tab-pane {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.arch-hero-banner {
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.arch-hero-banner h2 {
+    font-size: 1.25rem;
+    color: #00d2ff;
+    margin-bottom: 8px;
+}
+
+.arch-hero-banner p {
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+/* Flowchart Diagram */
+.arch-flow-container {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.arch-flow-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.arch-flow-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px 0;
+}
+
+.arch-flow-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #0f172a;
+    border: 1px solid #475569;
+    border-radius: 6px;
+    padding: 12px 10px;
+    min-width: 105px;
+    text-align: center;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.arch-flow-node:hover {
+    transform: translateY(-2px);
+    border-color: #00d2ff;
+}
+
+.arch-flow-node i {
+    font-size: 1.3rem;
+    margin-bottom: 6px;
+}
+
+.node-client i { color: #38bdf8; }
+.node-shell i { color: #a855f7; }
+.node-wm i { color: #00d2ff; }
+.node-apps i { color: #f59e0b; }
+.node-api i { color: #22c55e; }
+.node-db i { color: #ef4444; }
+
+.node-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.node-sub {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+
+.arch-flow-arrow {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+/* Cards Grid */
+.arch-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.arch-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.arch-card-header {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.arch-card p {
+    font-size: 0.84rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+}
+
+/* Specs & Metrics */
+.arch-section-header {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #38bdf8;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.arch-spec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 14px;
+}
+
+.arch-spec-item {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 6px;
+    padding: 14px;
+}
+
+.spec-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #00d2ff;
+    margin-bottom: 4px;
+}
+
+.spec-desc {
+    font-size: 0.83rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
+.arch-metrics-banner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+}
+
+.metric-box {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.metric-val {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.metric-lbl {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.arch-qa-info {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 18px;
+}
+
+.arch-qa-info h3 {
+    font-size: 1rem;
+    color: #a855f7;
+    margin-bottom: 6px;
+}
+
+.arch-qa-info p {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+}
+
 /* Visible Focus Rings for Keyboard Navigation */
 :focus-visible {
     outline: 2px solid #00d2ff !important;

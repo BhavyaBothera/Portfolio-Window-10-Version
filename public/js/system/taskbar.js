@@ -22,6 +22,7 @@ const windowMeta = {
     'taskmgr': { icon: 'fa-solid fa-chart-line text-green', label: 'Task Manager' },
     'stickynotes': { icon: 'fa-solid fa-note-sticky text-yellow', label: 'Sticky Notes' },
     'mediaplayer': { icon: 'fa-solid fa-compact-disc text-purple', label: 'Groove Music' },
+    'architecture': { icon: 'fa-solid fa-sitemap text-cyan', label: 'System Architecture' },
     'solitaire': { icon: 'fa-solid fa-heart text-red', label: 'Solitaire' }
 };
 
