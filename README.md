@@ -2,6 +2,11 @@
 
 An interactive, full-stack **Windows 10 Web Desktop Application** built with Node.js, Express, SQLite, and a modular Vanilla JavaScript ES Module Web OS engine.
 
+[![Tests Status](https://img.shields.io/badge/Tests-88%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
+[![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
+[![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
+[![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
+
 ---
 
 ## 🌟 Features & OS Applications
@@ -154,6 +159,23 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 
 6. **Access Application**:
    Open browser at `http://localhost:5000`
+
+---
+
+## 🚀 Continuous Integration & Automated Testing Pipeline
+
+Every `git push` and `pull_request` to `main` triggers the GitHub Actions CI Pipeline ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)):
+
+```
+git push origin main
+      ↓
+npm ci ──> npm run lint ──> npm run build ──> npm test ──> npx playwright install ──> npm run test:e2e
+```
+
+- **Syntax & Lint Verification**: `npm run lint` checks JavaScript files for syntax errors using `node --check`.
+- **Build Check**: `npm run build` verifies static bundle structure and Express route imports.
+- **Backend Unit, Integration & Security Tests**: `npm test` executes 38 tests across `tests/unit/`, `tests/integration/`, and `tests/security/`.
+- **Playwright E2E Tests**: `npm run test:e2e` executes 50 browser automation tests covering boot, window manager, start menu, taskbar, accessibility ARIA, and mobile viewports.
 
 ---
 
