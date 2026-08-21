@@ -1,5 +1,6 @@
 import { state } from './state.js';
 import { playSound } from './audio.js';
+import { showToast } from './notifications.js';
 import { updateTaskbarPills } from '../system/taskbar.js';
 
 /**
@@ -368,7 +369,16 @@ export const MobileAdaptation = {
 export const LifecycleManager = {
     open(windowId) {
         const winEl = WindowRegistry.getOrInstantiate(windowId);
-        if (!winEl) return;
+        if (!winEl) {
+            playSound('error');
+            showToast(
+                'Application Not Found',
+                `The application "${windowId}" is not installed on this system.`,
+                'fa-solid fa-circle-exclamation',
+                'Windows OS'
+            );
+            return;
+        }
 
         FocusManager.saveActiveElement();
         winEl.classList.remove('win-closing');

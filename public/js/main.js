@@ -11,6 +11,7 @@ import { initSettings } from './system/settings.js';
 import { initContextMenu } from './system/context-menu.js';
 import { initWindowManager, openWindow, registerAppInitializer } from './core/window-manager.js';
 import { playSound } from './core/audio.js';
+import { initErrorBoundary } from './utils/error-boundary.js';
 
 // Import App Initializers
 import { initCalculator } from './apps/calculator.js';
@@ -33,6 +34,9 @@ import { startTaskManagerUpdates } from './apps/task-manager.js';
 import { initArchitectureApp } from './apps/architecture.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 0. Initialize Global Error Boundary & Resilience Guards
+    initErrorBoundary();
+
     // 1. Initialize Core Systems
     initBootScreen();
     initLockScreen();

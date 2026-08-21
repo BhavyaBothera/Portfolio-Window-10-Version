@@ -50,7 +50,12 @@ export function initContactForm() {
                 body: JSON.stringify({ name, email, subject, message })
             });
 
-            const data = await res.json();
+            let data = {};
+            try {
+                data = await res.json();
+            } catch (e) {
+                data = { success: false, error: 'Invalid response from server' };
+            }
 
             if (res.ok && data.success) {
                 showToast('Message Sent!', 'Thank you! Your message has been delivered to Bhavy\'s portfolio inbox.', 'fa-solid fa-paper-plane', 'Windows Mail');
