@@ -73,12 +73,24 @@ function renderTaskManager(data) {
     }
 
     // Update text labels
-    const cpuPercentText = document.getElementById('tm-cpu-percent');
+    const cpuPercentText = document.getElementById('cpu-percent-val');
     if (cpuPercentText) cpuPercentText.textContent = `${data.cpu.percent}%`;
 
-    const ramPercentText = document.getElementById('tm-ram-percent');
-    if (ramPercentText) ramPercentText.textContent = `${data.memory.percent}% (${data.memory.used_gb} GB / ${data.memory.total_gb} GB)`;
+    const ramPercentText = document.getElementById('ram-percent-val');
+    if (ramPercentText) ramPercentText.textContent = `${data.memory.used_gb} / ${data.memory.total_gb} GB (${data.memory.percent}%)`;
 
-    const cpuModelText = document.getElementById('tm-cpu-model');
-    if (cpuModelText) cpuModelText.textContent = data.cpu.model;
+    // Update Real Server Observability & Telemetry Metrics
+    if (data.telemetry) {
+        const apiLatEl = document.getElementById('tm-api-latency');
+        if (apiLatEl) apiLatEl.textContent = `${data.telemetry.avg_api_latency_ms || 0} ms`;
+
+        const dbLatEl = document.getElementById('tm-db-latency');
+        if (dbLatEl) dbLatEl.textContent = `${data.telemetry.avg_db_latency_ms || 0} ms`;
+
+        const reqCountEl = document.getElementById('tm-total-requests');
+        if (reqCountEl) reqCountEl.textContent = String(data.telemetry.total_requests || 0);
+
+        const errRateEl = document.getElementById('tm-error-rate');
+        if (errRateEl) errRateEl.textContent = `${data.telemetry.error_rate_percent || 0}%`;
+    }
 }

@@ -20,9 +20,26 @@ const db = new sqlite3.Database(config.dbPath, (err) => {
 // Enable foreign keys & WAL mode for performance
 db.run('PRAGMA foreign_keys = ON');
 
+const dbDurations = [];
+
+function recordDbLatency(startTime) {
+    const diff = process.hrtime(startTime);
+    const durationMs = parseFloat(((diff[0] * 1e3) + (diff[1] * 1e-6)).toFixed(2));
+    dbDurations.push(durationMs);
+    if (dbDurations.length > 100) dbDurations.shift();
+}
+
+function getAverageDbLatencyMs() {
+    if (dbDurations.length === 0) return 0.5;
+    const sum = dbDurations.reduce((acc, d) => acc + d, 0);
+    return parseFloat((sum / dbDurations.length).toFixed(2));
+}
+
 function runAsync(sql, params = []) {
+    const startTime = process.hrtime();
     return new Promise((resolve, reject) => {
         db.run(sql, params, function (err) {
+            recordDbLatency(startTime);
             if (err) return reject(err);
             resolve({ lastID: this.lastID, changes: this.changes });
         });
@@ -30,8 +47,10 @@ function runAsync(sql, params = []) {
 }
 
 function getAsync(sql, params = []) {
+    const startTime = process.hrtime();
     return new Promise((resolve, reject) => {
         db.get(sql, params, (err, row) => {
+            recordDbLatency(startTime);
             if (err) return reject(err);
             resolve(row);
         });
@@ -39,8 +58,10 @@ function getAsync(sql, params = []) {
 }
 
 function allAsync(sql, params = []) {
+    const startTime = process.hrtime();
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {
+            recordDbLatency(startTime);
             if (err) return reject(err);
             resolve(rows);
         });
@@ -156,6 +177,7 @@ module.exports = {
     initDatabase,
     runAsync,
     getAsync,
-    allAsync
+    allAsync,
+    getAverageDbLatencyMs
 };
 

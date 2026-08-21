@@ -7,10 +7,14 @@ const config = require('./src/config/env');
 const apiRoutes = require('./src/routes/api.routes');
 const errorHandler = require('./src/middleware/errorHandler');
 const notFoundHandler = require('./src/middleware/notFound');
+const { observabilityMiddleware } = require('./src/middleware/observability.middleware');
 
 const { initDatabase } = require('./src/database/database');
 
 const app = express();
+
+// Mount Zero-PII Server Observability Middleware
+app.use(observabilityMiddleware);
 
 // Enable reverse proxy trust for accurate client IP rate limiting
 app.set('trust proxy', 1);

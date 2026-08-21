@@ -1,6 +1,7 @@
 const os = require('os');
 const path = require('path');
-const { getAsync, runAsync, allAsync } = require('../database/database');
+const { getTelemetryMetrics } = require('../middleware/observability.middleware');
+const { getAsync, runAsync, allAsync, getAverageDbLatencyMs } = require('../database/database');
 
 const FORBIDDEN_VFS_KEYS = ['__proto__', 'constructor', 'prototype'];
 
@@ -39,12 +40,14 @@ exports.getSystemStats = (req, res) => {
     const ramPercent = Math.round((usedMem / totalMem) * 100);
 
     const realCpuPercent = calculateRealCpuUsage();
+    const telemetry = getTelemetryMetrics();
+    telemetry.avg_db_latency_ms = getAverageDbLatencyMs();
 
     return res.json({
         success: true,
         meta: {
             simulation: true,
-            note: 'CPU utilization % and RAM metrics represent real server telemetry. Host identity specs (hostname, model, platform) are simulated Win10 OS environment attributes.'
+            note: 'CPU %, RAM %, API Latency, Database Latency, and HTTP Status Codes represent real server telemetry. Host identity attributes are simulated Win10 OS environment specs.'
         },
         cpu: {
             percent: realCpuPercent,
@@ -57,6 +60,7 @@ exports.getSystemStats = (req, res) => {
             free_gb: (freeMem / 1073741824).toFixed(1),
             percent: ramPercent
         },
+        telemetry,
         system: {
             platform: 'win32',
             arch: 'x64',

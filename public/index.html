@@ -1695,14 +1695,44 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
                     <div id="taskmgr-tab-performance" class="taskmgr-pane">
                         <div class="taskmgr-graph-grid">
                             <div class="graph-card">
-                                <div class="graph-header"><span>CPU Usage</span><span id="cpu-percent-val" class="graph-val text-cyan">18%</span></div>
+                                <div class="graph-header"><span><i class="fa-solid fa-bolt text-green mr-1"></i> CPU Usage (Real Telemetry)</span><span id="cpu-percent-val" class="graph-val text-cyan">18%</span></div>
                                 <canvas id="cpu-graph-canvas" height="120"></canvas>
-                                <div class="graph-footer">3.40 GHz • 8 Cores • Portfolio OS Core</div>
+                                <div class="graph-footer">Real Server Sampling • Virtual OS Web Core</div>
                             </div>
                             <div class="graph-card">
-                                <div class="graph-header"><span>Memory (RAM)</span><span id="ram-percent-val" class="graph-val text-purple">4.2 / 16.0 GB (26%)</span></div>
+                                <div class="graph-header"><span><i class="fa-solid fa-memory text-purple mr-1"></i> Memory RAM (Real Telemetry)</span><span id="ram-percent-val" class="graph-val text-purple">4.2 / 16.0 GB (26%)</span></div>
                                 <canvas id="ram-graph-canvas" height="120"></canvas>
-                                <div class="graph-footer">DDR4 3200 MHz • Smooth Web Audio Synthesizer</div>
+                                <div class="graph-footer">Real Node.js Server Telemetry • Host Memory</div>
+                            </div>
+                        </div>
+
+                        <!-- Real Server Telemetry & Observability Panel -->
+                        <div class="taskmgr-telemetry-panel" style="margin-top: 14px; padding: 14px; background: rgba(30, 41, 59, 0.7); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                            <div class="telemetry-panel-title" style="font-weight: 700; color: #f8fafc; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                                <span><i class="fa-solid fa-gauge-high text-cyan mr-1"></i> ⚡ Actual Server Telemetry & Observability</span>
+                                <span class="badge-tag" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Live Express & SQLite Metrics</span>
+                            </div>
+                            <div class="telemetry-metrics-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;">
+                                <div class="telemetry-metric-tile" style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px;">
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">API Latency</div>
+                                    <div id="tm-api-latency" style="font-size: 1.1rem; font-weight: 700; color: #38bdf8;">0.0 ms</div>
+                                </div>
+                                <div class="telemetry-metric-tile" style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px;">
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">SQLite DB Latency</div>
+                                    <div id="tm-db-latency" style="font-size: 1.1rem; font-weight: 700; color: #a78bfa;">0.0 ms</div>
+                                </div>
+                                <div class="telemetry-metric-tile" style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px;">
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">Total HTTP Requests</div>
+                                    <div id="tm-total-requests" style="font-size: 1.1rem; font-weight: 700; color: #34d399;">0</div>
+                                </div>
+                                <div class="telemetry-metric-tile" style="background: rgba(15, 23, 42, 0.6); padding: 8px; border-radius: 6px;">
+                                    <div style="font-size: 0.75rem; color: #94a3b8;">Error Rate</div>
+                                    <div id="tm-error-rate" style="font-size: 1.1rem; font-weight: 700; color: #f87171;">0.0%</div>
+                                </div>
+                            </div>
+                            <div class="telemetry-subinfo" style="margin-top: 10px; font-size: 0.78rem; color: #94a3b8; display: flex; justify-content: space-between;">
+                                <span><i class="fa-solid fa-shield-halved text-green mr-1"></i> Privacy: Zero PII Collected</span>
+                                <span><i class="fa-solid fa-desktop text-blue mr-1"></i> Simulated OS Specs: Win10 Pro x64 (WIN10-PORTFOLIO-DESKTOP)</span>
                             </div>
                         </div>
                     </div>

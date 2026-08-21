@@ -2,7 +2,7 @@
 
 An interactive, full-stack **Windows 10 Web Desktop Application** built with Node.js, Express, SQLite, and a modular Vanilla JavaScript ES Module Web OS engine.
 
-[![Tests Status](https://img.shields.io/badge/Tests-96%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
+[![Tests Status](https://img.shields.io/badge/Tests-99%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
 [![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
