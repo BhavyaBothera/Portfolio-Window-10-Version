@@ -6,7 +6,7 @@ An interactive, full-stack **Windows 10 Web Desktop Application** built with Nod
 [![Code Coverage](https://img.shields.io/badge/Coverage-90.6%25-brightgreen?style=flat-square&logo=c8)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![ESLint 9](https://img.shields.io/badge/ESLint-Clean-success?style=flat-square&logo=eslint)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
-[![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](LIGHTHOUSE_REPORT.md)
+[![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](docs/LIGHTHOUSE_REPORT.md)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 ---
@@ -31,9 +31,9 @@ The repository is validated across 9 empirical software engineering quality dime
 
 ### 📖 System Architecture & Engineering Specifications
 
-- 🪟 [Window Manager System Specification](WINDOW_MANAGER.md)
-- 🚀 [Production Deployment Topology & Configuration](DEPLOYMENT.md)
-- 📊 [Performance Audit & Web Vitals Evidence Report](LIGHTHOUSE_REPORT.md)
+- 🪟 [Window Manager System Specification](docs/WINDOW_MANAGER.md)
+- 🚀 [Production Deployment Topology & Configuration](docs/DEPLOYMENT.md)
+- 📊 [Performance Audit & Web Vitals Evidence Report](docs/LIGHTHOUSE_REPORT.md)
 
 ---
 
