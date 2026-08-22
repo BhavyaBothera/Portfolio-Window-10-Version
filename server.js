@@ -47,8 +47,14 @@ app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
-// Serve static frontend assets from public/ directory
-app.use(express.static(path.join(__dirname, 'public')));
+const fs = require('fs');
+
+// Static Frontend Asset Directory Resolution (Production dist/ vs Development public/)
+const distDir = path.join(__dirname, 'dist');
+const publicDir = path.join(__dirname, 'public');
+const staticDir = fs.existsSync(path.join(distDir, 'index.html')) ? distDir : publicDir;
+
+app.use(express.static(staticDir));
 
 // Mount API routes
 app.use('/api', apiRoutes);
@@ -58,7 +64,7 @@ app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api/')) {
         return next();
     }
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(staticDir, 'index.html'));
 });
 
 // 404 & Error Handling Middleware

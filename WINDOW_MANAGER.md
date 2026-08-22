@@ -16,7 +16,8 @@ WindowManager Sub-System Engine
 ├── 5. ResizeController     ──> 8-Axis Geometry Resizing Engine (320x200 Minimum Bounds)
 ├── 6. SnapController       ──> Aero Snap Grid Detection & Preview Overlay Box
 ├── 7. MobileAdaptation     ──> Viewport Touch Adapters & Small Screen Auto-Maximize
-└── 8. LifecycleManager     ──> Open, Close, Minimize, Maximize & Resource Cleanup
+├── 8. BuildPipeline        ──> ESBuild ES Module Bundling (51.7% JS size reduction), CSS Minification & Dist Artifacts
+└── 9. LifecycleManager     ──> Open, Close, Minimize, Maximize & Resource Cleanup
 ```
 
 ### Mermaid Sub-System Diagram
