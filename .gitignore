@@ -13,3 +13,4 @@ test-results/
 lighthouse*.json
 perf-audit.js
 dist/
+coverage/

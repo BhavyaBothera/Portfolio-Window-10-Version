@@ -1,5 +1,4 @@
 import { playSound } from '../core/audio.js';
-import { escapeHTML } from '../utils/dom.js';
 
 export function initCortana() {
     const input = document.getElementById('cortana-input-field');

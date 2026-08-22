@@ -2,15 +2,70 @@ import { state } from '../core/state.js';
 
 let devToolsActive = false;
 let updateIntervalId = null;
+let eventIntervalId = null;
+let animFrameId = null;
 
 let frameCount = 0;
-let lastFpsCheck = performance.now();
+let lastFpsCheck = 0;
 let currentFps = 60;
 
 let longTaskCount = 0;
 
 let eventCount = 0;
 let eventsPerSec = 0;
+
+const sampleEvents = () => {
+    if (devToolsActive) {
+        eventCount++;
+    }
+};
+
+function startSampling() {
+    // 1. FPS Loop
+    frameCount = 0;
+    lastFpsCheck = performance.now();
+    const measureFps = () => {
+        if (!devToolsActive) return;
+        frameCount++;
+        const now = performance.now();
+        if (now - lastFpsCheck >= 1000) {
+            currentFps = Math.round((frameCount * 1000) / (now - lastFpsCheck));
+            frameCount = 0;
+            lastFpsCheck = now;
+        }
+        animFrameId = requestAnimationFrame(measureFps);
+    };
+    animFrameId = requestAnimationFrame(measureFps);
+
+    // 2. DOM Event Bus Listeners
+    eventCount = 0;
+    eventsPerSec = 0;
+    window.addEventListener('click', sampleEvents, { capture: true, passive: true });
+    window.addEventListener('keydown', sampleEvents, { capture: true, passive: true });
+
+    if (!eventIntervalId) {
+        eventIntervalId = setInterval(() => {
+            if (devToolsActive) {
+                eventsPerSec = eventCount;
+                eventCount = 0;
+            }
+        }, 1000);
+    }
+}
+
+function stopSampling() {
+    if (animFrameId) {
+        cancelAnimationFrame(animFrameId);
+        animFrameId = null;
+    }
+    window.removeEventListener('click', sampleEvents, { capture: true });
+    window.removeEventListener('keydown', sampleEvents, { capture: true });
+
+    if (eventIntervalId) {
+        clearInterval(eventIntervalId);
+        eventIntervalId = null;
+    }
+}
 
 export function initDevTools() {
     // 1. Register Ctrl + Shift + D Shortcut
@@ -29,42 +84,19 @@ export function initDevTools() {
         });
     }
 
-    // 3. Start FPS Sampler Loop
-    const measureFps = () => {
-        frameCount++;
-        const now = performance.now();
-        if (now - lastFpsCheck >= 1000) {
-            currentFps = Math.round((frameCount * 1000) / (now - lastFpsCheck));
-            frameCount = 0;
-            lastFpsCheck = now;
-        }
-        requestAnimationFrame(measureFps);
-    };
-    requestAnimationFrame(measureFps);
-
-    // 4. Register Long Tasks Observer if supported
+    // 3. Register Long Tasks Observer if supported
     try {
         if ('PerformanceObserver' in window && PerformanceObserver.supportedEntryTypes?.includes('longtask')) {
             const observer = new PerformanceObserver((list) => {
-                longTaskCount += list.getEntries().length;
+                if (devToolsActive) {
+                    longTaskCount += list.getEntries().length;
+                }
             });
             observer.observe({ entryTypes: ['longtask'] });
         }
-    } catch (err) {
+    } catch {
         /* Longtask observer fallback */
     }
-
-    // 5. Track DOM Event Bus Frequency
-    const sampleEvents = () => {
-        eventCount++;
-    };
-    window.addEventListener('click', sampleEvents, { capture: true, passive: true });
-    window.addEventListener('keydown', sampleEvents, { capture: true, passive: true });
-
-    setInterval(() => {
-        eventsPerSec = eventCount;
-        eventCount = 0;
-    }, 1000);
 }
 
 export function toggleDevTools(forceState) {
@@ -79,12 +111,14 @@ export function toggleDevTools(forceState) {
 
     if (devToolsActive) {
         hud.classList.remove('hidden');
+        startSampling();
         refreshDevToolsUI();
         if (!updateIntervalId) {
             updateIntervalId = setInterval(refreshDevToolsUI, 1000);
         }
     } else {
         hud.classList.add('hidden');
+        stopSampling();
         if (updateIntervalId) {
             clearInterval(updateIntervalId);
             updateIntervalId = null;
@@ -131,7 +165,7 @@ async function refreshDevToolsUI() {
         }
         const storageKbEl = document.getElementById('dev-hud-storage-size');
         if (storageKbEl) storageKbEl.textContent = `${(storageBytes / 1024).toFixed(2)} KB`;
-    } catch (e) {
+    } catch {
         /* Storage measurement catch */
     }
 
@@ -152,7 +186,7 @@ async function refreshDevToolsUI() {
             const errRateEl = document.getElementById('dev-hud-error-rate');
             if (errRateEl) errRateEl.textContent = `${json.telemetry.error_rate_percent || 0}%`;
         }
-    } catch (e) {
+    } catch {
         /* Fetch catch */
     }
 }

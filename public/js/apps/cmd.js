@@ -1,6 +1,5 @@
 import { playSound } from '../core/audio.js';
 import { openWindow } from '../core/window-manager.js';
-import { escapeHTML } from '../utils/dom.js';
 
 export function initCmdTerminal() {
     const inputField = document.getElementById('cmd-input-field');

@@ -3,7 +3,6 @@ import { playSound } from '../core/audio.js';
 
 export function initCalculator() {
     const calcDisplay = document.getElementById('calc-display-text');
-    const calcHistory = document.getElementById('calc-history-list');
     let calcExpression = '0';
     let isResultState = false;
 
@@ -27,11 +26,6 @@ export function initCalculator() {
                 }
             } else if (action === 'equals') {
                 const res = evaluateExpression(calcExpression);
-                if (calcHistory && res !== 'Error') {
-                    const li = document.createElement('li');
-                    li.textContent = `${calcExpression} = ${res}`;
-                    calcHistory.prepend(li);
-                }
                 calcExpression = res;
                 isResultState = true;
             } else if (val) {
