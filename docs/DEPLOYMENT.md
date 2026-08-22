@@ -1,70 +1,102 @@
-# 🚀 Production Deployment Architecture & Operations Manual
+# 🚀 Deployment Architecture & Operations Manual
 
-This document details the production deployment topology, security hardening, reverse proxy configuration, environment variables, and persistence management for **Windows 10 Portfolio OS**.
+This document provides an accurate, truthful specification of the **active deployment pipeline** running in this repository, alongside the **recommended cloud host architecture** for enterprise scale deployment.
 
 ---
 
-## 1. System Topology & Architecture
+## Part 1 — Active Repository Deployment Architecture
+
+The architecture currently implemented and verified in this codebase:
+
+```
+Browser Client (Localhost / Hosted VPS Node.js Server)
+              │
+              ▼
+┌─────────────────────────────────────────────────────────────┐
+│ Express HTTP Server (server.js - Node.js v20+)              │
+│                                                             │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Security & Middleware Layer                             │ │
+│ │ - Helmet Security Headers (CSP, X-Frame-Options)       │ │
+│ │ - CORS Origin Guard & Express JSON Body Parser          │ │
+│ │ - Zero-PII High-Resolution Telemetry Middleware         │ │
+│ └───────────────────────────┬─────────────────────────────┘ │
+│                             │                               │
+│                             ▼                               │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ Static Asset Routing Engine                             │ │
+│ │ - Production Mode: Serves dist/ (bundled & minified)   │ │
+│ │ - Development Mode: Serves public/ ES modules           │ │
+│ └───────────────────────────┬─────────────────────────────┘ │
+│                             │                               │
+│                             ▼                               │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ SQLite3 Database Layer (src/database/database.js)       │ │
+│ │ - Location: ./db/portfolio.sqlite                       │ │
+│ │ - PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;   │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Active Implementation Details
+
+- **Production Build Compiler**: ESBuild script ([`build.js`](file:///c:/Users/bhavy/OneDrive/Desktop/Projects/Portfolio%20Ideas/New%20laptop%20version/build.js)) bundles 20+ Web OS modules into `dist/js/bundle.min.js` (51.7% size reduction) and minifies `dist/css/style.min.css` (31.9% size reduction).
+- **Static File Routing**: `server.js` automatically inspects whether `dist/index.html` exists. If present, Express serves the compiled `dist/` production assets; otherwise, it falls back to `public/` ES source modules.
+- **Database Engine & Concurrency**: Embedded SQLite3 database ([`src/database/database.js`](file:///c:/Users/bhavy/OneDrive/Desktop/Projects/Portfolio%20Ideas/New%20laptop%20version/src/database/database.js)) initialized with:
+  ```sql
+  PRAGMA foreign_keys = ON;
+  PRAGMA journal_mode = WAL;
+  ```
+- **Authentication Gatekeeper**: Protected REST API endpoints (`/api/messages`) validate request headers against static secret tokens (`X-Admin-Token` or `Bearer dev_secret_token_2026`).
+- **Telemetry Engine**: `process.hrtime()` measures API and database query latencies in an in-memory sliding window (last 100 entries). Returns `0` ms when unmeasured (no initial fake hardcoded defaults).
+
+---
+
+## Part 2 — Recommended Cloud Host Architecture
+
+For deploying this application to public cloud hosts (AWS EC2, Hetzner, DigitalOcean, GCP) for high-availability traffic:
+
+### Recommended Cloud Topology
 
 ```
 Internet / End Users (HTTPS Port 443)
               │
               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Edge CDN & DNS Proxy (Cloudflare / Fastly)                 │
-│ - Global Edge Caching for dist/assets & bundle.min.js       │
-│ - DDoS Mitigation & TLS 1.3 Termination                     │
+│ Global Edge CDN (Cloudflare / Fastly)                      │
+│ - Edge Caching for dist/ static assets & bundle.min.js      │
+│ - DDoS Protection & TLS 1.3 Termination                     │
 └─────────────────────────────┬───────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ Production Host Server (Ubuntu 24.04 LTS / Docker)          │
+│ Host Server (Ubuntu 24.04 LTS / Docker Container)           │
 │                                                             │
 │ ┌─────────────────────────────────────────────────────────┐ │
 │ │ Nginx / Caddy Reverse Proxy                              │ │
 │ │ - HTTP/2 Protocol Upgrade & Gzip/Brotli Compression     │ │
-│ │ - Passes API & Dynamic Requests to Local Port 3000      │ │
+│ │ - Passes /api/ and Dynamic Requests to Local Port 3000   │ │
 │ └───────────────────────────┬─────────────────────────────┘ │
 │                             │                               │
 │                             ▼                               │
 │ ┌─────────────────────────────────────────────────────────┐ │
-│ │ PM2 Process Manager (Node.js v20 Cluster Mode)          │ │
-│ │ - Executes server.js (Serving dist/ production build)   │ │
-│ │ - Auto-restart on crash / memory cap (>500MB)           │ │
-│ └───────────────────────────┬─────────────────────────────┘ │
-│                             │                               │
-│                             ▼                               │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ SQLite3 Database Layer (Persistent Volume)              │ │
-│ │ - Location: /var/lib/portfolio/db/portfolio.sqlite      │ │
-│ │ - PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;   │ │
+│ │ PM2 Process Manager / Node Cluster                      │ │
+│ │ - Executes server.js in production mode                 │ │
+│ │ - Automatic restart on crash or memory threshold        │ │
 │ └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## 2. Environment Configuration (`.env`)
-
-Create a `.env` file in the root directory prior to starting the production server:
+### Recommended Environment Configuration (`.env`)
 
 ```env
-# Application Core Config
 PORT=3000
 NODE_ENV=production
 CORS_ORIGIN=https://bhavyaos.com
-
-# Security & Secrets
-ADMIN_PASSWORD_HASH=$2b$12$eImiTXuWVxfM37uY4JANjO...
-JWT_SECRET=super_secret_production_key_x982347
-RATE_LIMIT_MAX=100
+ADMIN_TOKEN=super_secret_production_key_2026
 ```
 
----
-
-## 3. Nginx Reverse Proxy Configuration
-
-Place the following configuration in `/etc/nginx/sites-available/portfolio.conf`:
+### Recommended Nginx Site Config (`/etc/nginx/sites-available/portfolio.conf`)
 
 ```nginx
 server {
@@ -81,10 +113,6 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/bhavyaos.com/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
 
-    # Gzip Compression
-    gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml;
-
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_http_version 1.1;
@@ -94,38 +122,13 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
     }
 }
 ```
 
----
+### Backup Management (SQLite WAL Mode)
 
-## 4. Zero-Downtime Deployment Command Sequence
-
-```bash
-# 1. Pull Latest Source
-git pull origin main
-
-# 2. Clean Install Production Dependencies
-npm ci --only=production
-
-# 3. Execute Production ESBuild Compilation
-npm run build
-
-# 4. Verify Production Smoke Test
-npm run test:prod
-
-# 5. Reload Server via PM2
-pm2 reload server.js --name "bhavya-os"
-```
-
----
-
-## 5. SQLite Persistence & Backup Management
-
-SQLite database files (`db/portfolio.sqlite`) operate in Write-Ahead Logging (WAL) mode for concurrency:
-- **Daily Automated Backup Cron**:
+- **Automated Nightly Backup Cron**:
   ```bash
-  0 3 * * * sqlite3 /var/lib/portfolio/db/portfolio.sqlite ".backup '/backups/portfolio_$(date +\%Y\%m\%d).sqlite'"
+  0 3 * * * sqlite3 ./db/portfolio.sqlite ".backup '/backups/portfolio_$(date +\%Y\%m\%d).sqlite'"
   ```

@@ -17,8 +17,13 @@ const db = new sqlite3.Database(config.dbPath, (err) => {
     }
 });
 
-// Enable foreign keys & WAL mode for performance
-db.run('PRAGMA foreign_keys = ON');
+// Enable foreign keys & WAL (Write-Ahead Logging) mode for concurrent performance
+db.run('PRAGMA foreign_keys = ON;');
+db.run('PRAGMA journal_mode = WAL;', (err) => {
+    if (err) {
+        console.error('Failed to set WAL journal mode:', err.message);
+    }
+});
 
 const dbDurations = [];
 
@@ -30,7 +35,7 @@ function recordDbLatency(startTime) {
 }
 
 function getAverageDbLatencyMs() {
-    if (dbDurations.length === 0) return 0.5;
+    if (dbDurations.length === 0) return 0;
     const sum = dbDurations.reduce((acc, d) => acc + d, 0);
     return parseFloat((sum / dbDurations.length).toFixed(2));
 }

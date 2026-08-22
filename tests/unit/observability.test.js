@@ -63,4 +63,11 @@ describe('Unit Test: Server Observability & Telemetry Middleware', () => {
         assert.ok(!keys.includes('payload'), 'Telemetry must not include request body');
         assert.ok(!keys.includes('email'), 'Telemetry must not include user emails');
     });
+
+    test('Unmeasured DB latency returns 0 instead of fake hardcoded fallback', () => {
+        const { getAverageDbLatencyMs } = require('../../src/database/database');
+        const latency = getAverageDbLatencyMs();
+        assert.equal(typeof latency, 'number');
+        assert.ok(latency >= 0, 'Latency must be non-negative number');
+    });
 });

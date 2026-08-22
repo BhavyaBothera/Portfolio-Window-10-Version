@@ -47,7 +47,8 @@ exports.getSystemStats = (req, res) => {
         success: true,
         meta: {
             simulation: true,
-            note: 'CPU %, RAM %, API Latency, Database Latency, and HTTP Status Codes represent real server telemetry. Host identity attributes are simulated Win10 OS environment specs.'
+            telemetry_type: 'in_memory_runtime_sampling',
+            note: 'CPU %, RAM %, API Latency, Database Latency, and HTTP Status Codes represent real-time in-memory server runtime metrics. Host identity attributes are simulated Win10 OS environment specs.'
         },
         cpu: {
             percent: realCpuPercent,

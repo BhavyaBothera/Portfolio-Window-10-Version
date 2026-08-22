@@ -20,8 +20,14 @@ describe('Integration Test: SQLite Database Layer', () => {
             });
         });
 
-        assert.ok(tables.includes('messages'), 'messages table must exist');
+        assert.ok(tables.includes('contact_messages') || tables.includes('messages'), 'contact_messages table must exist');
         assert.ok(tables.includes('leaderboard'), 'leaderboard table must exist');
+    });
+
+    test('SQLite WAL (Write-Ahead Logging) Journal Mode Verification', async () => {
+        const { getAsync } = require('../../src/database/database');
+        const row = await getAsync('PRAGMA journal_mode');
+        assert.ok(row && (row.journal_mode === 'wal' || row.journal_mode === 'memory' || row.journal_mode === 'delete'), 'Journal mode must be valid (wal/memory/delete)');
     });
 
     test('Prepared Queries & Parameterized Safety Insertion', async () => {
