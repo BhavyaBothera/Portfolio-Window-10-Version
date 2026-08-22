@@ -13,6 +13,7 @@ import { initWindowManager, openWindow, registerAppInitializer } from './core/wi
 import { playSound } from './core/audio.js';
 import { initErrorBoundary } from './utils/error-boundary.js';
 import { initMobileShell } from './system/mobile-shell.js';
+import { initDevTools } from './system/dev-tools.js';
 
 // Import App Initializers
 import { initCalculator } from './apps/calculator.js';
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initContextMenu();
     initWindowManager();
     initMobileShell();
+    initDevTools();
 
     // 2. Register App Initializers for Lazy Window Instantiation
     registerAppInitializer('calculator', initCalculator);

@@ -2085,6 +2085,52 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
     <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
     <div id="toast-container" class="toast-container"></div>
 
+    <!-- ==================== DEVELOPER MODE TOOLS HUD (CTRL+SHIFT+D) ==================== -->
+    <div id="dev-tools-hud" class="dev-tools-hud hidden">
+        <div class="dev-hud-header" id="dev-hud-header">
+            <div class="dev-hud-title">
+                <span class="dev-pulse-dot"></span>
+                <span>🛠️ BhavyaOS DevTools</span>
+            </div>
+            <div class="dev-hud-controls">
+                <button id="dev-hud-close-btn" class="dev-hud-btn" title="Close DevTools (Ctrl+Shift+D)" aria-label="Close DevTools"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </div>
+        <div class="dev-hud-body">
+            <div class="dev-hud-section">
+                <div class="dev-hud-sec-title"><i class="fa-solid fa-window-maximize text-cyan"></i> Window Manager</div>
+                <div class="dev-hud-row"><span>Active Windows:</span> <span id="dev-hud-open-count" class="dev-val text-green">0</span></div>
+                <div class="dev-hud-row"><span>Focused Window:</span> <span id="dev-hud-focused-win" class="dev-val text-blue">Desktop Shell</span></div>
+                <div class="dev-hud-row"><span>Z-Index Counter:</span> <span id="dev-hud-zindex" class="dev-val">10</span></div>
+            </div>
+
+            <div class="dev-hud-section">
+                <div class="dev-hud-sec-title"><i class="fa-solid fa-gauge-high text-green"></i> Rendering Performance</div>
+                <div class="dev-hud-row"><span>Render FPS:</span> <span id="dev-hud-fps" class="dev-val text-green">60 FPS</span></div>
+                <div class="dev-hud-row"><span>Long Tasks (&gt;50ms):</span> <span id="dev-hud-long-tasks" class="dev-val text-yellow">0</span></div>
+                <div class="dev-hud-row"><span>Event Rate:</span> <span id="dev-hud-event-rate" class="dev-val text-purple">0 / sec</span></div>
+            </div>
+
+            <div class="dev-hud-section">
+                <div class="dev-hud-sec-title"><i class="fa-solid fa-database text-purple"></i> Reactive State & Storage</div>
+                <div class="dev-hud-row"><span>State Memory Size:</span> <span id="dev-hud-state-size" class="dev-val">1.2 KB</span></div>
+                <div class="dev-hud-row"><span>LocalStorage Footprint:</span> <span id="dev-hud-storage-size" class="dev-val">2.8 KB</span></div>
+            </div>
+
+            <div class="dev-hud-section">
+                <div class="dev-hud-sec-title"><i class="fa-solid fa-network-wired text-orange"></i> Backend Server Telemetry</div>
+                <div class="dev-hud-row"><span>Total HTTP Requests:</span> <span id="dev-hud-requests" class="dev-val text-blue">0</span></div>
+                <div class="dev-hud-row"><span>Avg API Latency:</span> <span id="dev-hud-api-latency" class="dev-val text-cyan">0.0 ms</span></div>
+                <div class="dev-hud-row"><span>SQLite Query Latency:</span> <span id="dev-hud-db-latency" class="dev-val text-purple">0.0 ms</span></div>
+                <div class="dev-hud-row"><span>Server Error Rate:</span> <span id="dev-hud-error-rate" class="dev-val text-green">0.0%</span></div>
+            </div>
+        </div>
+        <div class="dev-hud-footer">
+            <span>Toggle: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd></span>
+            <span>Zero PII Telemetry</span>
+        </div>
+    </div>
+
     <!-- ==================== SYSTEM ARCHITECTURE APP TEMPLATE ==================== -->
     <template id="tpl-win-architecture">
         <div class="win-window hidden" id="win-architecture" data-id="architecture" style="width: 920px; height: 640px; top: 50px; left: 160px;">

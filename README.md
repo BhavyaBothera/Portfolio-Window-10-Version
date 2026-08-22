@@ -2,7 +2,7 @@
 
 An interactive, full-stack **Windows 10 Web Desktop Application** built with Node.js, Express, SQLite, and a modular Vanilla JavaScript ES Module Web OS engine.
 
-[![Tests Status](https://img.shields.io/badge/Tests-99%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
+[![Tests Status](https://img.shields.io/badge/Tests-104%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
 [![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
@@ -12,6 +12,7 @@ An interactive, full-stack **Windows 10 Web Desktop Application** built with Nod
 ## 🌟 Features & OS Applications
 
 - **Interactive OS Desktop Shell**: Drag, 8-axis resize, minimize, maximize, snap left/right/quadrants, z-index window management, audio synthesizer sound engine, live canvas wallpapers, and desktop shortcuts.
+- **🛠️ Developer Mode (`Ctrl + Shift + D`)**: Live HUD exposing real browser render FPS, main thread long tasks (>50ms), DOM event rates, state store memory size, and backend Express/SQLite API latencies.
 - **20+ Built-in Web Applications**:
   - 📂 **This PC & Projects Explorer** — Interactive project cards, skills control panel, and developer overview.
   - 🤖 **Cortana Assistant** — Knowledge base guide with interactive query replies.
