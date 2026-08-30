@@ -1,5 +1,6 @@
 import { playSound } from '../core/audio.js';
 import { showToast } from '../core/notifications.js';
+import { apiUrl } from '../core/api.js';
 
 export function initSolitaireGame() {
     const container = document.getElementById('solitaire-game-board');
@@ -25,7 +26,7 @@ export function initSolitaireGame() {
             playSound('solitaire-victory');
             showToast('Solitaire Victory!', `Score of ${score} recorded!`, 'fa-solid fa-trophy', 'Solitaire');
 
-            fetch('/api/leaderboard', {
+            fetch(apiUrl('/api/leaderboard'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ player: 'Bhavy Player', game: 'solitaire', score, time_seconds: 180 })

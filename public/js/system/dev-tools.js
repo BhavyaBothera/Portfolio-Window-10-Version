@@ -1,4 +1,5 @@
 import { state } from '../core/state.js';
+import { apiUrl } from '../core/api.js';
 
 let devToolsActive = false;
 let updateIntervalId = null;
@@ -171,7 +172,7 @@ async function refreshDevToolsUI() {
 
     // Backend Telemetry
     try {
-        const res = await fetch('/api/system/stats');
+        const res = await fetch(apiUrl('/api/system/stats'));
         const json = await res.json();
         if (json.success && json.telemetry) {
             const reqEl = document.getElementById('dev-hud-requests');

@@ -1,5 +1,6 @@
 import { playSound } from '../core/audio.js';
 import { showToast } from '../core/notifications.js';
+import { apiUrl } from '../core/api.js';
 
 export function initMinesweeper() {
     const gridContainer = document.getElementById('minesweeper-grid');
@@ -148,7 +149,7 @@ export function initMinesweeper() {
 
             // Submit high score to SQLite backend
             const finalTime = Math.max(2, timerVal);
-            fetch('/api/leaderboard', {
+            fetch(apiUrl('/api/leaderboard'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ player: 'Bhavy Explorer', game: 'minesweeper', score: 100, time_seconds: finalTime })

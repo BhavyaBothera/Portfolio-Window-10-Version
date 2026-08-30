@@ -25,7 +25,7 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
-                scriptSrc: ["'self'"],
+                scriptSrc: ["'self'", "'unsafe-inline'"],
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
                 imgSrc: ["'self'", "data:", "blob:", "https:"],
@@ -49,23 +49,61 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 
 const fs = require('fs');
 
-// Static Frontend Asset Directory Resolution (Production dist/ vs Development public/)
-const distDir = path.join(__dirname, 'dist');
-const publicDir = path.join(__dirname, 'public');
-const staticDir = fs.existsSync(path.join(distDir, 'index.html')) ? distDir : publicDir;
+const isProduction = config.env === 'production';
 
-app.use(express.static(staticDir));
+// Static Frontend Asset Directory Resolution (Production dist/ vs Development public/)
+// In production (split deployment), Vercel serves the frontend — skip static files here.
+if (!isProduction) {
+    const distDir = path.join(__dirname, 'dist');
+    const publicDir = path.join(__dirname, 'public');
+    const staticDir = fs.existsSync(path.join(distDir, 'index.html')) ? distDir : publicDir;
+    app.use(express.static(staticDir));
+}
+
+// Health Check Endpoint (used by Render for uptime monitoring)
+app.get('/api/health', async (req, res) => {
+    try {
+        const { db } = require('./src/database/database');
+        await new Promise((resolve, reject) => {
+            db.get('SELECT 1', (err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+        res.json({ success: true, status: 'ok', database: 'connected' });
+    } catch {
+        res.status(503).json({ success: false, status: 'degraded', database: 'disconnected' });
+    }
+});
 
 // Mount API routes
 app.use('/api', apiRoutes);
 
-// Catch-all fallback route serving index.html for SPA/Desktop shell
-app.get('*', (req, res, next) => {
-    if (req.path.startsWith('/api/')) {
-        return next();
-    }
-    res.sendFile(path.join(staticDir, 'index.html'));
-});
+// In production (split deployment), reject non-API requests with JSON.
+// In development, serve the SPA frontend catch-all.
+if (isProduction) {
+    app.use((req, res, next) => {
+        if (!req.path.startsWith('/api/')) {
+            return res.status(404).json({
+                success: false,
+                error: 'Backend API only'
+            });
+        }
+        next();
+    });
+} else {
+    const distDir = path.join(__dirname, 'dist');
+    const publicDir = path.join(__dirname, 'public');
+    const staticDir = fs.existsSync(path.join(distDir, 'index.html')) ? distDir : publicDir;
+
+    // Catch-all fallback route serving index.html for SPA/Desktop shell
+    app.get('*', (req, res, next) => {
+        if (req.path.startsWith('/api/')) {
+            return next();
+        }
+        res.sendFile(path.join(staticDir, 'index.html'));
+    });
+}
 
 // 404 & Error Handling Middleware
 app.use(notFoundHandler);

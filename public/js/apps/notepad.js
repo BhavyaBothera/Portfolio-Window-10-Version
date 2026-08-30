@@ -1,5 +1,6 @@
 import { showToast } from '../core/notifications.js';
 import { playSound } from '../core/audio.js';
+import { apiUrl } from '../core/api.js';
 
 export function initNotepad() {
     const textEditor = document.getElementById('notepad-textarea');
@@ -11,11 +12,10 @@ export function initNotepad() {
         const content = textEditor?.value || '';
 
         try {
-            const res = await fetch('/api/vfs', {
+            const res = await fetch(apiUrl('/api/vfs'), {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-Admin-Token': 'bhavy-admin-secret-key-2026'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ fileName, content })
             });

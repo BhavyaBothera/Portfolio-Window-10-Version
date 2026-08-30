@@ -1,11 +1,12 @@
 import { state } from '../core/state.js';
+import { apiUrl } from '../core/api.js';
 
 export function startTaskManagerUpdates() {
     stopTaskManagerUpdates();
 
     const updateTelemetry = async () => {
         try {
-            const res = await fetch('/api/system/stats');
+            const res = await fetch(apiUrl('/api/system/stats'));
             const json = await res.json();
 
             if (json.success) {

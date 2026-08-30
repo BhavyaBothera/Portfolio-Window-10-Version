@@ -1,6 +1,7 @@
 import { isValidEmail } from '../utils/validation.js';
 import { showToast } from '../core/notifications.js';
 import { playSound } from '../core/audio.js';
+import { apiUrl } from '../core/api.js';
 
 export function initContactForm() {
     const form = document.getElementById('contact-form');
@@ -44,7 +45,7 @@ export function initContactForm() {
         }
 
         try {
-            const res = await fetch('/api/contact', {
+            const res = await fetch(apiUrl('/api/contact'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, subject, message })
