@@ -47,7 +47,7 @@ exports.getSystemStats = (req, res) => {
         success: true,
         meta: {
             simulation: true,
-            telemetry_type: 'in_memory_runtime_sampling',
+            telemetry_type: 'server_runtime_sampling',
             note: 'CPU %, RAM %, API Latency, Database Latency, and HTTP Status Codes represent real-time in-memory server runtime metrics. Host identity attributes are simulated Win10 OS environment specs.'
         },
         cpu: {
@@ -63,9 +63,9 @@ exports.getSystemStats = (req, res) => {
         },
         telemetry,
         system: {
-            platform: 'win32',
+            platform: process.platform,
             arch: 'x64',
-            hostname: 'WIN10-PORTFOLIO-DESKTOP',
+            hostname: 'server-runtime',
             uptime_seconds: Math.floor(os.uptime())
         }
     });
