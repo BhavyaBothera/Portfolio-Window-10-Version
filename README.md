@@ -11,9 +11,9 @@ An interactive, full-stack **Windows 10 Web Desktop Application** built with Nod
 
 ---
 
-## 🚀 Engineering Validation Release Report
+## 🚀 Engineering Validation Report
 
-The repository is validated across 9 empirical software engineering quality dimensions:
+The repository includes automated checks across nine engineering-quality areas. Exact pass counts and environment-specific performance numbers are intentionally reported by the current CI/audit run rather than hardcoded here.
 
 | Engineering Quality Pillar | Tooling & Benchmark Result | Metric / Verification | Status |
 | :--- | :--- | :--- | :---: |
@@ -203,8 +203,8 @@ npm ci ──> npm run lint ──> npm run build ──> npm test ──> npx p
 
 - **Syntax & Lint Verification**: `npm run lint` checks JavaScript files for syntax errors using `node --check`.
 - **Build Check**: `npm run build` verifies static bundle structure and Express route imports.
-- **Backend Unit, Integration & Security Tests**: `npm test` executes 38 tests across `tests/unit/`, `tests/integration/`, and `tests/security/`.
-- **Playwright E2E Tests**: `npm run test:e2e` executes 50 browser automation tests covering boot, window manager, start menu, taskbar, accessibility ARIA, and mobile viewports.
+- **Backend Unit, Integration & Security Tests**: `npm test` runs the current unit, integration, and security test files listed in `package.json`.
+- **Playwright E2E Tests**: `npm run test:e2e` runs the Playwright suite covering boot, window management, start menu, taskbar, accessibility, and mobile behavior.
 
 ---
 
