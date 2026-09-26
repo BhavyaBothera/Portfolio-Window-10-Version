@@ -1,134 +1,71 @@
-# 🚀 Deployment Architecture & Operations Manual
+# Deployment & Operations
 
-This document provides an accurate, truthful specification of the **active deployment pipeline** running in this repository, alongside the **recommended cloud host architecture** for enterprise scale deployment.
+This document describes the deployment behavior implemented by the repository. It does not imply a specific cloud provider or high-availability architecture.
 
----
-
-## Part 1 — Active Repository Deployment Architecture
-
-The architecture currently implemented and verified in this codebase:
+## Current application architecture
 
 ```
-Browser Client (Localhost / Hosted VPS Node.js Server)
-              │
-              ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Express HTTP Server (server.js - Node.js v20+)              │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ Security & Middleware Layer                             │ │
-│ │ - Helmet Security Headers (CSP, X-Frame-Options)       │ │
-│ │ - CORS Origin Guard & Express JSON Body Parser          │ │
-│ │ - Zero-PII High-Resolution Telemetry Middleware         │ │
-│ └───────────────────────────┬─────────────────────────────┘ │
-│                             │                               │
-│                             ▼                               │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ Static Asset Routing Engine                             │ │
-│ │ - Production Mode: Serves dist/ (bundled & minified)   │ │
-│ │ - Development Mode: Serves public/ ES modules           │ │
-│ └───────────────────────────┬─────────────────────────────┘ │
-│                             │                               │
-│                             ▼                               │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ SQLite3 Database Layer (src/database/database.js)       │ │
-│ │ - Location: ./db/portfolio.sqlite                       │ │
-│ │ - PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;   │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+Browser
+   │
+   ▼
+Express / Node.js
+   ├── Helmet + CORS + request limits
+   ├── REST API
+   ├── SQLite database
+   └── Static frontend (development source or built dist/)
 ```
 
-### Active Implementation Details
+### Production build
 
-- **Production Build Compiler**: ESBuild script ([`build.js`](file:///c:/Users/bhavy/OneDrive/Desktop/Projects/Portfolio%20Ideas/New%20laptop%20version/build.js)) bundles 20+ Web OS modules into `dist/js/bundle.min.js` (51.7% size reduction) and minifies `dist/css/style.min.css` (31.9% size reduction).
-- **Static File Routing**: `server.js` automatically inspects whether `dist/index.html` exists. If present, Express serves the compiled `dist/` production assets; otherwise, it falls back to `public/` ES source modules.
-- **Database Engine & Concurrency**: Embedded SQLite3 database ([`src/database/database.js`](file:///c:/Users/bhavy/OneDrive/Desktop/Projects/Portfolio%20Ideas/New%20laptop%20version/src/database/database.js)) initialized with:
-  ```sql
-  PRAGMA foreign_keys = ON;
-  PRAGMA journal_mode = WAL;
-  ```
-- **Authentication Gatekeeper**: Protected REST API endpoints (`/api/messages`) validate request headers against static secret tokens (`X-Admin-Token` or `Bearer dev_secret_token_2026`).
-- **Telemetry Engine**: `process.hrtime()` measures API and database query latencies in an in-memory sliding window (last 100 entries). Returns `0` ms when unmeasured (no initial fake hardcoded defaults).
+Run:
 
----
-
-## Part 2 — Recommended Cloud Host Architecture
-
-For deploying this application to public cloud hosts (AWS EC2, Hetzner, DigitalOcean, GCP) for high-availability traffic:
-
-### Recommended Cloud Topology
-
-```
-Internet / End Users (HTTPS Port 443)
-              │
-              ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Global Edge CDN (Cloudflare / Fastly)                      │
-│ - Edge Caching for dist/ static assets & bundle.min.js      │
-│ - DDoS Protection & TLS 1.3 Termination                     │
-└─────────────────────────────┬───────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│ Host Server (Ubuntu 24.04 LTS / Docker Container)           │
-│                                                             │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ Nginx / Caddy Reverse Proxy                              │ │
-│ │ - HTTP/2 Protocol Upgrade & Gzip/Brotli Compression     │ │
-│ │ - Passes /api/ and Dynamic Requests to Local Port 3000   │ │
-│ └───────────────────────────┬─────────────────────────────┘ │
-│                             │                               │
-│                             ▼                               │
-│ ┌─────────────────────────────────────────────────────────┐ │
-│ │ PM2 Process Manager / Node Cluster                      │ │
-│ │ - Executes server.js in production mode                 │ │
-│ │ - Automatic restart on crash or memory threshold        │ │
-│ └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+```bash
+npm run build
 ```
 
-### Recommended Environment Configuration (`.env`)
+The build bundles the frontend JavaScript with ESBuild, minifies the stylesheet, copies static assets, and writes the production shell to `dist/`.
+
+In development, the server uses `public/` when no built `dist/index.html` is present. In non-production environments, it can also serve the built `dist/` directory when available.
+
+### Split frontend/backend deployments
+
+The frontend API client uses the current browser origin by default. A separate frontend deployment can provide `window.__API_BASE_URL__` before the application bundle loads.
+
+If the frontend and backend are on different origins:
+
+- set `CORS_ORIGIN` on the backend to the exact frontend origin;
+- provide the backend base URL through the deployment's HTML/configuration layer;
+- ensure the backend's CSP `connect-src` policy allows the configured API origin.
+
+### Environment variables
 
 ```env
-PORT=3000
+PORT=5000
 NODE_ENV=production
-CORS_ORIGIN=https://bhavyaos.com
-ADMIN_TOKEN=super_secret_production_key_2026
+CORS_ORIGIN=https://your-frontend.example
+ADMIN_TOKEN=<generate-a-long-random-secret>
+DB_PATH=./db/portfolio.sqlite
+RESTRICT_PUBLIC_READ=false
 ```
 
-### Recommended Nginx Site Config (`/etc/nginx/sites-available/portfolio.conf`)
+Do not commit real credentials to the repository.
 
-```nginx
-server {
-    listen 80;
-    server_name bhavyaos.com www.bhavyaos.com;
-    return 301 https://$host$request_uri;
-}
+### Reverse proxies
 
-server {
-    listen 443 ssl http2;
-    server_name bhavyaos.com www.bhavyaos.com;
+If the application is placed behind a reverse proxy, configure Express's `trust proxy` setting to match the actual proxy topology. The current application uses one trusted proxy hop for client-IP handling; change this when the deployment has a different proxy chain.
 
-    ssl_certificate /etc/letsencrypt/live/bhavyaos.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/bhavyaos.com/privkey.pem;
-    ssl_protocols TLSv1.2 TLSv1.3;
+### Database
 
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+SQLite is the application's embedded database. The server initializes the schema before it starts listening. If initialization fails, startup fails rather than continuing with an unknown database state.
 
-### Backup Management (SQLite WAL Mode)
+For a single-instance portfolio deployment, SQLite is intentionally simple. Multi-instance deployments require a shared database/storage strategy rather than assuming that a local SQLite file is shared between instances.
 
-- **Automated Nightly Backup Cron**:
-  ```bash
-  0 3 * * * sqlite3 ./db/portfolio.sqlite ".backup '/backups/portfolio_$(date +\%Y\%m\%d).sqlite'"
-  ```
+### Health check
+
+`GET /api/health` performs a database connectivity check and returns HTTP 200 when the database query succeeds, or HTTP 503 when it fails. It is a basic readiness/health signal, not a complete infrastructure health monitor.
+
+## Operational notes
+
+- Rate limiting is in-memory and therefore per process.
+- Observability is lightweight in-memory request/latency instrumentation.
+- CDN/DDoS protection, external log aggregation, backups, and process managers are deployment-level concerns and are not provided by the Express application itself.
