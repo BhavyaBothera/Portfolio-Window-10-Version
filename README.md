@@ -3,8 +3,8 @@
 An interactive, full-stack **Windows 10 Web Desktop Application** built with Node.js, Express, SQLite, and a modular Vanilla JavaScript ES Module Web OS engine.
 
 [![Tests](https://img.shields.io/badge/Tests-run%20via%20CI-blue?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
-[![Code Coverage](https://img.shields.io/badge/Coverage-90.6%25-brightgreen?style=flat-square&logo=c8)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
-[![ESLint 9](https://img.shields.io/badge/ESLint-Clean-success?style=flat-square&logo=eslint)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
+[![Coverage](https://img.shields.io/badge/Coverage-reported%20by%20CI-blue?style=flat-square&logo=c8)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
+[![ESLint](https://img.shields.io/badge/ESLint-10-success?style=flat-square&logo=eslint)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
 [![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](docs/LIGHTHOUSE_REPORT.md)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
