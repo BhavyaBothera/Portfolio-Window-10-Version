@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playSound('click');
             return;
         }
+    });
 
     // Delegated click handler for non-inline data-window triggers (e.g. ribbon, tree, folder cards)
     document.addEventListener('click', (e) => {
