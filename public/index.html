@@ -2311,13 +2311,7 @@ Feel free to leave a note here or use the Contact Mail app to send me a message!
     </template>
 
     <!-- Main ES Module Bootstrap -->
-    <script>
-        // API Base URL Configuration for Split Deployment (Vercel frontend + Render backend)
-        // For production, set this to your Render service URL:
-        // window.__API_BASE_URL__ = 'https://YOUR-RENDER-SERVICE.onrender.com';
-        // For local development, use localhost:
-        window.__API_BASE_URL__ = 'http://localhost:5000';
-    </script>
+    <!-- Optional split-deployment override. Same-origin deployments use the current origin. -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
