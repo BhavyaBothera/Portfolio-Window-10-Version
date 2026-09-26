@@ -29,7 +29,7 @@ app.use(
                 styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
                 fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
                 imgSrc: ["'self'", "data:", "blob:", "https:"],
-                connectSrc: ["'self'"],
+                connectSrc: ["'self'", "https:"],
                 frameSrc: ["'self'", "https:"],
                 objectSrc: ["'none'"],
                 upgradeInsecureRequests: []
