@@ -235,6 +235,7 @@ export const SnapController = {
 export const DragController = {
     attach(winEl, titlebar, windowId) {
         if (!titlebar) return;
+        titlebar.style.touchAction = 'none';
         let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
         let dragFrameId = null;
 
