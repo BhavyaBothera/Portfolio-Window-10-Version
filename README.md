@@ -2,7 +2,7 @@
 
 An interactive, full-stack **Windows 10 Web Desktop Application** built with Node.js, Express, SQLite, and a modular Vanilla JavaScript ES Module Web OS engine.
 
-[![Tests Status](https://img.shields.io/badge/Tests-104%20Passing-brightgreen?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
+[![Tests](https://img.shields.io/badge/Tests-run%20via%20CI-blue?style=flat-square&logo=playwright)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
 [![Code Coverage](https://img.shields.io/badge/Coverage-90.6%25-brightgreen?style=flat-square&logo=c8)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![ESLint 9](https://img.shields.io/badge/ESLint-Clean-success?style=flat-square&logo=eslint)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
@@ -18,14 +18,14 @@ The repository is validated across 9 empirical software engineering quality dime
 | Engineering Quality Pillar | Tooling & Benchmark Result | Metric / Verification | Status |
 | :--- | :--- | :--- | :---: |
 | 1. **Static Code Analysis** | ESLint 9 Flat Config (`eslint.config.mjs`) | `npm run lint` — **0 Errors, 0 Warnings** | 🟢 PASS |
-| 2. **Production Build Pipeline** | ESBuild Bundler (`build.js`) | `npm run build` — **51.7% JS Savings** (115.3KB → 55.7KB), **151ms Build Time** | 🟢 PASS |
+| 2. **Production Build Pipeline** | ESBuild Bundler (`build.js`) | `npm run build` — bundle/minification verification | 🟢 PASS |
 | 3. **Code Coverage Reporting** | C8 Code Coverage Reporter | `npm run test:coverage` — **90.62% Statement Coverage**, **92.00% Function Coverage** | 🟢 PASS |
-| 4. **Performance Evidence** | Lighthouse & DevTools Profiler | **98/100 Performance** (LCP: 0.6s, FCP: 0.4s, CLS: 0.00, TBT: 0ms) | 🟢 PASS |
-| 5. **Accessibility Audit** | axe-core & Lighthouse WCAG 2.1 AA | **100/100 Accessibility** — **0 Violations**, Focus Trapping, ARIA Roles | 🟢 PASS |
-| 6. **Security Automation** | `npm audit` & Secret Scanner | `npm audit --audit-level=high` — **0 Vulnerabilities Found** (243 Audited) | 🟢 PASS |
+| 4. **Performance Evidence** | Lighthouse & DevTools Profiler | See `docs/LIGHTHOUSE_REPORT.md` for the dated audit and environment | 🟢 PASS |
+| 5. **Accessibility Audit** | axe-core & Lighthouse | Automated accessibility checks and keyboard/focus coverage; see the dated report | 🟢 PASS |
+| 6. **Security Automation** | `npm audit` & security tests | Dependency and application security checks run through CI | 🟢 PASS |
 | 7. **Production Smoke Testing** | Playwright Production E2E Spec | `npm run test:prod` — **4/4 Smoke Tests Passing** against `dist/` Minified Bundle | 🟢 PASS |
 | 8. **Playwright E2E Test Suite** | Chromium Browser Automation | `npm run test:e2e` — **59 / 59 E2E Specs Passing** | 🟢 PASS |
-| 9. **Automated CI Pipeline** | GitHub Actions Pipeline | `.github/workflows/ci.yml` — **108 / 108 Automated Checks Passing** | 🟢 PASS |
+| 9. **Automated CI Pipeline** | GitHub Actions Pipeline | `.github/workflows/ci.yml` — current status is reported by GitHub Actions | 🟢 PASS |
 
 ---
 
@@ -131,13 +131,13 @@ The application uses an embedded **SQLite** database (`db/portfolio.sqlite`) wit
 
 ## 🔒 Security & Performance Features
 
-- **Helmet Security Headers**: Strict Content-Security-Policy (with explicit font & CDN allowances for Google Fonts and Font Awesome), X-Content-Type-Options, Referrer-Policy, and Permissions-Policy enabled via Helmet.
+- **Helmet Security Headers**: Helmet-managed Content-Security-Policy plus standard security headers. The policy permits the external font/CDN resources required by the current UI.
 - **Admin Authentication**: Admin write endpoints (`GET /api/messages`, `POST /api/notes`, `POST /api/vfs`) protected by `X-Admin-Token` middleware. Public read routes can also be restricted by setting `RESTRICT_PUBLIC_READ=true`.
 - **Game Leaderboard Plausibility Verification**: Server-side score & time bounds enforcement preventing cheated score injections.
 - **Zero-Eval Math Calculator**: Replaced `eval()` and `Function()` with a custom Shunting-Yard arithmetic AST evaluator supporting numbers, `+`, `-`, `*`, `/`, `%`, and `()`.
-- **IP Rate Limiting**: In-memory rate limiting applied to public submission routes (`/api/contact`, `/api/leaderboard`).
-- **Input Sanitization & Validation**: HTML entity escaping on all user data inputs to eliminate Stored XSS vectors. Strict prototype pollution guards (`__proto__`, `constructor`, `prototype`).
-- **Real CPU Telemetry**: Task Manager calculates real system CPU load using `os.cpus()` time diff sampling over intervals. Host metadata is anonymized to prevent server infrastructure leaks.
+- **IP Rate Limiting**: In-memory per-process rate limiting is applied to public submission routes (`/api/contact`, `/api/leaderboard`). It is basic abuse protection, not distributed DDoS protection.
+- **Input Sanitization & Validation**: Validation and output escaping are applied to user-controlled data, with prototype-pollution guards (`__proto__`, `constructor`, `prototype`). Security tests cover representative attack paths; they are not a blanket proof of XSS safety.
+- **Server Runtime Telemetry**: Task Manager samples the backend process host using Node `os.cpus()` time-diff sampling and memory metrics. This is server-side telemetry, not the visitor’s local Windows CPU/RAM.
 - **No SSRF / Open Proxy**: Open proxy endpoints removed; Edge Browser iframe simulation gracefully handles blocked sites with external link fallbacks.
 
 ---
@@ -221,4 +221,4 @@ npm ci ──> npm run lint ──> npm run build ──> npm test ──> npx p
 ---
 
 ## 📄 License
-This project is licensed under the **MIT License**. Created by **Bhavy**.
+This project is licensed under the **MIT License**. Created by **Bhavya Bothera**.
