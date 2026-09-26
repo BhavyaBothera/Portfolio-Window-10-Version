@@ -201,7 +201,7 @@ git push origin main
 npm ci ──> npm run lint ──> npm run build ──> npm test ──> npx playwright install ──> npm run test:e2e
 ```
 
-- **Syntax & Lint Verification**: `npm run lint` checks JavaScript files for syntax errors using `node --check`.
+- **Syntax & Lint Verification**: `npm run lint` runs ESLint across the repository; `npm run syntax-check` separately runs Node syntax checks on the configured JavaScript paths.
 - **Build Check**: `npm run build` verifies static bundle structure and Express route imports.
 - **Backend Unit, Integration & Security Tests**: `npm test` runs the current unit, integration, and security test files listed in `package.json`.
 - **Playwright E2E Tests**: `npm run test:e2e` runs the Playwright suite covering boot, window management, start menu, taskbar, accessibility, and mobile behavior.
