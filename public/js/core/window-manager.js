@@ -271,24 +271,30 @@ export const DragController = {
             SnapController.applySnap(winEl, clientX, clientY, windowId);
         };
 
-        // Mouse Events
-        titlebar.addEventListener('mousedown', (e) => startDrag(e.clientX, e.clientY, e.target));
-        document.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
-        document.addEventListener('mouseup', (e) => endDrag(e.clientX, e.clientY));
+        // Pointer capture keeps drag events scoped to this titlebar/window.
+        // This avoids permanent document-level mouse/touch listeners for every open window.
+        const handlePointerMove = (e) => {
+            if (!isDragging) return;
+            moveDrag(e.clientX, e.clientY);
+        };
 
-        // Touch Events for Mobile Adaptation
-        titlebar.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            if (touch) startDrag(touch.clientX, touch.clientY, e.target);
-        }, { passive: true });
-        document.addEventListener('touchmove', (e) => {
-            const touch = e.touches[0];
-            if (touch) moveDrag(touch.clientX, touch.clientY);
-        }, { passive: true });
-        document.addEventListener('touchend', (e) => {
-            const touch = e.changedTouches[0];
-            if (touch) endDrag(touch.clientX, touch.clientY);
+        const handlePointerUp = (e) => {
+            if (!isDragging) return;
+            endDrag(e.clientX, e.clientY);
+            try { titlebar.releasePointerCapture(e.pointerId); } catch (err) {}
+        };
+
+        titlebar.addEventListener('pointerdown', (e) => {
+            if (e.button !== undefined && e.button !== 0) return;
+            if (e.target.closest('.win-controls')) return;
+            e.preventDefault();
+            try { titlebar.setPointerCapture(e.pointerId); } catch (err) {}
+            startDrag(e.clientX, e.clientY, e.target);
         });
+
+        titlebar.addEventListener('pointermove', handlePointerMove);
+        titlebar.addEventListener('pointerup', handlePointerUp);
+        titlebar.addEventListener('pointercancel', handlePointerUp);
     }
 };
 
