@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
-const crypto = require('crypto');
 const config = require('../config/env');
 
 const dbDir = path.dirname(config.dbPath);
@@ -132,20 +131,7 @@ async function initDatabase() {
             );
         }
 
-        const msgCount = await getAsync(`SELECT COUNT(*) as count FROM contact_messages`);
-        if (msgCount.count === 0) {
-            await runAsync(
-                `INSERT INTO contact_messages (id, name, email, subject, message, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
-                [
-                    crypto.randomUUID(),
-                    "Tech Innovations Lab",
-                    "recruiter@techinnovations.com",
-                    "Senior Full-Stack Developer Opportunity",
-                    "Hi Bhavy, we were highly impressed by your Windows 10 Portfolio OS! We would love to chat about an engineering position.",
-                    new Date().toISOString()
-                ]
-            );
-        }
+        // Keep the contact inbox empty on first run. Real messages should come from real visitors.
 
         const lbCount = await getAsync(`SELECT COUNT(*) as count FROM leaderboard`);
         if (lbCount.count === 0) {
@@ -174,6 +160,7 @@ async function initDatabase() {
         console.log('⚡ SQLite Database schema & seed data initialized successfully.');
     } catch (err) {
         console.error('Database initialization error:', err);
+        throw err;
     }
 }
 
