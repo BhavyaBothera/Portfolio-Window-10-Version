@@ -79,23 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Desktop Icons Interaction & Accessibility
     const desktopIcons = Array.from(document.querySelectorAll('.desktop-icon'));
 
-    desktopIcons.forEach(icon => {
-        const winId = icon.dataset.window;
-        if (!winId) return;
-
-        icon.addEventListener('dblclick', () => {
-            openWindow(winId);
-        });
-
-        icon.addEventListener('click', (e) => {
-            e.stopPropagation();
-            desktopIcons.forEach(i => i.classList.remove('selected'));
-            icon.classList.add('selected');
-            playSound('click');
-        });
-    });
-
-    // Delegated dblclick handler for desktop icons
+    // Delegated handlers keep desktop icon behavior centralized and avoid duplicate event listeners.
     document.addEventListener('dblclick', (e) => {
         const icon = e.target.closest('.desktop-icon');
         if (icon) {
@@ -103,6 +87,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (winId) openWindow(winId);
         }
     });
+
+    document.addEventListener('click', (e) => {
+        const icon = e.target.closest('.desktop-icon');
+        if (icon) {
+            e.stopPropagation();
+            desktopIcons.forEach(i => i.classList.remove('selected'));
+            icon.classList.add('selected');
+            playSound('click');
+            return;
+        }
 
     // Delegated click handler for non-inline data-window triggers (e.g. ribbon, tree, folder cards)
     document.addEventListener('click', (e) => {
