@@ -9,7 +9,7 @@ const errorHandler = require('./src/middleware/errorHandler');
 const notFoundHandler = require('./src/middleware/notFound');
 const { observabilityMiddleware } = require('./src/middleware/observability.middleware');
 
-const { initDatabase } = require('./src/database/database');
+const { initDatabase, closeDatabase } = require('./src/database/database');
 
 const app = express();
 
@@ -140,7 +140,18 @@ async function startServer(port = config.port) {
 
 async function stopServer() {
     if (activeServer) {
-        return new Promise((resolve) => activeServer.close(resolve));
+        await new Promise((resolve, reject) => {
+            activeServer.close((err) => {
+                if (err) reject(err);
+                else resolve();
+            });
+        });
+        activeServer = null;
+    }
+
+    // Test processes must release the SQLite handle or Node's test runner stays alive.
+    if (process.env.NODE_ENV === 'test') {
+        await closeDatabase();
     }
 }
 
