@@ -40,6 +40,20 @@ function getAverageDbLatencyMs() {
     return parseFloat((sum / dbDurations.length).toFixed(2));
 }
 
+function closeDatabase() {
+    return new Promise((resolve, reject) => {
+        if (!db.open) {
+            resolve();
+            return;
+        }
+
+        db.close((err) => {
+            if (err) return reject(err);
+            resolve();
+        });
+    });
+}
+
 function runAsync(sql, params = []) {
     const startTime = process.hrtime();
     return new Promise((resolve, reject) => {
@@ -171,6 +185,7 @@ module.exports = {
     runAsync,
     getAsync,
     allAsync,
-    getAverageDbLatencyMs
+    getAverageDbLatencyMs,
+    closeDatabase
 };
 
