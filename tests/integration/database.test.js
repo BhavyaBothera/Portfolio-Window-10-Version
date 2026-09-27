@@ -1,11 +1,15 @@
-const { test, describe, before } = require('node:test');
+const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { initDatabase, getDb } = require('../../src/database/database');
+const { initDatabase, getDb, closeDatabase } = require('../../src/database/database');
 
 describe('Integration Test: SQLite Database Layer', () => {
 
     before(async () => {
         await initDatabase();
+    });
+
+    after(async () => {
+        await closeDatabase();
     });
 
     test('SQLite Connection & Table Schema Initialization', async () => {
