@@ -1,15 +1,20 @@
-const { test, describe, beforeEach } = require('node:test');
+const { test, describe, beforeEach, after } = require('node:test');
 const assert = require('node:assert/strict');
 const {
     observabilityMiddleware,
     getTelemetryMetrics,
     resetTelemetryMetrics
 } = require('../../src/middleware/observability.middleware');
+const { closeDatabase } = require('../../src/database/database');
 
 describe('Unit Test: Server Observability & Telemetry Middleware', () => {
 
     beforeEach(() => {
         resetTelemetryMetrics();
+    });
+
+    after(async () => {
+        await closeDatabase();
     });
 
     test('Middleware increments request counter and records status codes', () => {
