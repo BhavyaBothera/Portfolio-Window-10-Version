@@ -43,8 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initBootScreen();
     initLockScreen();
 
-    // Signal that the core shell has initialized; the boot fail-safe can stand down.
-    window.__PORTFOLIO_OS_READY__ = true;
     initTaskbar();
     initStartMenu();
     initSettings();
@@ -148,6 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
             desktopIcons.forEach(i => i.classList.remove('selected'));
         }
     });
+
+    window.__PORTFOLIO_OS_READY__ = true;
 
     console.log('🚀 Windows 10 Portfolio OS ES Module System Initialized');
 });
