@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Initialize Core Systems
     initBootScreen();
     initLockScreen();
+
+    // Signal that the core shell has initialized; the boot fail-safe can stand down.
+    window.__PORTFOLIO_OS_READY__ = true;
     initTaskbar();
     initStartMenu();
     initSettings();
