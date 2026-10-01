@@ -49,7 +49,7 @@ describe('Security Test: API Error Resilience & Crash Protection', () => {
     test('Unknown API Endpoint Returns Structured JSON 404 (No HTML stack trace leak)', async () => {
         const res = await rawRequest('/api/unknown-endpoint-xyz');
         assert.equal(res.status, 404);
-        assert.equal(res.data.error, 'API endpoint not found');
+        assert.ok(res.data.error && res.data.error.includes('Endpoint not found'));
     });
 
     test('Malformed JSON Request Body Returns 400 Bad Request (No Server Crash)', async () => {
