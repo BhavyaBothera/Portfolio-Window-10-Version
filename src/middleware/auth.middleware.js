@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const config = require('../config/env');
 
 function requireAdminAuth(req, res, next) {
@@ -12,7 +13,16 @@ function requireAdminAuth(req, res, next) {
         providedToken = authHeader.substring(7);
     }
 
-    if (!providedToken || providedToken !== config.adminToken) {
+    const expectedToken = String(config.adminToken || '');
+    const suppliedToken = String(providedToken || '');
+    let tokenMatches = false;
+    if (suppliedToken && expectedToken) {
+        const suppliedBuffer = Buffer.from(suppliedToken);
+        const expectedBuffer = Buffer.from(expectedToken);
+        tokenMatches = suppliedBuffer.length === expectedBuffer.length && crypto.timingSafeEqual(suppliedBuffer, expectedBuffer);
+    }
+
+    if (!tokenMatches) {
         return res.status(401).json({
             success: false,
             error: 'Unauthorized: Admin authentication token required to access this endpoint.'
