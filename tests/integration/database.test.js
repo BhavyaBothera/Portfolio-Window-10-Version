@@ -1,6 +1,7 @@
 const { test, describe, before, after } = require('node:test');
 const assert = require('node:assert/strict');
-const { initDatabase, getDb, closeDatabase } = require('../../src/database/database');
+const database = require('../../src/database/database');
+const { initDatabase, closeDatabase } = database;
 
 describe('Integration Test: SQLite Database Layer', () => {
 
@@ -13,7 +14,7 @@ describe('Integration Test: SQLite Database Layer', () => {
     });
 
     test('SQLite Connection & Table Schema Initialization', async () => {
-        const db = getDb();
+        const db = database.db;
         assert.ok(db, 'Database handle must be initialized');
 
         // Verify tables exist
@@ -24,7 +25,7 @@ describe('Integration Test: SQLite Database Layer', () => {
             });
         });
 
-        assert.ok(tables.includes('contact_messages') || tables.includes('messages'), 'contact_messages table must exist');
+        assert.ok(tables.includes('contact_messages'), 'contact_messages table must exist');
         assert.ok(tables.includes('leaderboard'), 'leaderboard table must exist');
     });
 
@@ -35,15 +36,15 @@ describe('Integration Test: SQLite Database Layer', () => {
     });
 
     test('Prepared Queries & Parameterized Safety Insertion', async () => {
-        const db = getDb();
+        const db = database.db;
         const testName = 'DbTestUser';
         const testEmail = 'dbtest@example.com';
         const testMsg = 'Test DB query safety';
 
         await new Promise((resolve, reject) => {
             db.run(
-                `INSERT INTO messages (name, email, message) VALUES (?, ?, ?)`,
-                [testName, testEmail, testMsg],
+                `INSERT INTO contact_messages (id, name, email, subject, message, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+                [require('crypto').randomUUID(), testName, testEmail, 'DB Test', testMsg, new Date().toISOString()],
                 function(err) {
                     if (err) reject(err);
                     else resolve(this.lastID);
@@ -53,7 +54,7 @@ describe('Integration Test: SQLite Database Layer', () => {
 
         // Verify insertion
         const row = await new Promise((resolve, reject) => {
-            db.get(`SELECT * FROM messages WHERE email = ?`, [testEmail], (err, row) => {
+            db.get(`SELECT * FROM contact_messages WHERE email = ?`, [testEmail], (err, row) => {
                 if (err) reject(err);
                 else resolve(row);
             });
