@@ -1,10 +1,12 @@
 # 📊 Performance Audit & Web Vitals Evidence Report
 
-This document records the empirical performance audit results, Chrome DevTools profiling measurements, and Core Web Vitals metrics for **Windows 10 Portfolio OS** running in production build mode (`dist/`).
+This document records a historical performance benchmark for **Windows 10 Portfolio OS** running in production build mode (`dist/`). Treat these values as environment-specific evidence, not a current production guarantee.
 
 ---
 
-## 1. Lighthouse Audit Summary Scores
+## 1. Historical Lighthouse Audit Summary Scores
+
+> The original capture did not preserve a reproducible date, commit SHA, browser version, or network profile. These figures should be treated as historical benchmark evidence until a fresh audit is recorded.
 
 | Category | Score | Benchmark Target | Status |
 | :--- | :---: | :---: | :---: |
@@ -15,7 +17,7 @@ This document records the empirical performance audit results, Chrome DevTools p
 
 ---
 
-## 2. Core Web Vitals & DevTools Measurements
+## 2. Historical Core Web Vitals & DevTools Measurements
 
 ```
 Metric                          Measured Value   Google Web Vitals Threshold   Status
