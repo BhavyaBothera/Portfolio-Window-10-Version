@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const { Buffer } = require('buffer');
 const config = require('../config/env');
 
 function requireAdminAuth(req, res, next) {
