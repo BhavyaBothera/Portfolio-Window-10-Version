@@ -12,11 +12,12 @@ const { createRateLimiter } = require('../middleware/rateLimiter');
 const contactRateLimiter = createRateLimiter({ windowMs: 60 * 1000, maxRequests: 5 });
 const leaderboardRateLimiter = createRateLimiter({ windowMs: 60 * 1000, maxRequests: 10 });
 const adminWriteRateLimiter = createRateLimiter({ windowMs: 60 * 1000, maxRequests: 20 });
+const adminAuthRateLimiter = createRateLimiter({ windowMs: 60 * 1000, maxRequests: 20 });
 const publicReadRateLimiter = createRateLimiter({ windowMs: 60 * 1000, maxRequests: 60 });
 
 // Contact API
 router.post('/contact', contactRateLimiter, contactController.submitContactMessage);
-router.get('/messages', requireAdminAuth, contactController.getContactMessages);
+router.get('/messages', adminAuthRateLimiter, requireAdminAuth, contactController.getContactMessages);
 
 // System Telemetry & Utilities
 router.get('/system/stats', optionalPublicReadAuth, publicReadRateLimiter, systemController.getSystemStats);
