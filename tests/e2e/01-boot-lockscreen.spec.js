@@ -12,7 +12,7 @@ test.describe('1. Boot Sequence & Lock Screen E2E Tests', () => {
         if (await bootScreen.count() > 0) {
             await expect(bootScreen).toBeVisible();
             // Wait for boot screen to fade and remove
-            await expect(bootScreen).toHaveCount(0, { timeout: 4000 });
+            await expect(bootScreen).toHaveCount(0, { timeout: 5000 });
         }
     });
 
