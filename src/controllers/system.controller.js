@@ -159,7 +159,7 @@ exports.saveVFS = async (req, res, next) => {
             safeFileName.startsWith('__') ||
             Object.prototype.hasOwnProperty.call(Object.prototype, safeFileName)
         ) {
-            return res.status(400).json({ success: false, error: 'Invalid file name: reserved object prototype key.' });
+            return res.status(400).json({ success: false, error: 'Invalid payload: Prototype pollution attempt detected' });
         }
 
         await runAsync(
