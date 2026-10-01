@@ -11,14 +11,13 @@ function createRateLimiter(options = {}) {
     const ipHits = new Map();
 
     // Clean up expired IP entries every 2 minutes
-    setInterval(() => {
+    const cleanupTimer = setInterval(() => {
         const now = Date.now();
         for (const [ip, record] of ipHits.entries()) {
-            if (now - record.startTime > windowMs) {
-                ipHits.delete(ip);
-            }
+            if (now - record.startTime > windowMs) ipHits.delete(ip);
         }
     }, 2 * 60 * 1000);
+    cleanupTimer.unref?.();
 
     return function rateLimiter(req, res, next) {
         // Use Express req.ip (properly configured via app.set('trust proxy', 1))
