@@ -11,5 +11,5 @@ export function initBootScreen() {
         setTimeout(() => {
             bootScreen.remove();
         }, 800);
-    }, 2000);
+    }, 3000);
 }
