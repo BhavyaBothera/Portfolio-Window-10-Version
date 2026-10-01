@@ -83,6 +83,19 @@ function copyRecursive(src, dest) {
 console.log('📂 Copying static assets to dist/assets...');
 copyRecursive(path.join(publicDir, 'assets'), path.join(distDir, 'assets'));
 
+const directRuntimeFiles = [
+    ['css/fonts.css', 'css/fonts.css'],
+    ['js/system/boot-failsafe.js', 'js/system/boot-failsafe.js']
+];
+
+for (const [source, destination] of directRuntimeFiles) {
+    const sourcePath = path.join(publicDir, source);
+    const destinationPath = path.join(distDir, destination);
+    if (!fs.existsSync(sourcePath)) throw new Error('Required production asset is missing: public/' + source);
+    fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
+    fs.copyFileSync(sourcePath, destinationPath);
+}
+
 // 5. HTML Production Transformation
 console.log('📄 Transforming index.html for production bundle assets...');
 const origHtmlPath = path.join(publicDir, 'index.html');
@@ -102,6 +115,12 @@ if (fs.existsSync(origHtmlPath)) {
     );
 
     fs.writeFileSync(path.join(distDir, 'index.html'), htmlContent, 'utf8');
+
+    for (const asset of ['css/style.min.css', 'css/fonts.css', 'js/bundle.min.js', 'js/system/boot-failsafe.js']) {
+        if (!fs.existsSync(path.join(distDir, asset))) {
+            throw new Error('Production build validation failed: dist/' + asset + ' was not generated.');
+        }
+    }
 }
 
 // 6. Build Telemetry Report
