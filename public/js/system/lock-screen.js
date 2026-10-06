@@ -5,6 +5,11 @@ export function initLockScreen() {
     const lockScreen = document.getElementById('lock-screen');
     if (!lockScreen) return;
 
+    // A tiny classic-script fallback initializes before the module graph so the
+    // visitor can never be stranded. Do not register duplicate handlers when it
+    // has already taken ownership of the lock screen.
+    if (window.__PORTFOLIO_OS_LOCKSCREEN_FALLBACK__) return;
+
     const showSignInStage = () => {
         if (!lockScreen.classList.contains('sign-in-mode')) {
             lockScreen.classList.add('sign-in-mode');
@@ -29,7 +34,7 @@ export function initLockScreen() {
 
     const lockOS = () => {
         lockScreen.style.display = 'flex';
-        void lockScreen.offsetWidth; // Force layout reflow
+        void lockScreen.offsetWidth;
         lockScreen.classList.remove('unlocked', 'sign-in-mode');
         showToast('Screen Locked', 'Press any key or click to sign in.', 'fa-solid fa-lock', 'System');
     };
