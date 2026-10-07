@@ -11,10 +11,6 @@ test.describe('10. Production Build Smoke Tests', () => {
         await expect(lockScreen).not.toBeVisible();
     }
 
-    test.beforeEach(async ({ page }) => {
-        await unlockPortfolio(page);
-    });
-
     test('10.1 Production build serves critical bootstrap assets', async ({ page }) => {
         expect((await page.request.get('/js/system/boot-failsafe.js')).ok()).toBe(true);
         expect((await page.request.get('/css/fonts.css')).ok()).toBe(true);
@@ -22,6 +18,7 @@ test.describe('10. Production Build Smoke Tests', () => {
     });
 
     test('10.2 Production Desktop Shell renders cleanly', async ({ page }) => {
+        await unlockPortfolio(page);
         const desktop = page.locator('#desktop-shell');
         await expect(desktop).toBeVisible();
 
@@ -40,6 +37,7 @@ test.describe('10. Production Build Smoke Tests', () => {
     });
 
     test('10.4 Opening app in production build mode operates window controls', async ({ page }) => {
+        await unlockPortfolio(page);
         const icon = page.locator('.desktop-icon[data-window="calculator"]');
         await icon.dispatchEvent('dblclick');
 
@@ -60,6 +58,7 @@ test.describe('10. Production Build Smoke Tests', () => {
     });
 
     test('10.5 Developer Mode (Ctrl + Shift + D) activates in production build', async ({ page }) => {
+        await unlockPortfolio(page);
         const hud = page.locator('#dev-tools-hud');
         await page.keyboard.press('Control+Shift+KeyD');
         await expect(hud).toBeVisible();
