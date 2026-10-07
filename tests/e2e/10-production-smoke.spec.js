@@ -64,4 +64,21 @@ test.describe('10. Production Build Smoke Tests', () => {
         await expect(hud).toBeVisible();
         await expect(hud).toContainText('BhavyaOS DevTools');
     });
+    test('10.6 Edge search output escapes untrusted query text', async ({ page }) => {
+        await unlockPortfolio(page);
+
+        const edgeIcon = page.locator('.desktop-icon[data-window="edge"]');
+        await edgeIcon.dispatchEvent('dblclick');
+
+        const win = page.locator('#win-edge');
+        await expect(win).toBeVisible();
+
+        await page.locator('#edge-address-input').fill('<img src=x onerror="window.__xss=1">');
+        await page.locator('#edge-go-btn').click();
+
+        await expect(page.locator('#edge-viewport-container')).toContainText('Bing Search Results for:');
+        await expect(page.locator('#edge-viewport-container img')).toHaveCount(0);
+        expect(await page.evaluate(() => window.__xss)).toBeUndefined();
+    });
+
 });
