@@ -6,7 +6,7 @@ An interactive, full-stack **Windows 10 Web Desktop Application** built with Nod
 [![Coverage](https://img.shields.io/badge/Coverage-reported%20by%20CI-blue?style=flat-square&logo=c8)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions)
 [![ESLint](https://img.shields.io/badge/ESLint-10-success?style=flat-square&logo=eslint)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version)
 [![CI Status](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml/badge.svg)](https://github.com/BhavyaBothera/Portfolio-Window-10-Version/actions/workflows/ci.yml)
-[![Accessibility Audit](https://img.shields.io/badge/Accessibility-100%2F100-success?style=flat-square&logo=lighthouse)](docs/LIGHTHOUSE_REPORT.md)
+[![Accessibility](https://img.shields.io/badge/Accessibility-automated%20checks-blue?style=flat-square)](docs/LIGHTHOUSE_REPORT.md)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 
 ---
