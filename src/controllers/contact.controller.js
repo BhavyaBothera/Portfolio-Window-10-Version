@@ -41,11 +41,13 @@ exports.submitContactMessage = async (req, res, next) => {
             [id, name, email, subject, message, createdAt]
         );
 
-        console.log(`[API Contact] Saved message from ${name} (${email}): "${subject}"`);
+        // Do not log or echo submitted contact PII. The returned request ID is
+        // enough for client-side correlation without exposing the message contents.
+        console.log('[API Contact] Contact message stored successfully.');
         return res.status(201).json({
             success: true,
             message: 'Message delivered and saved to portfolio database successfully!',
-            data: { id, name, email, subject, message, created_at: createdAt }
+            request_id: id
         });
     } catch (err) {
         next(err);
