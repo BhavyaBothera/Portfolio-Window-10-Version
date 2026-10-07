@@ -2,13 +2,17 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('10. Production Build Smoke Tests', () => {
 
-    test.beforeEach(async ({ page }) => {
+    async function unlockPortfolio(page) {
         await page.goto('/');
         const lockScreen = page.locator('#lock-screen');
         await lockScreen.click();
         await page.keyboard.press('Enter');
         await expect(lockScreen).toHaveClass(/unlocked/);
         await expect(lockScreen).not.toBeVisible();
+    }
+
+    test.beforeEach(async ({ page }) => {
+        await unlockPortfolio(page);
     });
 
     test('10.1 Production build serves critical bootstrap assets', async ({ page }) => {
