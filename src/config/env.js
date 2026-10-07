@@ -27,7 +27,9 @@ const config = {
     adminToken: devFallbackToken,
     dbPath: process.env.DB_PATH || path.join(__dirname, '../../db/portfolio.sqlite'),
     corsOrigin: corsOrigin,
-    restrictPublicRead: (process.env.RESTRICT_PUBLIC_READ || 'false').toLowerCase() === 'true'
+    // Public VFS/notes reads are opt-in in production; development keeps the
+    // current demo-friendly default unless explicitly overridden.
+    restrictPublicRead: (process.env.RESTRICT_PUBLIC_READ || (isProduction ? 'true' : 'false')).toLowerCase() === 'true'
 };
 
 module.exports = config;
