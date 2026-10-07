@@ -216,7 +216,7 @@ npm ci ──> npm run lint ──> npm run build ──> npm test ──> npx p
 | `NODE_ENV` | `development` | Node environment (`development` / `production`) |
 | `ADMIN_TOKEN` | Secret in `.env` | Admin API authentication header token |
 | `DB_PATH` | `./db/portfolio.sqlite` | SQLite database file location |
-| `RESTRICT_PUBLIC_READ` | `false` | If set to `true`, locks down read endpoints (`/notes`, `/vfs`, `/system/stats`) to admin token |
+| `RESTRICT_PUBLIC_READ` | `true` in production, `false` in development | Locks down read endpoints (`/notes`, `/vfs`, `/system/stats`) to admin token when enabled |
 
 ---
 
