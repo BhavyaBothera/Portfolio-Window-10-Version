@@ -17,13 +17,13 @@ The repository includes automated checks across nine engineering-quality areas. 
 
 | Engineering Quality Pillar | Tooling & Benchmark Result | Metric / Verification | Status |
 | :--- | :--- | :--- | :---: |
-| 1. **Static Code Analysis** | ESLint 9 Flat Config (`eslint.config.mjs`) | `npm run lint` — **0 Errors, 0 Warnings** | 🟢 PASS |
+| 1. **Static Code Analysis** | ESLint 10 Flat Config (`eslint.config.mjs`) | `npm run lint` — **0 Errors, 0 Warnings** | 🟢 PASS |
 | 2. **Production Build Pipeline** | ESBuild Bundler (`build.js`) | `npm run build` — bundle/minification verification | 🟢 PASS |
 | 3. **Code Coverage Reporting** | C8 Code Coverage Reporter | `npm run test:coverage` — generates the current statement/function coverage report | 🟢 PASS |
 | 4. **Performance Evidence** | Lighthouse & DevTools Profiler | See `docs/LIGHTHOUSE_REPORT.md` for the dated audit and environment | 🟢 PASS |
 | 5. **Accessibility Audit** | axe-core & Lighthouse | Automated accessibility checks and keyboard/focus coverage; see the dated report | 🟢 PASS |
 | 6. **Security Automation** | `npm audit` & security tests | Dependency and application security checks run through CI | 🟢 PASS |
-| 7. **Production Smoke Testing** | Playwright Production E2E Spec | `npm run test:prod` — **4/4 Smoke Tests Passing** against `dist/` Minified Bundle | 🟢 PASS |
+| 7. **Production Smoke Testing** | Playwright Production E2E Spec | `npm run test:prod` — production smoke checks against the `dist/` build | 🟢 PASS |
 | 8. **Playwright E2E Test Suite** | Chromium Browser Automation | `npm run test:e2e` — current Playwright suite | 🟢 PASS |
 | 9. **Automated CI Pipeline** | GitHub Actions Pipeline | `.github/workflows/ci.yml` — current status is reported by GitHub Actions | 🟢 PASS |
 
@@ -50,7 +50,7 @@ The repository includes automated checks across nine engineering-quality areas. 
   - 🎨 **MS Paint** — Drawing canvas with brush, eraser, shapes, undo stack, and PNG export.
   - 🔢 **Calculator** — Safe, zero-eval Shunting-Yard arithmetic parser supporting `+`, `-`, `*`, `/`, `%`, and `()`.
   - 🕹️ **Minesweeper & Solitaire** — Retro games with victory audio fanfare and SQLite leaderboard recording.
-  - 📝 **Sticky Notes & Notepad** — Real-time notes editor synced to SQLite database.
+  - 📝 **Sticky Notes & Notepad** — Browser-persistent local notes editor; admin-only server notes remain protected.
   - ⚙️ **Windows Settings** — Accent color pickers, wallpaper selection, light/dark mode, and sound toggles.
   - 🌐 **Microsoft Edge Simulation** — Web browser with safe HTTPS URL validation and fallback embeds for sites blocking iframes.
 
