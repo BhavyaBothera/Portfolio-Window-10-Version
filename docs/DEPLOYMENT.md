@@ -45,7 +45,7 @@ NODE_ENV=production
 CORS_ORIGIN=https://your-frontend.example
 ADMIN_TOKEN=<generate-a-long-random-secret>
 DB_PATH=./db/portfolio.sqlite
-RESTRICT_PUBLIC_READ=false
+RESTRICT_PUBLIC_READ=true
 ```
 
 Do not commit real credentials to the repository.
