@@ -8,6 +8,7 @@
 function createRateLimiter(options = {}) {
     const windowMs = options.windowMs || 60 * 1000; // 1 minute window
     const maxRequests = options.maxRequests || 5;    // 5 requests per window
+    const maxTrackedClients = options.maxTrackedClients || 10000;
     const ipHits = new Map();
 
     // Clean up expired IP entries every 2 minutes
@@ -26,6 +27,19 @@ function createRateLimiter(options = {}) {
 
         let record = ipHits.get(clientIp);
 
+        if (!record && ipHits.size >= maxTrackedClients) {
+            // Bound memory usage if an attacker rotates client IPs.
+            let oldestIp = null;
+            let oldestStart = Infinity;
+            for (const [ip, entry] of ipHits.entries()) {
+                if (entry.startTime < oldestStart) {
+                    oldestStart = entry.startTime;
+                    oldestIp = ip;
+                }
+            }
+            if (oldestIp !== null) ipHits.delete(oldestIp);
+        }
+
         if (!record || (now - record.startTime > windowMs)) {
             record = { count: 1, startTime: now };
             ipHits.set(clientIp, record);
@@ -34,6 +48,8 @@ function createRateLimiter(options = {}) {
         }
 
         if (record.count > maxRequests) {
+            const retryAfterSeconds = Math.max(1, Math.ceil((windowMs - (now - record.startTime)) / 1000));
+            res.set('Retry-After', String(retryAfterSeconds));
             return res.status(429).json({
                 success: false,
                 error: 'Too many requests. Please wait a minute before submitting again.'
