@@ -43,6 +43,7 @@ export function updateClocks() {
 }
 
 let previewTimeout = null;
+let clockInterval = null;
 
 export function updateTaskbarPills() {
     const taskbarAppsContainer = document.getElementById('taskbar-apps-container');
@@ -142,7 +143,10 @@ export function updateTaskbarPills() {
 }
 
 export function initTaskbar() {
-    setInterval(updateClocks, 1000);
+    if (!clockInterval) {
+        clockInterval = setInterval(updateClocks, 1000);
+        clockInterval.unref?.();
+    }
     updateClocks();
     updateTaskbarPills();
 }
