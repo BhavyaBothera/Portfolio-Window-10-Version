@@ -1,5 +1,4 @@
 import { playSound } from '../core/audio.js';
-import { openWindow } from '../core/window-manager.js';
 
 export function initStartMenu() {
     const startBtn = document.getElementById('start-btn');
@@ -75,11 +74,7 @@ export function initStartMenu() {
     // Start menu item click listeners
     getStartMenuItems().forEach(item => {
         item.addEventListener('click', () => {
-            const winId = item.dataset.window;
-            if (winId) {
-                openWindow(winId);
-                closeStartMenu(false);
-            }
+            if (item.dataset.window) closeStartMenu(false);
         });
         item.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
