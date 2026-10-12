@@ -7656,3 +7656,113 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ==========================================================================
+   UI / UX POLISH — FOCUS, DISCOVERY AND CONTENT HIERARCHY
+   ========================================================================== */
+:where(button, input, textarea, select, [role="button"], [tabindex="0"]):focus-visible {
+    outline: 2px solid var(--win-accent, #0078d4);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.22);
+}
+
+button,
+.project-item-card,
+.mobile-tile,
+.sidebar-menu li[data-filter] {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.project-item-card {
+    min-width: 0;
+    overflow: hidden;
+    transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.project-item-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 120, 212, 0.62);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.project-item-card:focus-within {
+    outline: 2px solid var(--win-accent, #0078d4);
+    outline-offset: 2px;
+}
+
+.sidebar-menu li[data-filter] {
+    cursor: pointer;
+}
+
+.sidebar-menu li[data-filter]:focus-visible {
+    outline-offset: -2px;
+}
+
+.projects-filter-status {
+    margin: 10px 16px 0;
+    color: var(--win-text-dim, #aeb8c2);
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.projects-empty-state {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--win-text-dim, #aeb8c2);
+    text-align: center;
+    border: 1px dashed var(--win-border, rgba(255,255,255,0.2));
+    border-radius: 8px;
+}
+
+.projects-empty-state[hidden] {
+    display: none !important;
+}
+
+.projects-empty-state i {
+    font-size: 1.5rem;
+    color: var(--win-accent, #0078d4);
+}
+
+.projects-empty-state strong {
+    color: var(--win-text, #f5f7fa);
+    font-size: 1rem;
+}
+
+.projects-empty-state span {
+    max-width: 34ch;
+    font-size: 0.88rem;
+}
+
+.mobile-launcher-empty {
+    grid-column: 1 / -1;
+    padding: 28px 12px;
+    color: var(--win-text-dim, #aeb8c2);
+    text-align: center;
+}
+
+.mobile-tile:focus-visible {
+    outline-offset: 2px;
+}
+
+.mobile-switcher-card-body[role="button"] {
+    cursor: pointer;
+}
+
+@media (hover: none) {
+    .project-item-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-item-card {
+        transition: none;
+    }
+}
