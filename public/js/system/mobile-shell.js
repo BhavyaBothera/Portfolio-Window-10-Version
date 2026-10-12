@@ -41,6 +41,12 @@ export function initMobileShell() {
 
     if (!launcher || !switcher || !backBtn || !homeBtn || !switcherBtn) return;
 
+    // Keep overlay state available to assistive technology.
+    launcher.setAttribute('aria-hidden', String(launcher.classList.contains('hidden')));
+    switcher.setAttribute('aria-hidden', String(switcher.classList.contains('hidden')));
+    searchInput?.setAttribute('aria-label', 'Search applications');
+    searchInput?.setAttribute('type', 'search');
+
     // 1. Render Mobile Launcher App Grid
     renderLauncherTiles(APPS_LIST);
 
@@ -55,11 +61,29 @@ export function initMobileShell() {
         if (!gridContainer) return;
         gridContainer.innerHTML = '';
 
+        if (apps.length === 0) {
+            gridContainer.appendChild(createElement('p', {
+                className: 'mobile-launcher-empty',
+                textContent: 'No apps found. Try another search.'
+            }));
+            return;
+        }
+
         apps.forEach(app => {
             const tile = createElement('div', { className: `mobile-tile ${app.color}`, dataset: { window: app.id } }, [
                 createElement('i', { className: app.icon }),
                 createElement('span', { className: 'mobile-tile-label', textContent: app.name })
             ]);
+
+            tile.setAttribute('role', 'button');
+            tile.setAttribute('tabindex', '0');
+            tile.setAttribute('aria-label', `Open ${app.name}`);
+            tile.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    tile.click();
+                }
+            });
 
             tile.addEventListener('click', () => {
                 hideMobileOverlays();
@@ -120,13 +144,17 @@ export function initMobileShell() {
 
     function showSwitcher() {
         launcher.classList.add('hidden');
+        launcher.setAttribute('aria-hidden', 'true');
         renderTaskSwitcherCards();
         switcher.classList.remove('hidden');
+        switcher.setAttribute('aria-hidden', 'false');
     }
 
     function hideMobileOverlays() {
         launcher.classList.add('hidden');
         switcher.classList.add('hidden');
+        launcher.setAttribute('aria-hidden', 'true');
+        switcher.setAttribute('aria-hidden', 'true');
     }
 
     // 3. Render Task Switcher Cards
@@ -153,15 +181,26 @@ export function initMobileShell() {
                         createElement('i', { className: appMeta.icon }),
                         createElement('span', { textContent: ` ${appMeta.name}` })
                     ]),
-                    createElement('button', { className: 'mobile-switcher-card-close', title: 'Close' }, [
+                    createElement('button', { className: 'mobile-switcher-card-close', title: 'Close', 'aria-label': `Close ${appMeta.name}` }, [
                         createElement('i', { className: 'fa-solid fa-xmark' })
                     ])
                 ]),
                 createElement('div', { className: 'mobile-switcher-card-body', textContent: `Tap to switch to ${appMeta.name}` })
             ]);
 
+            // Make the switch target keyboard accessible as well as touch accessible.
+            const switchTarget = card.querySelector('.mobile-switcher-card-body');
+            switchTarget.setAttribute('role', 'button');
+            switchTarget.setAttribute('tabindex', '0');
+            switchTarget.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    switchTarget.click();
+                }
+            });
+
             // Tap card body to activate window
-            card.querySelector('.mobile-switcher-card-body').addEventListener('click', () => {
+            switchTarget.addEventListener('click', () => {
                 hideMobileOverlays();
                 openWindow(winId);
                 playSound('click');
