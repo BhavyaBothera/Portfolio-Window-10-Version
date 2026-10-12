@@ -46,6 +46,10 @@ export function initMobileShell() {
     switcher.setAttribute('aria-hidden', String(switcher.classList.contains('hidden')));
     searchInput?.setAttribute('aria-label', 'Search applications');
     searchInput?.setAttribute('type', 'search');
+    homeBtn.setAttribute('aria-controls', 'mobile-app-launcher');
+    switcherBtn.setAttribute('aria-controls', 'mobile-task-switcher');
+    homeBtn.setAttribute('aria-expanded', 'false');
+    switcherBtn.setAttribute('aria-expanded', 'false');
 
     // 1. Render Mobile Launcher App Grid
     renderLauncherTiles(APPS_LIST);
@@ -138,8 +142,13 @@ export function initMobileShell() {
     function showLauncher() {
         switcher.classList.add('hidden');
         launcher.classList.remove('hidden');
+        launcher.setAttribute('aria-hidden', 'false');
+        switcher.setAttribute('aria-hidden', 'true');
+        homeBtn.setAttribute('aria-expanded', 'true');
+        switcherBtn.setAttribute('aria-expanded', 'false');
         if (searchInput) searchInput.value = '';
         renderLauncherTiles(APPS_LIST);
+        searchInput?.focus({ preventScroll: true });
     }
 
     function showSwitcher() {
@@ -148,6 +157,8 @@ export function initMobileShell() {
         renderTaskSwitcherCards();
         switcher.classList.remove('hidden');
         switcher.setAttribute('aria-hidden', 'false');
+        homeBtn.setAttribute('aria-expanded', 'false');
+        switcherBtn.setAttribute('aria-expanded', 'true');
     }
 
     function hideMobileOverlays() {
@@ -155,6 +166,8 @@ export function initMobileShell() {
         switcher.classList.add('hidden');
         launcher.setAttribute('aria-hidden', 'true');
         switcher.setAttribute('aria-hidden', 'true');
+        homeBtn.setAttribute('aria-expanded', 'false');
+        switcherBtn.setAttribute('aria-expanded', 'false');
     }
 
     // 3. Render Task Switcher Cards
