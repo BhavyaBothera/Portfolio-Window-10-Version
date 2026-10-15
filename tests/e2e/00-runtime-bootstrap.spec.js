@@ -26,10 +26,14 @@ test('runtime bootstrap diagnostics expose module startup failures', async ({ pa
         startButtonHasClickHandlerSignal: document.getElementById('start-btn')?.getAttribute('aria-controls') === 'start-menu',
     }));
 
-    expect(runtime.ready, JSON.stringify({
+    const diagnostics = JSON.stringify({
         runtime,
         pageErrors,
         consoleErrors,
         failedRequests,
-    }, null, 2)).toBe(true);
+    }, null, 2);
+
+    expect(runtime.ready, diagnostics).toBe(true);
+    expect(runtime.startButtonHasClickHandlerSignal, diagnostics).toBe(true);
+    expect(runtime.bootstrapFailures || [], diagnostics).toEqual([]);
 });
