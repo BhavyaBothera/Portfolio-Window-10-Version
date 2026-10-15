@@ -21,7 +21,7 @@ test.describe('11. Portfolio Discovery & Interaction UX', () => {
         expect(countBeforeSearch).toBeGreaterThan(0);
 
         const firstTitle = (await visibleAiCards.first().locator('h3').textContent()).trim();
-        const query = firstTitle.split(/\\s+/)[0];
+        const query = firstTitle.split(/\s+/)[0];
         await page.locator('#project-search-input').fill(query);
 
         await expect(page.locator('#win-projects .projects-filter-status')).toContainText('Showing');
