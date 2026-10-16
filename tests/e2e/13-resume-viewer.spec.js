@@ -29,7 +29,7 @@ test.describe('13. Resume Viewer', () => {
         await expect.poll(() => page.evaluate(() => window.__resumePrintCalled === true)).toBe(true);
         await expect(page.locator('body')).toHaveClass(/resume-print-mode/);
 
-        await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+        await page.evaluate(() => window.dispatchEvent(new document.defaultView.Event('afterprint')));
         await expect(page.locator('body')).not.toHaveClass(/resume-print-mode/);
     });
 });
