@@ -54,7 +54,7 @@ test.describe('14. Taskbar Tray Controls', () => {
 
         await page.reload();
         await expect(page.locator('body')).toHaveClass(/night-light-active/);
-        await expect.poll(() => page.locator('#desktop-wallpaper').evaluate(element => getComputedStyle(element).backgroundImage))
+        await expect.poll(() => page.locator('#desktop-wallpaper').evaluate(element => window.getComputedStyle(element).backgroundImage))
             .toContain('photo-1579546929518-9e396f3cc809');
     });
 
