@@ -2,6 +2,7 @@ import { state } from '../core/state.js';
 import { openWindow, minimizeWindow, closeWindow } from '../core/window-manager.js';
 import { setText } from '../utils/dom.js';
 import { setItem } from '../core/storage.js';
+import { playSound } from '../core/audio.js';
 
 const windowMeta = {
     'this-pc': { icon: 'fa-solid fa-desktop text-blue', label: 'This PC' },
