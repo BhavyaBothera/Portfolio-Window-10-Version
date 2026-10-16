@@ -7998,3 +7998,76 @@ button,
     font-size: 0.82rem;
     line-height: 1.45;
 }
+
+
+/* Resume preview: print only the resume page, not the simulated desktop. */
+@media print {
+    @page {
+        size: auto;
+        margin: 12mm;
+    }
+
+    body.resume-print-mode,
+    body.resume-print-mode * {
+        visibility: hidden !important;
+    }
+
+    body.resume-print-mode #win-resume,
+    body.resume-print-mode #win-resume #pdf-document,
+    body.resume-print-mode #win-resume #pdf-document * {
+        visibility: visible !important;
+    }
+
+    body.resume-print-mode #desktop-shell,
+    body.resume-print-mode #taskbar,
+    body.resume-print-mode #windows-container > :not(#win-resume) {
+        display: none !important;
+    }
+
+    body.resume-print-mode #windows-container {
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+
+    body.resume-print-mode #win-resume {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        transform: none !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+
+    body.resume-print-mode #win-resume .win-titlebar,
+    body.resume-print-mode #win-resume .pdf-toolbar {
+        display: none !important;
+    }
+
+    body.resume-print-mode #win-resume .win-body,
+    body.resume-print-mode #win-resume .pdf-viewer-body {
+        display: block !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        background: #fff !important;
+    }
+
+    body.resume-print-mode #pdf-document {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+    }
+}
