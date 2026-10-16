@@ -29,6 +29,7 @@ export function initSettings() {
     }
 
     // Wallpaper options
+    let wallpaperRequestId = 0;
     document.querySelectorAll('.wallpaper-option-card').forEach((card, idx) => {
         card.addEventListener('click', () => {
             document.querySelectorAll('.wallpaper-option-card').forEach(c => c.classList.remove('active'));
@@ -37,15 +38,23 @@ export function initSettings() {
             const wpUrl = card.dataset.wallpaper;
             const desktopWp = document.getElementById('desktop-wallpaper');
             if (desktopWp && wpUrl) {
+                const requestId = ++wallpaperRequestId;
                 const img = new Image();
                 img.onload = () => {
+                    if (requestId !== wallpaperRequestId) return;
                     desktopWp.style.backgroundImage = `url('${wpUrl}')`;
                     state.currentWallpaperIdx = idx;
                     setItem('win10-wallpaper', wpUrl);
                 };
                 img.onerror = () => {
-                    desktopWp.style.backgroundImage = `url('assets/wallpaper.webp')`;
-                    setItem('win10-wallpaper', 'assets/wallpaper.webp');
+                    if (requestId !== wallpaperRequestId) return;
+                    const fallback = state.wallpapers[0];
+                    desktopWp.style.backgroundImage = `url('${fallback}')`;
+                    state.currentWallpaperIdx = 0;
+                    setItem('win10-wallpaper', fallback);
+                    document.querySelectorAll('.wallpaper-option-card').forEach((option, optionIndex) => {
+                        option.classList.toggle('active', optionIndex === 0);
+                    });
                 };
                 img.src = wpUrl;
             }
