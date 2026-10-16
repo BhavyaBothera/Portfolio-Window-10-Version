@@ -321,7 +321,7 @@ function initTrayControls() {
 
     const themeTile = document.getElementById('toggle-dark-mode');
     if (themeTile) {
-        updateToggleTile(themeTile, document.body.classList.contains('light-mode'));
+        updateToggleTile(themeTile, !document.body.classList.contains('light-mode'));
     }
 
     const soundTile = document.getElementById('toggle-sound');
@@ -344,7 +344,7 @@ function initTrayControls() {
             const lightMode = !document.body.classList.contains('light-mode');
             document.body.classList.toggle('light-mode', lightMode);
             setItem('win10-theme', lightMode ? 'light' : 'dark');
-            updateToggleTile(tile, lightMode);
+            updateToggleTile(tile, !lightMode);
         }],
         ['toggle-wallpaper', () => {
             if (!state.wallpapers.length) return;
