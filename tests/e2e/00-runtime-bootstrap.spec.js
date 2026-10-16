@@ -23,7 +23,7 @@ test('runtime bootstrap diagnostics expose module startup failures', async ({ pa
         ready: window.__PORTFOLIO_OS_READY__ === true,
         bootstrapFailures: window.__PORTFOLIO_OS_BOOTSTRAP_FAILURES__ || null,
         desktopIconCount: document.querySelectorAll('.desktop-icon').length,
-        startButtonHasClickHandlerSignal: document.getElementById('start-btn')?.getAttribute('aria-controls') === 'start-menu',
+        startMenuInitialized: document.getElementById('start-btn')?.getAttribute('aria-haspopup') === 'true' && document.getElementById('start-btn')?.getAttribute('aria-controls') === 'start-menu',
     }));
 
     const diagnostics = JSON.stringify({
@@ -34,6 +34,6 @@ test('runtime bootstrap diagnostics expose module startup failures', async ({ pa
     }, null, 2);
 
     expect(runtime.ready, diagnostics).toBe(true);
-    expect(runtime.startButtonHasClickHandlerSignal, diagnostics).toBe(true);
+    expect(runtime.startMenuInitialized, diagnostics).toBe(true);
     expect(runtime.bootstrapFailures || [], diagnostics).toEqual([]);
 });
