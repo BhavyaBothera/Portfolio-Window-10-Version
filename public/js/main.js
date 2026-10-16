@@ -58,7 +58,7 @@ function safeRegisterApp(name, initializer) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function bootstrapPortfolioOS() {
     safeInit('error-boundary', initErrorBoundary);
 
     // Critical boot + lock-screen controls are initialized first so a failure in
@@ -176,4 +176,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('🚀 Windows 10 Portfolio OS ES Module System Initialized',
         bootstrapFailures.length ? bootstrapFailures : 'all bootstrap stages completed');
-});
+}
+
+// Module dependencies can finish after DOMContentLoaded in some deployments.
+// Run immediately when the document is already parsed, otherwise wait once.
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootstrapPortfolioOS, { once: true });
+} else {
+    bootstrapPortfolioOS();
+}
