@@ -50,4 +50,13 @@ test.describe('11. Portfolio Discovery & Interaction UX', () => {
         await expect(webFilter).toHaveAttribute('aria-pressed', 'true');
         await expect(webFilter).toHaveClass(/active/);
     });
+    test('11.4 Projects can appear in more than one relevant category', async ({ page }) => {
+        const mobileFilter = page.locator('#win-projects .sidebar-menu li[data-filter="mobile"]');
+        await mobileFilter.click();
+
+        const visibleCards = page.locator('#win-projects .project-item-card:visible');
+        await expect(visibleCards).toHaveCount(1);
+        await expect(visibleCards.first().locator('h3')).toHaveText('E-Kabadi');
+    });
+
 });
