@@ -129,7 +129,9 @@ function bootstrapPortfolioOS() {
 
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('[data-window]');
-        if (trigger && !trigger.classList.contains('desktop-icon')) {
+        // Mobile launcher tiles own their click handler so they can close the
+        // launcher before opening an app. Do not launch the same window twice.
+        if (trigger && !trigger.classList.contains('desktop-icon') && !trigger.classList.contains('mobile-tile')) {
             const winId = trigger.dataset.window;
             if (winId) openWindow(winId);
         }
