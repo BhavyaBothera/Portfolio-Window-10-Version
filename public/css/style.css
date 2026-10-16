@@ -7656,3 +7656,338 @@ body {
         transition-duration: 0.01ms !important;
     }
 }
+
+/* ==========================================================================
+   UI / UX POLISH — FOCUS, DISCOVERY AND CONTENT HIERARCHY
+   ========================================================================== */
+:where(button, input, textarea, select, [role="button"], [tabindex="0"]):focus-visible {
+    outline: 2px solid var(--win-accent, #0078d4);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.22);
+}
+
+button,
+.project-item-card,
+.mobile-tile,
+.sidebar-menu li[data-filter] {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.project-item-card {
+    min-width: 0;
+    overflow: hidden;
+    transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.project-item-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(0, 120, 212, 0.62);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.project-item-card:focus-within {
+    outline: 2px solid var(--win-accent, #0078d4);
+    outline-offset: 2px;
+}
+
+.sidebar-menu li[data-filter] {
+    cursor: pointer;
+}
+
+.sidebar-menu li[data-filter]:focus-visible {
+    outline-offset: -2px;
+}
+
+.projects-filter-status {
+    margin: 10px 16px 0;
+    color: var(--win-text-dim, #aeb8c2);
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.projects-empty-state {
+    grid-column: 1 / -1;
+    min-height: 180px;
+    padding: 28px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--win-text-dim, #aeb8c2);
+    text-align: center;
+    border: 1px dashed var(--win-border, rgba(255,255,255,0.2));
+    border-radius: 8px;
+}
+
+.projects-empty-state[hidden] {
+    display: none !important;
+}
+
+.projects-empty-state i {
+    font-size: 1.5rem;
+    color: var(--win-accent, #0078d4);
+}
+
+.projects-empty-state strong {
+    color: var(--win-text, #f5f7fa);
+    font-size: 1rem;
+}
+
+.projects-empty-state span {
+    max-width: 34ch;
+    font-size: 0.88rem;
+}
+
+.mobile-launcher-empty {
+    grid-column: 1 / -1;
+    padding: 28px 12px;
+    color: var(--win-text-dim, #aeb8c2);
+    text-align: center;
+}
+
+.mobile-tile:focus-visible {
+    outline-offset: 2px;
+}
+
+.mobile-switcher-card-body[role="button"] {
+    cursor: pointer;
+}
+
+@media (hover: none) {
+    .project-item-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .project-item-card {
+        transition: none;
+    }
+}
+
+
+/* Put portfolio destinations before simulated utilities on the desktop. */
+.desktop-icon[data-window="projects"] { order: -6; }
+.desktop-icon[data-window="this-pc"] { order: -5; }
+.desktop-icon[data-window="experience"] { order: -4; }
+.desktop-icon[data-window="skills"] { order: -3; }
+.desktop-icon[data-window="resume"] { order: -2; }
+.desktop-icon[data-window="contact"] { order: -1; }
+
+.desktop-icon[role="button"]:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.95);
+    outline-offset: 2px;
+    background: rgba(0, 120, 212, 0.28);
+}
+
+.desktop-icon .icon-label {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.desktop-icon .icon-fa-tile {
+    display: flex;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+@media (max-width: 768px) {
+    .desktop-icon[data-window] {
+        order: initial;
+    }
+}
+
+
+/* ==========================================================================
+   UX PASS 2 — PROJECT CARD RHYTHM & WINDOW CHROME
+   Keep the Windows 10 visual language, but make content easier to scan.
+   ========================================================================== */
+#win-projects .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    align-items: stretch;
+    gap: 16px;
+    padding: 16px;
+}
+
+#win-projects .project-item-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    border-color: rgba(255, 255, 255, 0.14);
+    background:
+        linear-gradient(155deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018) 52%),
+        rgba(20, 24, 32, 0.76);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.2);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+#win-projects .project-item-card:hover,
+#win-projects .project-item-card:focus-within {
+    transform: translateY(-3px);
+    border-color: rgba(0, 210, 255, 0.48);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 210, 255, 0.08);
+}
+
+#win-projects .proj-banner {
+    height: 116px;
+    min-height: 116px;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+#win-projects .proj-banner::after {
+    content: "";
+    position: absolute;
+    inset: 45% 0 0;
+    z-index: -1;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.22));
+    pointer-events: none;
+}
+
+#win-projects .proj-icon-overlay {
+    font-size: 3rem;
+    opacity: 0.68;
+    transition: transform 220ms ease, opacity 220ms ease;
+}
+
+#win-projects .project-item-card:hover .proj-icon-overlay,
+#win-projects .project-item-card:focus-within .proj-icon-overlay {
+    transform: translateY(-2px) scale(1.04);
+    opacity: 0.9;
+}
+
+#win-projects .proj-details {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0;
+    padding: 17px;
+}
+
+#win-projects .proj-details h3 {
+    margin: 0 0 8px;
+    font-size: 1.04rem;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+}
+
+#win-projects .proj-desc {
+    margin: 0 0 14px;
+    font-size: 0.86rem;
+    line-height: 1.58;
+    color: rgba(235, 241, 248, 0.76);
+}
+
+#win-projects .proj-tech-stack {
+    gap: 6px;
+    margin-top: auto;
+    margin-bottom: 16px;
+    padding-top: 2px;
+}
+
+#win-projects .proj-tech-stack span {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.69rem;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+}
+
+#win-projects .proj-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+#win-projects .proj-link {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.035);
+    font-size: 0.78rem;
+    line-height: 1.25;
+    text-decoration: none;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+#win-projects .proj-link:hover {
+    border-color: rgba(0, 210, 255, 0.4);
+    background: rgba(0, 120, 215, 0.16);
+    color: #fff;
+}
+
+#win-projects .proj-link:focus-visible {
+    outline: 2px solid var(--win-accent, #0078d4);
+    outline-offset: 2px;
+}
+
+.win-titlebar {
+    position: relative;
+}
+
+.win-title {
+    min-width: 0;
+    padding-right: 10px;
+}
+
+.win-controls {
+    flex-shrink: 0;
+}
+
+.win-control-btn,
+.win-btn {
+    -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 600px) {
+    #win-projects .projects-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #win-projects .proj-banner {
+        height: 96px;
+        min-height: 96px;
+    }
+
+    #win-projects .proj-details {
+        padding: 15px;
+    }
+
+    #win-projects .proj-footer-links {
+        gap: 7px;
+    }
+
+    #win-projects .proj-link {
+        flex: 1 1 auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #win-projects .project-item-card,
+    #win-projects .proj-icon-overlay,
+    #win-projects .proj-link {
+        transition: none;
+    }
+
+    #win-projects .project-item-card:hover,
+    #win-projects .project-item-card:focus-within {
+        transform: none;
+    }
+}

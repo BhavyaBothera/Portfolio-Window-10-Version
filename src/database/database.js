@@ -137,7 +137,7 @@ async function initDatabase() {
         const noteCount = await getAsync(`SELECT COUNT(*) as count FROM notes`);
         if (noteCount.count === 0) {
             await runAsync(
-                `INSERT INTO notes (id, text, color, updated_at) VALUES (1, ?, ?, ?)`,
+                `INSERT OR IGNORE INTO notes (id, text, color, updated_at) VALUES (1, ?, ?, ?)`,
                 [
                     "WELCOME TO BHAVY'S WINDOWS 10 PORTFOLIO OS!\n==================================================\n\n- Backend powered by Node.js, Express & SQLite3\n- Real-time CPU telemetry sampling\n- Secure REST APIs with rate limiting & input sanitization",
                     "yellow",
@@ -151,7 +151,7 @@ async function initDatabase() {
         const lbCount = await getAsync(`SELECT COUNT(*) as count FROM leaderboard`);
         if (lbCount.count === 0) {
             await runAsync(
-                `INSERT INTO leaderboard (id, player, game, score, time_seconds, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+                `INSERT OR IGNORE INTO leaderboard (id, player, game, score, time_seconds, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
                 [crypto.randomUUID(), "Bhavy", "minesweeper", 100, 42, new Date().toISOString()]
             );
             await runAsync(
@@ -163,7 +163,7 @@ async function initDatabase() {
         const vfsCount = await getAsync(`SELECT COUNT(*) as count FROM vfs`);
         if (vfsCount.count === 0) {
             await runAsync(
-                `INSERT INTO vfs (file_name, content, updated_at) VALUES (?, ?, ?)`,
+                `INSERT OR IGNORE INTO vfs (file_name, content, updated_at) VALUES (?, ?, ?)`,
                 [
                     "Welcome.txt",
                     "Welcome to Windows 10 Portfolio OS!\nFull-Stack REST API & SQLite Database Connected.",
