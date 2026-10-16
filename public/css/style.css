@@ -8071,3 +8071,19 @@ button,
         page-break-inside: avoid;
     }
 }
+
+
+/* Native buttons keep the calendar grid consistent with the simulated OS theme. */
+.cal-day {
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+}
+
+.cal-day.selected:not(.today) {
+    outline: 1px solid var(--win-accent);
+    outline-offset: -2px;
+}
