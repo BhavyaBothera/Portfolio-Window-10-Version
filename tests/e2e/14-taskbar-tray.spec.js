@@ -36,7 +36,7 @@ test.describe('14. Taskbar Tray Controls', () => {
 
         await page.locator('#tray-volume-slider').evaluate(element => {
             element.value = '0';
-            element.dispatchEvent(new Event('input', { bubbles: true }));
+            element.dispatchEvent(new document.defaultView.Event('input', { bubbles: true }));
         });
         await expect(page.locator('#tray-volume-percent')).toHaveText('0%');
         await expect(page.locator('#volume-icon-tray')).toHaveClass(/fa-volume-xmark/);
