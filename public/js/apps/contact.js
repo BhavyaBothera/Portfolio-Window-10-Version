@@ -7,14 +7,21 @@ export function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
 
+
+    const clearBtn = document.getElementById('clear-mail-btn');
+    clearBtn?.addEventListener('click', () => {
+        form.reset();
+        playSound('click');
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const nameInput = document.getElementById('contact-name');
-        const emailInput = document.getElementById('contact-email');
-        const subjectInput = document.getElementById('contact-subject');
-        const messageInput = document.getElementById('contact-message');
-        const submitBtn = document.getElementById('contact-submit-btn');
+        const nameInput = document.getElementById('sender-name');
+        const emailInput = document.getElementById('sender-email');
+        const subjectInput = document.getElementById('sender-subject');
+        const messageInput = document.getElementById('sender-message');
+        const submitBtn = document.getElementById('send-mail-btn');
 
         const name = nameInput?.value?.trim() || '';
         const email = emailInput?.value?.trim() || '';
@@ -41,7 +48,7 @@ export function initContactForm() {
 
         if (submitBtn) {
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Delivering Message...';
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Saving message...';
         }
 
         try {
@@ -59,7 +66,7 @@ export function initContactForm() {
             }
 
             if (res.ok && data.success) {
-                showToast('Message Sent!', 'Thank you! Your message has been delivered to Bhavy\'s portfolio inbox.', 'fa-solid fa-paper-plane', 'Windows Mail');
+                showToast('Message Saved', 'Thanks! Your message was saved to the portfolio database. It is not emailed automatically.', 'fa-solid fa-paper-plane', 'Windows Mail');
                 playSound('notify');
                 form.reset();
             } else {
@@ -72,7 +79,7 @@ export function initContactForm() {
         } finally {
             if (submitBtn) {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Message';
+                submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Send Message';
             }
         }
     });
