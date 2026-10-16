@@ -33,6 +33,7 @@ import { initStickyNotes } from './apps/stickynotes.js';
 import { initGrooveMusic } from './apps/mediaplayer.js';
 import { startTaskManagerUpdates } from './apps/task-manager.js';
 import { initArchitectureApp } from './apps/architecture.js';
+import { initResumeViewer } from './apps/resume.js';
 
 const bootstrapFailures = [];
 
@@ -92,6 +93,7 @@ function bootstrapPortfolioOS() {
     safeRegisterApp('mediaplayer', initGrooveMusic);
     safeRegisterApp('taskmgr', startTaskManagerUpdates);
     safeRegisterApp('architecture', initArchitectureApp);
+    safeRegisterApp('resume', initResumeViewer);
 
     safeInit('preloaded-this-pc', () => {
         if (document.getElementById('win-this-pc')) initThisPC();
