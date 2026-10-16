@@ -372,6 +372,7 @@ function initTrayControls() {
         ['toggle-night-light', tile => {
             const enabled = !document.body.classList.contains('night-light-active');
             document.body.classList.toggle('night-light-active', enabled);
+            setItem('win10-night-light', enabled ? '1' : '0');
             updateToggleTile(tile, enabled);
         }],
         ['toggle-fullscreen', async tile => {
