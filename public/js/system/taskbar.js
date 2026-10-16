@@ -389,11 +389,22 @@ function initTrayControls() {
         }]
     ]);
 
+    const toggleActionIds = new Set([
+        'toggle-dark-mode',
+        'toggle-sound',
+        'toggle-night-light',
+        'toggle-fullscreen'
+    ]);
+
     quickActions.forEach(tile => {
         tile.setAttribute('role', 'button');
         tile.setAttribute('tabindex', '0');
-        if (!tile.hasAttribute('aria-pressed')) {
-            tile.setAttribute('aria-pressed', String(tile.classList.contains('active')));
+        if (toggleActionIds.has(tile.id)) {
+            if (!tile.hasAttribute('aria-pressed')) {
+                tile.setAttribute('aria-pressed', String(tile.classList.contains('active')));
+            }
+        } else {
+            tile.removeAttribute('aria-pressed');
         }
         const activate = event => {
             if (event.type === 'keydown') {
