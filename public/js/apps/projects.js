@@ -39,6 +39,8 @@ export function initProjectsExplorer() {
         projectCards.forEach(card => {
             const categories = (card.dataset.category || '').split(/\s+/).filter(Boolean);
             const categoryMatches = activeFilter === 'all' || categories.includes(activeFilter);
+            const searchableText = card.textContent.toLowerCase();
+            const searchMatches = !query || searchableText.includes(query);
             const visible = categoryMatches && searchMatches;
 
             card.classList.toggle('hidden', !visible);
