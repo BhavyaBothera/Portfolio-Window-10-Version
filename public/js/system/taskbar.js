@@ -1,6 +1,7 @@
 import { state } from '../core/state.js';
 import { openWindow, minimizeWindow, closeWindow } from '../core/window-manager.js';
 import { setText } from '../utils/dom.js';
+import { setItem } from '../core/storage.js';
 
 const windowMeta = {
     'this-pc': { icon: 'fa-solid fa-desktop text-blue', label: 'This PC' },
@@ -303,6 +304,162 @@ function initTrayControls() {
 
     document.getElementById('tray-lang')?.setAttribute('role', 'img');
     document.getElementById('tray-lang')?.setAttribute('aria-label', 'Keyboard language: English (United States)');
+
+
+    const quickActions = [
+        document.getElementById('toggle-dark-mode'),
+        document.getElementById('toggle-wallpaper'),
+        document.getElementById('toggle-sound'),
+        document.getElementById('toggle-night-light'),
+        document.getElementById('toggle-fullscreen')
+    ].filter(Boolean);
+
+    const updateToggleTile = (tile, active) => {
+        tile.classList.toggle('active', active);
+        tile.setAttribute('aria-pressed', String(active));
+    };
+
+    const themeTile = document.getElementById('toggle-dark-mode');
+    if (themeTile) {
+        updateToggleTile(themeTile, document.body.classList.contains('light-mode'));
+    }
+
+    const soundTile = document.getElementById('toggle-sound');
+    if (soundTile) {
+        updateToggleTile(soundTile, state.soundEnabled);
+        const label = soundTile.querySelector('span');
+        if (label) label.textContent = state.soundEnabled ? 'Sound: ON' : 'Sound: OFF';
+        const icon = soundTile.querySelector('i');
+        if (icon) icon.className = state.soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+    }
+
+    const nightLightTile = document.getElementById('toggle-night-light');
+    if (nightLightTile) updateToggleTile(nightLightTile, document.body.classList.contains('night-light-active'));
+
+    const fullscreenTile = document.getElementById('toggle-fullscreen');
+    if (fullscreenTile) updateToggleTile(fullscreenTile, Boolean(document.fullscreenElement));
+
+    const actions = new Map([
+        ['toggle-dark-mode', tile => {
+            const lightMode = !document.body.classList.contains('light-mode');
+            document.body.classList.toggle('light-mode', lightMode);
+            setItem('win10-theme', lightMode ? 'light' : 'dark');
+            updateToggleTile(tile, lightMode);
+        }],
+        ['toggle-wallpaper', () => {
+            if (!state.wallpapers.length) return;
+            state.currentWallpaperIdx = (state.currentWallpaperIdx + 1) % state.wallpapers.length;
+            const wallpaper = state.wallpapers[state.currentWallpaperIdx];
+            const desktop = document.getElementById('desktop-wallpaper');
+            if (desktop && wallpaper) {
+                desktop.style.backgroundImage = 'url("' + wallpaper.replace(/"/g, '%22') + '")';
+                setItem('win10-wallpaper', wallpaper);
+            }
+            document.querySelectorAll('.wallpaper-option-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.wallpaper === wallpaper);
+            });
+        }],
+        ['toggle-sound', tile => {
+            state.soundEnabled = !state.soundEnabled;
+            setItem('win10-sound', state.soundEnabled ? '1' : '0');
+            updateToggleTile(tile, state.soundEnabled);
+            const label = tile.querySelector('span');
+            if (label) label.textContent = state.soundEnabled ? 'Sound: ON' : 'Sound: OFF';
+            const icon = tile.querySelector('i');
+            if (icon) icon.className = state.soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark';
+        }],
+        ['toggle-night-light', tile => {
+            const enabled = !document.body.classList.contains('night-light-active');
+            document.body.classList.toggle('night-light-active', enabled);
+            updateToggleTile(tile, enabled);
+        }],
+        ['toggle-fullscreen', async tile => {
+            try {
+                if (document.fullscreenElement) {
+                    await document.exitFullscreen();
+                } else {
+                    await document.documentElement.requestFullscreen();
+                }
+                updateToggleTile(tile, Boolean(document.fullscreenElement));
+            } catch {
+                /* Fullscreen may be unavailable in embedded or restricted contexts. */
+            }
+        }]
+    ]);
+
+    quickActions.forEach(tile => {
+        tile.setAttribute('role', 'button');
+        tile.setAttribute('tabindex', '0');
+        if (!tile.hasAttribute('aria-pressed')) {
+            tile.setAttribute('aria-pressed', String(tile.classList.contains('active')));
+        }
+        const activate = event => {
+            if (event.type === 'keydown') {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+            }
+            const action = actions.get(tile.id);
+            if (!action) return;
+            playSound('click');
+            void action(tile);
+        };
+        tile.addEventListener('click', activate);
+        tile.addEventListener('keydown', activate);
+    });
+
+    document.getElementById('clear-notifications')?.addEventListener('click', () => {
+        document.querySelector('#action-center .notifications-list')?.replaceChildren();
+        state.notifCount = 0;
+        document.getElementById('notif-badge')?.classList.add('hidden');
+        document.getElementById('notif-badge')?.replaceChildren(document.createTextNode('0'));
+    });
+
+    document.querySelectorAll('#wifi-popover .wifi-item').forEach(item => {
+        item.setAttribute('role', 'button');
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('aria-pressed', String(item.classList.contains('active')));
+        const activate = event => {
+            if (event.type === 'keydown') {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+            }
+            document.querySelectorAll('#wifi-popover .wifi-item').forEach(network => {
+                const selected = network === item;
+                network.classList.toggle('active', selected);
+                network.setAttribute('aria-pressed', String(selected));
+                const status = network.querySelector('.wifi-status');
+                if (status) status.textContent = selected ? 'Selected network · secured' : 'Secured';
+            });
+            playSound('click');
+        };
+        item.addEventListener('click', activate);
+        item.addEventListener('keydown', activate);
+    });
+
+    const peekDesktop = document.getElementById('peek-desktop');
+    if (peekDesktop) {
+        peekDesktop.setAttribute('role', 'button');
+        peekDesktop.setAttribute('tabindex', '0');
+        peekDesktop.setAttribute('aria-label', 'Show desktop');
+        let desktopShown = false;
+        const toggleDesktop = () => {
+            desktopShown = !desktopShown;
+            if (desktopShown) {
+                [...state.openWindows].forEach(id => minimizeWindow(id));
+                peekDesktop.setAttribute('aria-label', 'Restore windows');
+            } else {
+                [...state.openWindows].forEach(id => openWindow(id));
+                peekDesktop.setAttribute('aria-label', 'Show desktop');
+            }
+        };
+        peekDesktop.addEventListener('click', toggleDesktop);
+        peekDesktop.addEventListener('keydown', event => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleDesktop();
+            }
+        });
+    }
 
     document.addEventListener('click', event => {
         if (!event.target.closest('.system-tray') && !event.target.closest('.tray-popover') && !event.target.closest('#action-center')) {
