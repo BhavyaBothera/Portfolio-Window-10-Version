@@ -46,7 +46,7 @@ exports.submitContactMessage = async (req, res, next) => {
         console.log('[API Contact] Contact message stored successfully.');
         return res.status(201).json({
             success: true,
-            message: 'Message delivered and saved to portfolio database successfully!',
+            message: 'Message saved to portfolio database successfully.',
             request_id: id
         });
     } catch (err) {
