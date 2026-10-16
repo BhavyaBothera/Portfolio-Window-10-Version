@@ -7991,3 +7991,10 @@ button,
         transform: none;
     }
 }
+
+.social-contact-note {
+    margin: 0;
+    color: var(--win-text-dim);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
