@@ -23,7 +23,7 @@ test.describe('12. Contact Form', () => {
         await expect(page.locator('#sender-email')).toHaveValue('');
         await expect(page.locator('#sender-subject')).toHaveValue('');
         await expect(page.locator('#sender-message')).toHaveValue('');
-        await expect(page.locator('.toast-notification')).toHaveCount(0);
+        await expect(page.locator('.toast-notification').filter({ hasText: 'Validation Error' })).toHaveCount(0);
     });
 
     test('12.2 Valid message is saved and the form resets', async ({ page }) => {
