@@ -44,6 +44,9 @@ export function updateClocks() {
 
 let previewTimeout = null;
 let clockInterval = null;
+let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let selectedCalendarDate = new Date();
+let calendarInitialized = false;
 
 export function updateTaskbarPills() {
     const taskbarAppsContainer = document.getElementById('taskbar-apps-container');
@@ -142,11 +145,178 @@ export function updateTaskbarPills() {
     }
 }
 
+
+
+function renderCalendarMonth() {
+    const monthLabel = document.getElementById('cal-month-name');
+    const daysGrid = document.getElementById('cal-days-grid');
+    if (!monthLabel || !daysGrid) return;
+
+    monthLabel.textContent = calendarMonth.toLocaleDateString('en-US', {
+        month: 'long',
+        year: 'numeric'
+    });
+    daysGrid.replaceChildren();
+
+    const year = calendarMonth.getFullYear();
+    const month = calendarMonth.getMonth();
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const previousMonthDays = new Date(year, month, 0).getDate();
+    const today = new Date();
+
+    for (let index = 0; index < 42; index += 1) {
+        const dayNumber = index - firstWeekday + 1;
+        const date = new Date(year, month, dayNumber);
+        const isCurrentMonth = dayNumber >= 1 && dayNumber <= daysInMonth;
+        const isToday = date.getFullYear() === today.getFullYear()
+            && date.getMonth() === today.getMonth()
+            && date.getDate() === today.getDate();
+        const isSelected = date.getFullYear() === selectedCalendarDate.getFullYear()
+            && date.getMonth() === selectedCalendarDate.getMonth()
+            && date.getDate() === selectedCalendarDate.getDate();
+
+        const dayButton = document.createElement('button');
+        dayButton.type = 'button';
+        dayButton.className = 'cal-day';
+        dayButton.textContent = String(isCurrentMonth
+            ? dayNumber
+            : dayNumber < 1
+                ? previousMonthDays + dayNumber
+                : dayNumber - daysInMonth);
+        dayButton.setAttribute('aria-label', date.toLocaleDateString('en-US', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric'
+        }));
+        dayButton.setAttribute('aria-pressed', String(isSelected));
+        dayButton.classList.toggle('other-month', !isCurrentMonth);
+        dayButton.classList.toggle('today', isToday);
+        dayButton.classList.toggle('selected', isSelected);
+
+        dayButton.addEventListener('click', () => {
+            selectedCalendarDate = date;
+            if (!isCurrentMonth) {
+                calendarMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            }
+            renderCalendarMonth();
+        });
+
+        daysGrid.appendChild(dayButton);
+    }
+
+    calendarInitialized = true;
+}
+
+function initTrayControls() {
+    const popoverIds = ['calendar-popover', 'volume-popover', 'wifi-popover', 'battery-popover', 'action-center'];
+    const getPopover = id => document.getElementById(id);
+
+    const closePopovers = () => {
+        popoverIds.forEach(id => {
+            const popover = getPopover(id);
+            if (popover) popover.classList.add('hidden');
+        });
+        ['taskbar-clock', 'tray-volume', 'tray-wifi', 'tray-battery', 'tray-action-center'].forEach(id => {
+            const trigger = document.getElementById(id);
+            if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        });
+    };
+
+    const togglePopover = (triggerId, popoverId) => {
+        const trigger = document.getElementById(triggerId);
+        const popover = getPopover(popoverId);
+        if (!trigger || !popover) return;
+
+        const shouldOpen = popover.classList.contains('hidden');
+        closePopovers();
+        if (shouldOpen) {
+            popover.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+    };
+
+    const controls = [
+        ['taskbar-clock', 'calendar-popover', 'Show calendar'],
+        ['tray-volume', 'volume-popover', 'Volume control'],
+        ['tray-wifi', 'wifi-popover', 'Wi-Fi networks'],
+        ['tray-battery', 'battery-popover', 'Battery status'],
+        ['tray-action-center', 'action-center', 'Notifications and quick settings']
+    ];
+
+    controls.forEach(([triggerId, popoverId, label]) => {
+        const trigger = document.getElementById(triggerId);
+        if (!trigger) return;
+
+        trigger.setAttribute('role', 'button');
+        trigger.setAttribute('tabindex', '0');
+        trigger.setAttribute('aria-label', label);
+        trigger.setAttribute('aria-controls', popoverId);
+        trigger.setAttribute('aria-expanded', 'false');
+
+        const activate = event => {
+            if (event.type === 'keydown') {
+                if (event.key !== 'Enter' && event.key !== ' ') return;
+                event.preventDefault();
+            }
+            if (triggerId === 'taskbar-clock' && !calendarInitialized) renderCalendarMonth();
+            togglePopover(triggerId, popoverId);
+        };
+
+        trigger.addEventListener('click', activate);
+        trigger.addEventListener('keydown', activate);
+    });
+
+    document.getElementById('cal-prev-month')?.addEventListener('click', () => {
+        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
+        renderCalendarMonth();
+    });
+    document.getElementById('cal-next-month')?.addEventListener('click', () => {
+        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1);
+        renderCalendarMonth();
+    });
+
+    const volumeSlider = document.getElementById('tray-volume-slider');
+    const volumePercent = document.getElementById('tray-volume-percent');
+    const volumeIcons = [
+        document.getElementById('volume-icon-tray'),
+        document.getElementById('volume-icon-pop')
+    ];
+    const updateVolume = () => {
+        if (!volumeSlider) return;
+        const value = Number(volumeSlider.value);
+        if (volumePercent) volumePercent.textContent = value + '%';
+        const iconClass = value === 0
+            ? 'fa-solid fa-volume-xmark'
+            : value < 35
+                ? 'fa-solid fa-volume-low'
+                : 'fa-solid fa-volume-high';
+        volumeIcons.forEach(icon => {
+            if (icon) icon.className = iconClass;
+        });
+        const trigger = document.getElementById('tray-volume');
+        if (trigger) trigger.setAttribute('aria-label', 'Volume ' + value + ' percent');
+    };
+    volumeSlider?.addEventListener('input', updateVolume);
+    updateVolume();
+
+    document.getElementById('tray-lang')?.setAttribute('role', 'img');
+    document.getElementById('tray-lang')?.setAttribute('aria-label', 'Keyboard language: English (United States)');
+
+    document.addEventListener('click', event => {
+        if (!event.target.closest('.system-tray') && !event.target.closest('.tray-popover') && !event.target.closest('#action-center')) {
+            closePopovers();
+        }
+    });
+}
+
 export function initTaskbar() {
     if (!clockInterval) {
         clockInterval = setInterval(updateClocks, 1000);
         clockInterval.unref?.();
     }
     updateClocks();
+    initTrayControls();
     updateTaskbarPills();
 }
