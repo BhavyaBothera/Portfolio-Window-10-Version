@@ -59,4 +59,13 @@ test.describe('11. Portfolio Discovery & Interaction UX', () => {
         await expect(visibleCards.first().locator('h3')).toHaveText('E-Kabadi');
     });
 
+    test('11.5 Desktop icons can be focused and activated with the keyboard', async ({ page }) => {
+        const calculatorIcon = page.locator('.desktop-icon[data-window="calculator"]');
+        await expect(calculatorIcon).toHaveAttribute('role', 'button');
+        await expect(calculatorIcon).toHaveAttribute('tabindex', '0');
+        await calculatorIcon.focus();
+        await page.keyboard.press('Enter');
+        await expect(page.locator('#win-calculator')).toBeVisible();
+    });
+
 });
