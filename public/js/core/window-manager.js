@@ -439,7 +439,14 @@ export const LifecycleManager = {
         winEl.classList.remove('win-opening');
         winEl.classList.add('win-closing');
 
+        let closeFinished = false;
+        let closeFallbackTimer;
         const onCloseEnd = () => {
+            if (closeFinished) return;
+            closeFinished = true;
+            if (closeFallbackTimer) clearTimeout(closeFallbackTimer);
+            winEl.removeEventListener('animationend', onCloseEnd);
+
             winEl.classList.add('hidden');
             winEl.classList.remove('win-closing', 'active', 'maximized', 'minimized');
             state.openWindows = state.openWindows.filter(id => id !== windowId);
@@ -457,7 +464,10 @@ export const LifecycleManager = {
             FocusManager.restoreFocus();
         };
 
-        winEl.addEventListener('animationend', onCloseEnd, { once: true });
+        // CSS animations may be disabled (for example, reduced-motion settings).
+        // The fallback keeps window state and app cleanup from hanging forever.
+        winEl.addEventListener('animationend', onCloseEnd);
+        closeFallbackTimer = setTimeout(onCloseEnd, 350);
         playSound('close');
     },
 
