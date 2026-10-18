@@ -31,7 +31,22 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         await expect(launcher.locator('.mobile-tile[data-window="calculator"]')).toBeVisible();
     });
 
-    test('6.3 Mobile app window fits the viewport and hides desktop controls', async ({ page }) => {
+    test('6.3 Mobile launcher search announces empty results and recovers when cleared', async ({ page }) => {
+        await loadAt(page, 320, 568);
+        await page.locator('#mobile-home-btn').click();
+
+        const search = page.locator('#mobile-launcher-search-input');
+        await search.fill('no-app-matches-this-query-987654');
+        const emptyState = page.locator('.mobile-launcher-empty');
+        await expect(emptyState).toBeVisible();
+        await expect(emptyState).toHaveAttribute('role', 'status');
+        await expect(emptyState).toHaveAttribute('aria-live', 'polite');
+
+        await search.fill('');
+        await expect(page.locator('.mobile-tile[data-window="calculator"]')).toBeVisible();
+    });
+
+    test('6.5 Mobile app window fits the viewport and hides desktop controls', async ({ page }) => {
         await loadAt(page, 375, 812);
         await page.locator('#mobile-home-btn').click();
         await page.locator('#mobile-app-launcher .mobile-tile[data-window="calculator"]').click();
@@ -51,7 +66,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         expect(box.y + box.height).toBeLessThanOrEqual(812.5);
     });
 
-    test('6.4 Task switcher displays open apps and can close them', async ({ page }) => {
+    test('6.5 Task switcher displays open apps and can close them', async ({ page }) => {
         await loadAt(page, 390, 844);
         await page.locator('#mobile-home-btn').click();
         await page.locator('#mobile-app-launcher .mobile-tile[data-window="calculator"]').click();
@@ -62,7 +77,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         await expect(switcher.locator('.mobile-switcher-card')).toBeVisible();
     });
 
-    test('6.5 Mobile back button closes the active window', async ({ page }) => {
+    test('6.6 Mobile back button closes the active window', async ({ page }) => {
         await loadAt(page, 430, 932);
         await page.locator('#mobile-home-btn').click();
         await page.locator('#mobile-app-launcher .mobile-tile[data-window="calculator"]').click();
@@ -73,7 +88,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         await expect(calcWin).not.toBeVisible();
     });
 
-    test('6.6 Landscape phone layout has no horizontal overflow', async ({ page }) => {
+    test('6.7 Landscape phone layout has no horizontal overflow', async ({ page }) => {
         await loadAt(page, 812, 375);
 
         const overflow = await page.evaluate(() => ({
@@ -87,7 +102,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         await expect(page.locator('#mobile-nav-bar')).toBeVisible();
     });
 
-    test('6.7 Common mobile widths do not create horizontal overflow', async ({ page }) => {
+    test('6.8 Common mobile widths do not create horizontal overflow', async ({ page }) => {
         for (const viewport of [
             { width: 320, height: 568 },
             { width: 360, height: 800 },
@@ -107,7 +122,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         }
     });
 
-    test('6.8 Tablet windows stay inside the viewport instead of using desktop pixel coordinates', async ({ page }) => {
+    test('6.9 Tablet windows stay inside the viewport instead of using desktop pixel coordinates', async ({ page }) => {
         for (const viewport of [
             { width: 768, height: 1024 },
             { width: 820, height: 1180 },

@@ -66,10 +66,13 @@ export function initMobileShell() {
         gridContainer.innerHTML = '';
 
         if (apps.length === 0) {
-            gridContainer.appendChild(createElement('p', {
+            const emptyState = createElement('p', {
                 className: 'mobile-launcher-empty',
                 textContent: 'No apps found. Try another search.'
-            }));
+            });
+            emptyState.setAttribute('role', 'status');
+            emptyState.setAttribute('aria-live', 'polite');
+            gridContainer.appendChild(emptyState);
             return;
         }
 
