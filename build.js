@@ -114,6 +114,14 @@ if (fs.existsSync(origHtmlPath)) {
         '<script type="module" src="js/bundle.min.js"></script>'
     );
 
+    // Fail the build if an expected production rewrite silently stops matching.
+    if (!htmlContent.includes('href="css/style.min.css"') || !htmlContent.includes('src="js/bundle.min.js"')) {
+        throw new Error('Production HTML transformation failed: optimized CSS or JavaScript entry point is missing.');
+    }
+    if (htmlContent.includes('href="css/style.css"') || htmlContent.includes('src="js/main.js"')) {
+        throw new Error('Production HTML transformation failed: development asset references remain in dist/index.html.');
+    }
+
     fs.writeFileSync(path.join(distDir, 'index.html'), htmlContent, 'utf8');
 
     for (const asset of ['css/style.min.css', 'css/fonts.css', 'js/bundle.min.js', 'js/system/boot-failsafe.js']) {
