@@ -43,6 +43,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Reset build output before source E2E tests
+        run: rm -rf dist
+
       - name: Run Playwright E2E Tests
         run: npm run test:e2e
 
