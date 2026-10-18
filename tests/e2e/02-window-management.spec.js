@@ -60,6 +60,13 @@ test.describe('2. Window Management E2E Tests', () => {
         await expect(win).not.toBeVisible();
     });
 
+    test('2.9 Closing a window completes when reduced motion disables animations', async ({ page }) => {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+        const win = await openApp(page, 'calculator');
+        await win.locator('.close-btn').click();
+        await expect(win).not.toBeVisible({ timeout: 2000 });
+    });
+
     test('2.8 Clicking back window focuses and brings to front', async ({ page }) => {
         const winThisPc = await openApp(page, 'this-pc');
         const winCalc = await openApp(page, 'calculator');

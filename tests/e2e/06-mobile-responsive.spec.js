@@ -46,7 +46,7 @@ test.describe('6. Responsive Layout & Mobile Shell E2E Tests', () => {
         await expect(page.locator('.mobile-tile[data-window="calculator"]')).toBeVisible();
     });
 
-    test('6.5 Mobile app window fits the viewport and hides desktop controls', async ({ page }) => {
+    test('6.4 Mobile app window fits the viewport and hides desktop controls', async ({ page }) => {
         await loadAt(page, 375, 812);
         await page.locator('#mobile-home-btn').click();
         await page.locator('#mobile-app-launcher .mobile-tile[data-window="calculator"]').click();
